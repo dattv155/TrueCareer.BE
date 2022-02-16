@@ -1,11 +1,4 @@
-version: '3'
+version: "3"
 services:
-  web:
-    build: .
-    ports:
-      - "5005:80"
-    environment:
-      - "TZ=Asia/Ho_Chi_Minh"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+    truecareer-backend:
+        image: truesight.asia:8443/truecareer-backend:latest

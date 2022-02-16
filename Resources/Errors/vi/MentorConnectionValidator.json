@@ -1,0 +1,22 @@
+{
+  "MentorConnection": {
+    "Id": {
+    },
+    "MentorId": {
+    },
+    "Url": {
+      "UrlEmpty": "Chưa nhập @Url",
+      "UrlOverLength": "Url quá dài"
+    },
+    "ConnectionTypeId": {
+    },
+    "ConnectionType": {
+      "ConnectionTypeEmpty": "Chưa chọn @ConnectionType",
+      "ConnectionTypeNotExisted": "@ConnectionType không tồn tại"
+    },
+    "Mentor": {
+      "MentorEmpty": "Chưa chọn @Mentor",
+      "MentorNotExisted": "@Mentor không tồn tại"
+    }
+  }
+}

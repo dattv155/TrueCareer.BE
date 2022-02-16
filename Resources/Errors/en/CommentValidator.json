@@ -1,0 +1,18 @@
+{
+  "Comment": {
+    "Id": {
+    },
+    "Content": {
+      "ContentEmpty": "Chưa nhập @Content",
+      "ContentOverLength": "Content quá dài"
+    },
+    "CreatorId": {
+    },
+    "DiscussionId": {
+    },
+    "Creator": {
+      "CreatorEmpty": "Chưa chọn @Creator",
+      "CreatorNotExisted": "@Creator không tồn tại"
+    }
+  }
+}

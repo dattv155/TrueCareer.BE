@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj": {}
+    "E:\\final-project-uet\\TrueCareer.BE\\TrueCareer.BE.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj": {
+    "E:\\final-project-uet\\TrueCareer.BE\\TrueCareer.BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj",
+        "projectUniqueName": "E:\\final-project-uet\\TrueCareer.BE\\TrueCareer.BE.csproj",
         "projectName": "TrueCareer.BE",
-        "projectPath": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj",
-        "packagesPath": "C:\\Users\\Mr John\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\obj\\",
+        "projectPath": "E:\\final-project-uet\\TrueCareer.BE\\TrueCareer.BE.csproj",
+        "packagesPath": "C:\\Users\\Ngoc Chi\\.nuget\\packages\\",
+        "outputPath": "E:\\final-project-uet\\TrueCareer.BE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mr John\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Ngoc Chi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,9 +40,57 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "Elastic.Apm.NetCoreAll": {
+              "target": "Package",
+              "version": "[1.6.1, )"
+            },
+            "GeoCoordinate.NetCore": {
+              "target": "Package",
+              "version": "[1.0.0.1, )"
+            },
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.7.12, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.24, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.8.10, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.11.4, )"
+            },
+            "Scrutor": {
+              "target": "Package",
+              "version": "[3.2.2, )"
+            },
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.2.3, )"
+              "version": "[5.5.1, )"
+            },
+            "Thinktecture.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "TrueSight": {
+              "target": "Package",
+              "version": "[0.4.1, )"
             }
           },
           "imports": [
@@ -63,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

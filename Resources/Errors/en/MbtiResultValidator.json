@@ -1,0 +1,18 @@
+{
+  "MbtiResult": {
+    "UserId": {
+    },
+    "MbtiPersonalTypeId": {
+    },
+    "Id": {
+    },
+    "MbtiPersonalType": {
+      "MbtiPersonalTypeEmpty": "Chưa chọn @MbtiPersonalType",
+      "MbtiPersonalTypeNotExisted": "@MbtiPersonalType không tồn tại"
+    },
+    "User": {
+      "UserEmpty": "Chưa chọn @User",
+      "UserNotExisted": "@User không tồn tại"
+    }
+  }
+}

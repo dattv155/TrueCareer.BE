@@ -1,0 +1,132 @@
+{
+  "AppUser": {
+    "Id": {
+    },
+    "Username": {
+      "UsernameEmpty": "Chưa nhập @Username",
+      "UsernameOverLength": "Username quá dài"
+    },
+    "Email": {
+      "EmailEmpty": "Chưa nhập @Email",
+      "EmailOverLength": "Email quá dài"
+    },
+    "Phone": {
+      "PhoneEmpty": "Chưa nhập @Phone",
+      "PhoneOverLength": "Phone quá dài"
+    },
+    "Password": {
+      "PasswordEmpty": "Chưa nhập @Password",
+      "PasswordOverLength": "Password quá dài"
+    },
+    "DisplayName": {
+      "DisplayNameEmpty": "Chưa nhập @DisplayName",
+      "DisplayNameOverLength": "DisplayName quá dài"
+    },
+    "SexId": {
+    },
+    "Birthday": {
+      "BirthdayEmpty": "Chưa nhập @Birthday"
+      "BirthdayInvalid": "@Birthday không hợp lệ"
+    },
+    "Avatar": {
+      "AvatarEmpty": "Chưa nhập @Avatar",
+      "AvatarOverLength": "Avatar quá dài"
+    },
+    "CoverImage": {
+      "CoverImageEmpty": "Chưa nhập @CoverImage",
+      "CoverImageOverLength": "CoverImage quá dài"
+    },
+    "Sex": {
+      "SexEmpty": "Chưa chọn @Sex",
+      "SexNotExisted": "@Sex không tồn tại"
+    },
+    "FavouriteMentorMentor": {
+        "Id": {
+        },
+        "UserId": {
+        },
+        "MentorId": {
+        },
+        "Mentor": {
+        },
+        "User": {
+        }
+    },
+    "FavouriteMentorUser": {
+        "Id": {
+        },
+        "UserId": {
+        },
+        "MentorId": {
+        },
+        "Mentor": {
+        },
+        "User": {
+        }
+    },
+    "FavouriteNews": {
+        "Id": {
+        },
+        "UserId": {
+        },
+        "NewsId": {
+        },
+        "News": {
+            "FavouriteNews_NewsEmpty": "Chưa chọn @FavouriteNews_News",
+            "FavouriteNews_NewsNotExisted": "@FavouriteNews_News không tồn tại"
+        },
+        "User": {
+        }
+    },
+    "Information": {
+        "Id": {
+        },
+        "InformationTypeId": {
+        },
+        "Name": {
+            "Information_NameEmpty": "Chưa nhập @Information_Name",
+            "Information_NameOverLength": "@Information_Name quá dài"
+        },
+        "Description": {
+            "Information_DescriptionEmpty": "Chưa nhập @Information_Description",
+            "Information_DescriptionOverLength": "@Information_Description quá dài"
+        },
+        "StartAt": {
+            "_StartAtEmpty": "Chưa nhập @_StartAt"
+        },
+        "Role": {
+            "Information_RoleEmpty": "Chưa nhập @Information_Role",
+            "Information_RoleOverLength": "@Information_Role quá dài"
+        },
+        "Image": {
+            "Information_ImageEmpty": "Chưa nhập @Information_Image",
+            "Information_ImageOverLength": "@Information_Image quá dài"
+        },
+        "TopicId": {
+        },
+        "UserId": {
+        },
+        "EndAt": {
+            "_EndAtEmpty": "Chưa nhập @_EndAt"
+        },
+        "CreatedAt": {
+        },
+        "UpdatedAt": {
+        },
+        "DeletedAt": {
+        },
+        "RowId": {
+        },
+        "InformationType": {
+            "Information_InformationTypeEmpty": "Chưa chọn @Information_InformationType",
+            "Information_InformationTypeNotExisted": "@Information_InformationType không tồn tại"
+        },
+        "Topic": {
+            "Information_TopicEmpty": "Chưa chọn @Information_Topic",
+            "Information_TopicNotExisted": "@Information_Topic không tồn tại"
+        },
+        "User": {
+        }
+    }
+  }
+}

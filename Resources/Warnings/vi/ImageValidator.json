@@ -1,0 +1,18 @@
+{
+  "Image": {
+    "Id": {
+    },
+    "Name": {
+      "NameEmpty": "Chưa nhập @Name",
+      "NameOverLength": "Name quá dài"
+    },
+    "Url": {
+      "UrlEmpty": "Chưa nhập @Url",
+      "UrlOverLength": "Url quá dài"
+    },
+    "ThumbnailUrl": {
+      "ThumbnailUrlEmpty": "Chưa nhập @ThumbnailUrl",
+      "ThumbnailUrlOverLength": "ThumbnailUrl quá dài"
+    }
+  }
+}

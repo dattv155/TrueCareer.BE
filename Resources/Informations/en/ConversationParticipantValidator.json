@@ -1,0 +1,18 @@
+{
+  "ConversationParticipant": {
+    "Id": {
+    },
+    "ConversationId": {
+    },
+    "UserId": {
+    },
+    "Conversation": {
+      "ConversationEmpty": "Chưa chọn @Conversation",
+      "ConversationNotExisted": "@Conversation không tồn tại"
+    },
+    "User": {
+      "UserEmpty": "Chưa chọn @User",
+      "UserNotExisted": "@User không tồn tại"
+    }
+  }
+}

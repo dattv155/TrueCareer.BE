@@ -1,0 +1,36 @@
+{
+  "MentorMenteeConnection": {
+    "MentorId": {
+    },
+    "MenteeId": {
+    },
+    "ConnectionId": {
+    },
+    "FirstMessage": {
+      "FirstMessageEmpty": "Chưa nhập @FirstMessage",
+      "FirstMessageOverLength": "FirstMessage quá dài"
+    },
+    "ConnectionStatusId": {
+    },
+    "ActiveTimeId": {
+    },
+    "Id": {
+    },
+    "Connection": {
+      "ConnectionEmpty": "Chưa chọn @Connection",
+      "ConnectionNotExisted": "@Connection không tồn tại"
+    },
+    "ConnectionStatus": {
+      "ConnectionStatusEmpty": "Chưa chọn @ConnectionStatus",
+      "ConnectionStatusNotExisted": "@ConnectionStatus không tồn tại"
+    },
+    "Mentee": {
+      "MenteeEmpty": "Chưa chọn @Mentee",
+      "MenteeNotExisted": "@Mentee không tồn tại"
+    },
+    "Mentor": {
+      "MentorEmpty": "Chưa chọn @Mentor",
+      "MentorNotExisted": "@Mentor không tồn tại"
+    }
+  }
+}
