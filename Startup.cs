@@ -53,8 +53,14 @@ namespace TrueCareer.BE
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "rpc/true-career/swagger/{documentname}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "rpc/true-career/swagger";
+            });
         }
     }
 }

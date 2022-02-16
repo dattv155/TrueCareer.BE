@@ -1,29 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/Users/trongdat/Documents/Code/Backend/TrueCareer.BE/TrueCareer.BE.csproj": {}
+    "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj": {}
   },
   "projects": {
-    "/Users/trongdat/Documents/Code/Backend/TrueCareer.BE/TrueCareer.BE.csproj": {
+    "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/trongdat/Documents/Code/Backend/TrueCareer.BE/TrueCareer.BE.csproj",
+        "projectUniqueName": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj",
         "projectName": "TrueCareer.BE",
-        "projectPath": "/Users/trongdat/Documents/Code/Backend/TrueCareer.BE/TrueCareer.BE.csproj",
-        "packagesPath": "/Users/trongdat/.nuget/packages/",
-        "outputPath": "/Users/trongdat/Documents/Code/Backend/TrueCareer.BE/obj/",
+        "projectPath": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\TrueCareer.BE.csproj",
+        "packagesPath": "C:\\Users\\Mr John\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mr John\\Documents\\TrueCareer.BE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/trongdat/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Mr John\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -35,6 +38,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -59,7 +63,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.416/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

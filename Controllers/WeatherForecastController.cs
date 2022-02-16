@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace TrueCareer.BE.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/rpc/true-career/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
