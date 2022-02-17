@@ -1,0 +1,44 @@
+{
+  "AppUser": {
+    "Id": {
+    },
+    "Username": {
+      "UsernameEmpty": "Chưa nhập @Username",
+      "UsernameOverLength": "Username quá dài"
+    },
+    "Email": {
+      "EmailEmpty": "Chưa nhập @Email",
+      "EmailOverLength": "Email quá dài"
+    },
+    "Phone": {
+      "PhoneEmpty": "Chưa nhập @Phone",
+      "PhoneOverLength": "Phone quá dài"
+    },
+    "Password": {
+      "PasswordEmpty": "Chưa nhập @Password",
+      "PasswordOverLength": "Password quá dài"
+    },
+    "DisplayName": {
+      "DisplayNameEmpty": "Chưa nhập @DisplayName",
+      "DisplayNameOverLength": "DisplayName quá dài"
+    },
+    "SexId": {
+    },
+    "Birthday": {
+      "BirthdayEmpty": "Chưa nhập @Birthday"
+      "BirthdayInvalid": "@Birthday không hợp lệ"
+    },
+    "Avatar": {
+      "AvatarEmpty": "Chưa nhập @Avatar",
+      "AvatarOverLength": "Avatar quá dài"
+    },
+    "CoverImage": {
+      "CoverImageEmpty": "Chưa nhập @CoverImage",
+      "CoverImageOverLength": "CoverImage quá dài"
+    },
+    "Sex": {
+      "SexEmpty": "Chưa chọn @Sex",
+      "SexNotExisted": "@Sex không tồn tại"
+    }
+  }
+}

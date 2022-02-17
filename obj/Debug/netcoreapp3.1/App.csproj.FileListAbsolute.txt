@@ -1,7 +1,0 @@
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.csproj.AssemblyReference.cache
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.GeneratedMSBuildEditorConfig.editorconfig
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.AssemblyInfoInputs.cache
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.AssemblyInfo.cs
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.csproj.CoreCompileInputs.cache
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.MvcApplicationPartsAssemblyInfo.cs
-D:\fpt-rangdong\gencode-evn\AppCSharp\App\obj\Debug\netcoreapp3.1\App.MvcApplicationPartsAssemblyInfo.cache

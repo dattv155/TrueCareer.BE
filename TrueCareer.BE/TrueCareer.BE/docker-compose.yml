@@ -1,0 +1,4 @@
+version: "3"
+services:
+    truecareer-backend:
+        image: truesight.asia:8443/truecareer-backend:latest
