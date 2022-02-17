@@ -76,7 +76,6 @@ namespace TrueCareer
             services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
             services.AddSingleton<IPooledObjectPolicy<IModel>, MyRabbitModelPooledObjectPolicy>();
             services.AddSingleton<IRabbitManager, RabbitManager>();
-            services.AddHostedService<MyRabbitMQHostedService>();
 
             services.AddDbContext<DataContext>(options =>
             {
