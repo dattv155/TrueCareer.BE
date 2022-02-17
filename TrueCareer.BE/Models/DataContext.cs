@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -48,7 +48,7 @@ namespace TrueCareer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=LAPTOP-PO83DCLI\\SQLEXPRESS;Initial Catalog=TrueCareer;Persist Security Info=True;User ID=sa;Password=kandayuu1996;multipleactiveresultsets=True;");
+                optionsBuilder.UseSqlServer("Data Source=222.252.27.58,1500;Initial Catalog=TrueCareer;Persist Security Info=True;User ID=sa;Password=123@123a;multipleactiveresultsets=True;");
             }
         }
 
