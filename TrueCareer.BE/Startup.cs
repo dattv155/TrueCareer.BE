@@ -59,7 +59,9 @@ namespace TrueCareer
 
         public void ConfigureServices(IServiceCollection services)
         {
-         
+
+            _ = DataEntity.InformationResource;
+            _ = DataEntity.WarningResource;
             _ = DataEntity.ErrorResource;
 
             services.AddControllers().AddNewtonsoftJson(

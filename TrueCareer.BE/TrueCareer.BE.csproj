@@ -21,4 +21,8 @@
         <PackageReference Include="Thinktecture.EntityFrameworkCore.SqlServer" Version="2.0.0" />
         <PackageReference Include="TrueSight" Version="0.4.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\" />
+    </ItemGroup>
 </Project>

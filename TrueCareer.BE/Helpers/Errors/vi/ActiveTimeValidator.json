@@ -3,11 +3,11 @@
     "Id": {
     },
     "StartAt": {
-      "StartAtEmpty": "Chưa nhập @StartAt"
+      "StartAtEmpty": "Chưa nhập @StartAt",
       "StartAtInvalid": "@StartAt không hợp lệ"
     },
     "EndAt": {
-      "EndAtEmpty": "Chưa nhập @EndAt"
+      "EndAtEmpty": "Chưa nhập @EndAt",
       "EndAtInvalid": "@EndAt không hợp lệ"
     },
     "MentorId": {
