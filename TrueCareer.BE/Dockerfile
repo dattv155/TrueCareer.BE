@@ -1,8 +1,8 @@
-FROM registry.truesight.asia/aspnet:3.1-buster-slim AS base
+FROM registry-dev.truesight.asia/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 RUN apt-get update && apt-get install -y net-tools curl iputils-ping telnet nano vim libc6-dev libgdiplus
 
-FROM registry.truesight.asia/dotnet-sdk:3.1-buster AS build
+FROM registry-dev.truesight.asia/dotnet-sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["TrueCareer.csproj", "./"]
 RUN dotnet restore "TrueCareer.csproj"
