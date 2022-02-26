@@ -2,7 +2,7 @@ using TrueSight.Common;
 using TrueSight.Handlers;
 using TrueCareer.Common;
 using TrueCareer.Entities;
-using TrueCareer.Models;
+using TrueCareer.BE.Models;
 using TrueCareer.Repositories;
 using Newtonsoft.Json;
 using RabbitMQ.Client;

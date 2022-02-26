@@ -10,7 +10,7 @@ namespace TrueCareer.Entities
     public class ActiveTime : DataEntity,  IEquatable<ActiveTime>
     {
         public long Id { get; set; }
-        public DateTime? StartAt { get; set; }
+        public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
         public long MentorId { get; set; }
         public AppUser Mentor { get; set; }

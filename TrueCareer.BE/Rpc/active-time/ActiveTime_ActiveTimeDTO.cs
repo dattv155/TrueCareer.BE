@@ -10,7 +10,7 @@ namespace TrueCareer.Rpc.active_time
     public class ActiveTime_ActiveTimeDTO : DataDTO
     {
         public long Id { get; set; }
-        public DateTime? StartAt { get; set; }
+        public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
         public long MentorId { get; set; }
         public ActiveTime_AppUserDTO Mentor { get; set; }

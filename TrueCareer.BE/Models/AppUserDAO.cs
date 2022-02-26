@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace TrueCareer.Models
+namespace TrueCareer.BE.Models
 {
     public partial class AppUserDAO
     {
@@ -39,6 +39,8 @@ namespace TrueCareer.Models
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public Guid RowId { get; set; }
+        public string OtpCode { get; set; }
+        public DateTime? OtpExpired { get; set; }
 
         public virtual SexDAO Sex { get; set; }
         public virtual ICollection<ActiveTimeDAO> ActiveTimes { get; set; }
