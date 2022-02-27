@@ -8,6 +8,7 @@ using TrueCareer.Common;
 using TrueCareer.Enums;
 using TrueCareer.Entities;
 using TrueCareer.Repositories;
+using System.Security.Cryptography;
 
 namespace TrueCareer.Services.MAppUser
 {
@@ -19,10 +20,12 @@ namespace TrueCareer.Services.MAppUser
         Task<bool> Delete(AppUser AppUser);
         Task<bool> BulkDelete(List<AppUser> AppUsers);
         Task<bool> Import(List<AppUser> AppUsers);
+        Task<bool> Login(AppUser AppUser);
     }
 
     public class AppUserValidator : IAppUserValidator
     {
+
         private IUOW UOW;
         private ICurrentContext CurrentContext;
         private AppUserMessage AppUserMessage;
@@ -34,63 +37,7 @@ namespace TrueCareer.Services.MAppUser
             this.AppUserMessage = new AppUserMessage();
         }
 
-        public async Task Get(AppUser AppUser)
-        {
-        }
-
-        public async Task<bool> Create(AppUser AppUser)
-        {
-            await ValidateUsername(AppUser);
-            await ValidateEmail(AppUser);
-            await ValidatePhone(AppUser);
-            await ValidatePassword(AppUser);
-            await ValidateDisplayName(AppUser);
-            await ValidateBirthday(AppUser);
-            await ValidateAvatar(AppUser);
-            await ValidateCoverImage(AppUser);
-            await ValidateSex(AppUser);
-            return AppUser.IsValidated;
-        }
-
-        public async Task<bool> Update(AppUser AppUser)
-        {
-            if (await ValidateId(AppUser))
-            {
-                await ValidateUsername(AppUser);
-                await ValidateEmail(AppUser);
-                await ValidatePhone(AppUser);
-                await ValidatePassword(AppUser);
-                await ValidateDisplayName(AppUser);
-                await ValidateBirthday(AppUser);
-                await ValidateAvatar(AppUser);
-                await ValidateCoverImage(AppUser);
-                await ValidateSex(AppUser);
-            }
-            return AppUser.IsValidated;
-        }
-
-        public async Task<bool> Delete(AppUser AppUser)
-        {
-            if (await ValidateId(AppUser))
-            {
-            }
-            return AppUser.IsValidated;
-        }
-        
-        public async Task<bool> BulkDelete(List<AppUser> AppUsers)
-        {
-            foreach (AppUser AppUser in AppUsers)
-            {
-                await Delete(AppUser);
-            }
-            return AppUsers.All(x => x.IsValidated);
-        }
-        
-        public async Task<bool> Import(List<AppUser> AppUsers)
-        {
-            return true;
-        }
-        
+       
         private async Task<bool> ValidateId(AppUser AppUser)
         {
             AppUserFilter AppUserFilter = new AppUserFilter
@@ -214,5 +161,112 @@ namespace TrueCareer.Services.MAppUser
             }
             return true;
         }
+
+        private bool VerifyPassword(string oldPassword, string newPassword)
+        {
+            byte[] hashBytes = Convert.FromBase64String(oldPassword);
+            /* Get the salt */
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+            /* Compute the hash on the password the user entered */
+            var pbkdf2 = new Rfc2898DeriveBytes(newPassword, salt, 10000);
+            byte[] hash = pbkdf2.GetBytes(20);
+            /* Compare the results */
+            for (int i = 0; i < 20; i++)
+                if (hashBytes[i + 16] != hash[i])
+                    return false;
+            return true;
+        }
+
+        public async Task<bool> Login(AppUser AppUser)
+        {
+            if (string.IsNullOrWhiteSpace(AppUser.Username))
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.UsernameNotExisted, AppUserMessage);
+                return false;
+            }
+            List<AppUser> AppUsers = await UOW.AppUserRepository.List(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Username = new StringFilter { Equal = AppUser.Username },
+                Selects = AppUserSelect.ALL,
+                
+            });
+            if (AppUsers.Count == 0)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.UsernameNotExisted, AppUserMessage);
+                return false;
+            } else
+            {
+                AppUser appUser = AppUsers.FirstOrDefault();
+                bool verify = VerifyPassword(appUser.Password, AppUser.Password);
+                if (verify == false)
+                {
+                    AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Password), AppUserMessage.Error.PasswordNotMatch, AppUserMessage);
+                    return false;
+                }
+                AppUser.Id = appUser.Id;
+            }
+            return AppUser.IsValidated;
+        }
+
+        public async Task Get(AppUser AppUser)
+        {
+        }
+
+        public async Task<bool> Create(AppUser AppUser)
+        {
+            await ValidateUsername(AppUser);
+            await ValidateEmail(AppUser);
+            await ValidatePhone(AppUser);
+            await ValidatePassword(AppUser);
+            await ValidateDisplayName(AppUser);
+            await ValidateBirthday(AppUser);
+            await ValidateAvatar(AppUser);
+            await ValidateCoverImage(AppUser);
+            await ValidateSex(AppUser);
+            return AppUser.IsValidated;
+        }
+
+        public async Task<bool> Update(AppUser AppUser)
+        {
+            if (await ValidateId(AppUser))
+            {
+                await ValidateUsername(AppUser);
+                await ValidateEmail(AppUser);
+                await ValidatePhone(AppUser);
+                await ValidatePassword(AppUser);
+                await ValidateDisplayName(AppUser);
+                await ValidateBirthday(AppUser);
+                await ValidateAvatar(AppUser);
+                await ValidateCoverImage(AppUser);
+                await ValidateSex(AppUser);
+            }
+            return AppUser.IsValidated;
+        }
+
+        public async Task<bool> Delete(AppUser AppUser)
+        {
+            if (await ValidateId(AppUser))
+            {
+            }
+            return AppUser.IsValidated;
+        }
+
+        public async Task<bool> BulkDelete(List<AppUser> AppUsers)
+        {
+            foreach (AppUser AppUser in AppUsers)
+            {
+                await Delete(AppUser);
+            }
+            return AppUsers.All(x => x.IsValidated);
+        }
+
+        public async Task<bool> Import(List<AppUser> AppUsers)
+        {
+            return true;
+        }
+
     }
 }
