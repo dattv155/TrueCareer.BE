@@ -39,7 +39,9 @@ namespace TrueCareer.Services.MAppUser
             SexEmpty,
             SexNotExisted,
             UsernameNotExisted,
-            PasswordNotMatch
+            PasswordNotMatch,
+            UserExisted,
+            PasswordConfirmationNotMatch
         }
     }
 }

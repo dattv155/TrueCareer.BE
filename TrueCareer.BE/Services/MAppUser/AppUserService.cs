@@ -36,6 +36,7 @@ namespace TrueCareer.Services.MAppUser
         Task<List<AppUser>> Import(List<AppUser> AppUsers);
         Task<AppUserFilter> ToFilter(AppUserFilter AppUserFilter);
         Task<AppUser> Login(AppUser AppUser);
+        Task<AppUser> Register(AppUser AppUser);
     }
 
     public class AppUserService : BaseService, IAppUserService
@@ -318,6 +319,28 @@ namespace TrueCareer.Services.MAppUser
             CurrentContext.UserId = AppUser.Id;
             AppUser.Token = CreateToken(AppUser.Id, AppUser.Username, AppUser.RowId);
             return AppUser;
+        }
+
+        public async Task<AppUser> Register(AppUser AppUser)
+        {
+            if (!await AppUserValidator.Register(AppUser))
+                return AppUser;
+
+            try
+            {
+                AppUser.Id = 0;
+                var Password = AppUser.Password;
+                AppUser.Password = HashPassword(Password);
+                await UOW.AppUserRepository.Create(AppUser);
+                AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
+                Logging.CreateAuditLog(AppUser, new { }, nameof(AppUserService));
+                return AppUser;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(AppUserService));
+            }
+            return null;
         }
     }
 }

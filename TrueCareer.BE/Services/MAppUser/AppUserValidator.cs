@@ -1,4 +1,4 @@
-using TrueSight.Common;
+﻿using TrueSight.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +21,7 @@ namespace TrueCareer.Services.MAppUser
         Task<bool> BulkDelete(List<AppUser> AppUsers);
         Task<bool> Import(List<AppUser> AppUsers);
         Task<bool> Login(AppUser AppUser);
+        Task<bool> Register(AppUser AppUser);
     }
 
     public class AppUserValidator : IAppUserValidator
@@ -268,5 +269,41 @@ namespace TrueCareer.Services.MAppUser
             return true;
         }
 
+        public async Task<bool> Register(AppUser AppUser)
+        {
+            await ValidateUsername(AppUser);
+            await ValidateEmail(AppUser);
+            await ValidatePhone(AppUser);
+            await ValidatePassword(AppUser);
+            await ValidateDisplayName(AppUser);
+            await ValidateBirthday(AppUser);
+            await ValidateAvatar(AppUser);
+            await ValidateCoverImage(AppUser);
+            await ValidateSex(AppUser);
+            // kiểm tra xem user này đã có chưa
+            // - kiểm tra username
+            int CountAppUser = await UOW.AppUserRepository.Count(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Username = new StringFilter { Equal = AppUser.Username },
+                Selects = AppUserSelect.ALL,
+
+            });
+            // user đã tồn tại 
+            if (CountAppUser > 0)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.UserExisted, AppUserMessage);
+                return false;
+
+            }
+            // kiểm tra xem password và password confirm có trùng nhau chưa
+            if (AppUser.PasswordConfirmation != AppUser.Password)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.PasswordConfirmationNotMatch, AppUserMessage);
+                return false;
+            }
+            return AppUser.IsValidated;
+        }
     }
 }

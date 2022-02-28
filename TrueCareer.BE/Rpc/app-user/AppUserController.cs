@@ -71,13 +71,15 @@ namespace TrueCareer.Rpc.app_user
             AppUser AppUser = await AppUserService.Get(AppUser_AppUserDTO.Id);
             return new AppUser_AppUserDTO(AppUser);
         }
-        [AllowAnonymous]
         [Route(AppUserRoute.Create), HttpPost]
         public async Task<ActionResult<AppUser_AppUserDTO>> Create([FromBody] AppUser_AppUserDTO AppUser_AppUserDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
+            if (!await HasPermission(AppUser_AppUserDTO.Id))
+                return Forbid();
+
             AppUser AppUser = ConvertDTOToEntity(AppUser_AppUserDTO);
             AppUser = await AppUserService.Create(AppUser);
             AppUser_AppUserDTO = new AppUser_AppUserDTO(AppUser);
