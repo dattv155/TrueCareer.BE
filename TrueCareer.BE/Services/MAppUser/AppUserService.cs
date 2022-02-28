@@ -37,6 +37,10 @@ namespace TrueCareer.Services.MAppUser
         Task<AppUserFilter> ToFilter(AppUserFilter AppUserFilter);
         Task<AppUser> Login(AppUser AppUser);
         Task<AppUser> Register(AppUser AppUser);
+        Task<AppUser> ChangePassword(AppUser AppUser);
+        Task<AppUser> ForgotPassword(AppUser AppUser);
+        Task<AppUser> VerifyOtpCode(AppUser AppUser);
+        Task<AppUser> RecoveryPassword(AppUser AppUser);
     }
 
     public class AppUserService : BaseService, IAppUserService
@@ -341,6 +345,26 @@ namespace TrueCareer.Services.MAppUser
                 Logging.CreateSystemLog(ex, nameof(AppUserService));
             }
             return null;
+        }
+
+        public Task<AppUser> ChangePassword(AppUser AppUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AppUser> ForgotPassword(AppUser AppUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AppUser> VerifyOtpCode(AppUser AppUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AppUser> RecoveryPassword(AppUser AppUser)
+        {
+            throw new NotImplementedException();
         }
     }
 }
