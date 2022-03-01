@@ -22,6 +22,9 @@ namespace TrueCareer.Services.MAppUser
         Task<bool> Import(List<AppUser> AppUsers);
         Task<bool> Login(AppUser AppUser);
         Task<bool> Register(AppUser AppUser);
+        Task<bool> ChangePassword(AppUser AppUser);
+        Task<bool> ForgotPassword(AppUser AppUser);
+        Task<bool> VerifyOptCode(AppUser AppUser);
     }
 
     public class AppUserValidator : IAppUserValidator
@@ -303,6 +306,70 @@ namespace TrueCareer.Services.MAppUser
                 AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.PasswordConfirmationNotMatch, AppUserMessage);
                 return false;
             }
+            return AppUser.IsValidated;
+        }
+        public async Task<bool> ChangePassword(AppUser AppUser)
+        {
+            List<AppUser> AppUsers = await UOW.AppUserRepository.List(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Id = new IdFilter { Equal = AppUser.Id },
+                Selects = AppUserSelect.ALL,
+            });
+            if (AppUsers.Count == 0)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Username), AppUserMessage.Error.IdNotExisted);
+            }
+            else
+            {
+                AppUser appUser = AppUsers.FirstOrDefault();
+                bool verify = VerifyPassword(appUser.Password, AppUser.Password);
+                if (verify == false)
+                {
+                    AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Password), AppUserMessage.Error.PasswordNotMatch);
+                }
+            }
+            return AppUser.IsValidated;
+        }
+
+        public async Task<bool> ForgotPassword(AppUser AppUser)
+        {
+            if (AppUser != null && !string.IsNullOrWhiteSpace(AppUser.Email))
+            {
+                AppUserFilter AppUserFilter = new AppUserFilter
+                {
+                    Email = new StringFilter { Equal = AppUser.Email },
+                };
+
+                int count = await UOW.AppUserRepository.Count(AppUserFilter);
+                if (count == 0)
+                    AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Email), AppUserMessage.Error.EmailNotExisted);
+            }
+
+            return AppUser.IsValidated;
+        }
+
+        public async Task<bool> VerifyOptCode(AppUser AppUser)
+        {
+            AppUser oldData = (await UOW.AppUserRepository.List(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Email = new StringFilter { Equal = AppUser.Email },
+                Selects = AppUserSelect.ALL
+            })).FirstOrDefault();
+            if (oldData == null)
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.Email), AppUserMessage.Error.EmailNotExisted);
+            if (oldData.OtpCode != AppUser.OtpCode)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.OtpCode), AppUserMessage.Error.OtpCodeInvalid);
+            }
+            if (DateTime.Now > oldData.OtpExpired)
+            {
+                AppUser.AddError(nameof(AppUserValidator), nameof(AppUser.OtpExpired), AppUserMessage.Error.OtpExpired);
+            }
+
             return AppUser.IsValidated;
         }
     }

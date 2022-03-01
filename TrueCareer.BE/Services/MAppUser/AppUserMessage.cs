@@ -41,7 +41,10 @@ namespace TrueCareer.Services.MAppUser
             UsernameNotExisted,
             PasswordNotMatch,
             UserExisted,
-            PasswordConfirmationNotMatch
+            PasswordConfirmationNotMatch,
+            EmailNotExisted,
+            OtpCodeInvalid,
+            OtpExpired
         }
     }
 }

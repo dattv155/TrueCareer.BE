@@ -8,6 +8,8 @@ using TrueCareer.Common;
 using TrueCareer.Services.MAppUser;
 using TrueSight.Common;
 using TrueCareer.Entities;
+using System.Security.Claims;
+using TrueCareer.Services.MSex;
 
 namespace TrueCareer.Rpc.app_user
 {
@@ -28,6 +30,7 @@ namespace TrueCareer.Rpc.app_user
     public class ProfileController:ControllerBase
     {
         private IAppUserService AppUserService;
+        private ISexService SexService;
         private ICurrentContext CurrentContext;
         public ProfileController(
            IAppUserService AppUserService,
@@ -95,8 +98,7 @@ namespace TrueCareer.Rpc.app_user
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            if (!IsAppUser())
-                return Unauthorized();
+
             this.CurrentContext.UserId = ExtractUserId();
             AppUser AppUser = new AppUser
             {
@@ -116,14 +118,14 @@ namespace TrueCareer.Rpc.app_user
         #region Forgot Password
         [AllowAnonymous]
         [Route(ProfileRoot.ForgotPassword), HttpPost]
-        public async Task<ActionResult<AppUser_AppUserDTO>> ForgotPassword([FromBody] AppUser_ForgotPassword AppUser_ForgotPassword)
+        public async Task<ActionResult<AppUser_AppUserDTO>> ForgotPassword([FromBody] AppUser_ForgotPasswordDTO AppUser_ForgotPasswordDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
 
             AppUser AppUser = new AppUser
             {
-                Email = AppUser_ForgotPassword.Email,
+                Email = AppUser_ForgotPasswordDTO.Email,
             };
             AppUser.BaseLanguage = CurrentContext.Language;
 
@@ -163,17 +165,16 @@ namespace TrueCareer.Rpc.app_user
         }
 
         [Route(ProfileRoot.RecoveryPassword), HttpPost]
-        public async Task<ActionResult<AppUser_AppUserDTO>> RecoveryPassword([FromBody] AppUser_RecoveryPassword AppUser_RecoveryPassword)
+        public async Task<ActionResult<AppUser_AppUserDTO>> RecoveryPassword([FromBody] AppUser_RecoveryPasswordDTO AppUser_RecoveryPasswordDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            if (!IsAppUser())
-                return Unauthorized();
+
             var UserId = ExtractUserId();
             AppUser AppUser = new AppUser
             {
                 Id = UserId,
-                Password = AppUser_RecoveryPassword.Password,
+                Password = AppUser_RecoveryPasswordDTO.Password,
             };
             AppUser.BaseLanguage = CurrentContext.Language;
             AppUser = await AppUserService.RecoveryPassword(AppUser);
@@ -189,13 +190,9 @@ namespace TrueCareer.Rpc.app_user
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            if (!IsAppUser())
-                return Unauthorized();
             this.CurrentContext.UserId = ExtractUserId();
-            AppUser OldData = await AppUserService.Get(this.CurrentContext.UserId);
             AppUser AppUser = ConvertDTOToEntity(AppUser_AppUserDTO);
             AppUser.Id = CurrentContext.UserId;
-            AppUser.AppUserSiteMappings = OldData.AppUserSiteMappings;
             AppUser = await AppUserService.Update(AppUser);
             AppUser_AppUserDTO = new AppUser_AppUserDTO(AppUser);
             if (AppUser.IsValidated)
@@ -227,6 +224,37 @@ namespace TrueCareer.Rpc.app_user
         {
             return long.TryParse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value, out long u) ? u : 0;
         }
-
+        private AppUser ConvertDTOToEntity(AppUser_AppUserDTO AppUser_AppUserDTO)
+        {
+            AppUser AppUser = new AppUser();
+            AppUser.Id = AppUser_AppUserDTO.Id;
+            AppUser.Username = AppUser_AppUserDTO.Username;
+            AppUser.Password = AppUser_AppUserDTO.Password;
+            AppUser.DisplayName = AppUser_AppUserDTO.DisplayName;
+            AppUser.Avatar = AppUser_AppUserDTO.Avatar;
+            AppUser.Birthday = AppUser_AppUserDTO.Birthday;
+            AppUser.Email = AppUser_AppUserDTO.Email;
+            AppUser.Phone = AppUser_AppUserDTO.Phone;
+            AppUser.SexId = AppUser_AppUserDTO.SexId;
+            AppUser.Sex = AppUser_AppUserDTO.Sex == null ? null : new Sex
+            {
+                Id = AppUser_AppUserDTO.Sex.Id,
+                Code = AppUser_AppUserDTO.Sex.Code,
+                Name = AppUser_AppUserDTO.Sex.Name,
+            };
+            AppUser.AppUserRoleMappings = AppUser_AppUserDTO.AppUserRoleMappings?
+                .Select(x => new AppUserRoleMapping
+                {
+                    RoleId = x.RoleId,
+                    Role = x.Role == null ? null : new Role
+                    {
+                        Id = x.Role.Id,
+                        Code = x.Role.Code,
+                        Name = x.Role.Name,
+                    },
+                }).ToList();
+            AppUser.BaseLanguage = CurrentContext.Language;
+            return AppUser;
+        }
     }
 }

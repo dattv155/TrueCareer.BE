@@ -49,7 +49,6 @@ namespace TrueCareer.Services.MAppUser
         private IRabbitManager RabbitManager;
         private ILogging Logging;
         private ICurrentContext CurrentContext;
-        
         private IAppUserValidator AppUserValidator;
         private IConfiguration Configuration;
 
@@ -347,24 +346,159 @@ namespace TrueCareer.Services.MAppUser
             return null;
         }
 
-        public Task<AppUser> ChangePassword(AppUser AppUser)
+        public async Task<AppUser> ChangePassword(AppUser AppUser)
         {
-            throw new NotImplementedException();
+            if (!await AppUserValidator.ChangePassword(AppUser))
+                return AppUser;
+            try
+            {
+                AppUser oldData = await UOW.AppUserRepository.Get(AppUser.Id);
+                oldData.Password = HashPassword(AppUser.NewPassword);
+
+                await UOW.AppUserRepository.Update(oldData);
+
+                var newData = await UOW.AppUserRepository.Get(AppUser.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Change Password AppUser",
+                    Body = $"Your password has been changed at {StaticParams.DateTimeNow.AddHours(7).ToString("HH:mm:ss dd-MM-yyyy")}",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
         }
 
-        public Task<AppUser> ForgotPassword(AppUser AppUser)
+        public async Task<AppUser> ForgotPassword(AppUser AppUser)
         {
-            throw new NotImplementedException();
+            if (!await AppUserValidator.ForgotPassword(AppUser))
+                return AppUser;
+            try
+            {
+                AppUser oldData = (await UOW.AppUserRepository.List(new AppUserFilter
+                {
+                    Skip = 0,
+                    Take = 1,
+                    Email = new StringFilter { Equal = AppUser.Email },
+                    Selects = AppUserSelect.ALL
+                })).FirstOrDefault();
+
+                CurrentContext.UserId = oldData.Id;
+
+                oldData.OtpCode = GenerateOTPCode();
+                oldData.OtpExpired = StaticParams.DateTimeNow.AddHours(1);
+
+
+                await UOW.AppUserRepository.Update(oldData);
+
+
+                var newData = await UOW.AppUserRepository.Get(oldData.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Otp Code",
+                    Body = $"Otp Code recovery password: {newData.OtpCode}",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
         }
 
-        public Task<AppUser> VerifyOtpCode(AppUser AppUser)
+        public async Task<AppUser> VerifyOtpCode(AppUser AppUser)
         {
-            throw new NotImplementedException();
+            if (!await AppUserValidator.VerifyOptCode(AppUser))
+                return AppUser;
+            AppUser appUser = (await UOW.AppUserRepository.List(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Email = new StringFilter { Equal = AppUser.Email },
+                Selects = AppUserSelect.ALL
+            })).FirstOrDefault();
+            appUser.Token = CreateToken(appUser.Id, appUser.Username, appUser.RowId, 300);
+            return appUser;
         }
 
-        public Task<AppUser> RecoveryPassword(AppUser AppUser)
+        public async Task<AppUser> RecoveryPassword(AppUser AppUser)
         {
-            throw new NotImplementedException();
+            if (AppUser.Id == 0)
+                return null;
+            try
+            {
+                AppUser oldData = await UOW.AppUserRepository.Get(AppUser.Id);
+                CurrentContext.UserId = AppUser.Id;
+                oldData.Password = HashPassword(AppUser.Password);
+
+                await UOW.AppUserRepository.Update(oldData);
+
+
+                var newData = await UOW.AppUserRepository.Get(oldData.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Recovery Password",
+                    Body = $"Your password has been recovered.",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
         }
+        private string GenerateOTPCode()
+        {
+            Random rand = new Random();
+            return rand.Next(100000, 999999).ToString();
+        }
+
     }
 }
