@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TrueCareer.Entities
 {
-    public class AppUser : DataEntity,  IEquatable<AppUser>
+    public class AppUser : DataEntity, IEquatable<AppUser>
     {
         public long Id { get; set; }
         public string Username { get; set; }
@@ -24,20 +24,12 @@ namespace TrueCareer.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
-        
+
         public bool Equals(AppUser other)
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.Username != other.Username) return false;
-            if (this.Email != other.Email) return false;
-            if (this.Phone != other.Phone) return false;
-            if (this.Password != other.Password) return false;
-            if (this.DisplayName != other.DisplayName) return false;
-            if (this.SexId != other.SexId) return false;
-            if (this.Birthday != other.Birthday) return false;
-            if (this.Avatar != other.Avatar) return false;
-            if (this.CoverImage != other.CoverImage) return false;
+
             return true;
         }
         public override int GetHashCode()
@@ -61,8 +53,8 @@ namespace TrueCareer.Entities
         public DateFilter CreatedAt { get; set; }
         public DateFilter UpdatedAt { get; set; }
         public List<AppUserFilter> OrFilter { get; set; }
-        public AppUserOrder OrderBy {get; set;}
-        public AppUserSelect Selects {get; set;}
+        public AppUserOrder OrderBy { get; set; }
+        public AppUserSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -83,7 +75,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum AppUserSelect:long
+    public enum AppUserSelect : long
     {
         ALL = E.ALL,
         Id = E._0,
