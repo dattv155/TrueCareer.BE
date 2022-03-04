@@ -1,6 +1,6 @@
 using TrueSight.Handlers;
 using TrueCareer.Common;
-using TrueCareer.Models;
+using TrueCareer.BE.Models;
 using TrueCareer.Helpers;
 using TrueCareer.Repositories;
 using Microsoft.EntityFrameworkCore;

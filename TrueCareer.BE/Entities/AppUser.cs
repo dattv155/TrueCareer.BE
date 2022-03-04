@@ -14,6 +14,10 @@ namespace TrueCareer.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
+        public string NewPassword { get; set; }
+        public string OtpCode { get; set; }
+        public DateTime? OtpExpired { get; set; }
+        public string Token { get; set; }
         public string DisplayName { get; set; }
         public long SexId { get; set; }
         public DateTime? Birthday { get; set; }
@@ -24,13 +28,12 @@ namespace TrueCareer.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public string PasswordConfirmation { get; set; }
+        public List<AppUserRoleMapping> AppUserRoleMappings { get; set; }
 
         public bool Equals(AppUser other)
         {
-            if (other == null) return false;
-            if (this.Id != other.Id) return false;
-
-            return true;
+            return other != null && Id == other.Id;
         }
         public override int GetHashCode()
         {
@@ -45,6 +48,9 @@ namespace TrueCareer.Entities
         public StringFilter Email { get; set; }
         public StringFilter Phone { get; set; }
         public StringFilter Password { get; set; }
+        public string OtpCode { get; set; }
+        public DateTime? OtpExpired { get; set; }
+        public string Token { get; set; }
         public StringFilter DisplayName { get; set; }
         public IdFilter SexId { get; set; }
         public DateFilter Birthday { get; set; }

@@ -71,13 +71,12 @@ namespace TrueCareer.Rpc.app_user
             AppUser AppUser = await AppUserService.Get(AppUser_AppUserDTO.Id);
             return new AppUser_AppUserDTO(AppUser);
         }
-
         [Route(AppUserRoute.Create), HttpPost]
         public async Task<ActionResult<AppUser_AppUserDTO>> Create([FromBody] AppUser_AppUserDTO AppUser_AppUserDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(AppUser_AppUserDTO.Id))
                 return Forbid();
 
@@ -386,6 +385,17 @@ namespace TrueCareer.Rpc.app_user
                 Code = AppUser_AppUserDTO.Sex.Code,
                 Name = AppUser_AppUserDTO.Sex.Name,
             };
+            AppUser.AppUserRoleMappings = AppUser_AppUserDTO.AppUserRoleMappings?
+                .Select(x => new AppUserRoleMapping
+                {
+                    RoleId = x.RoleId,
+                    Role = x.Role == null ? null : new Role
+                    {
+                        Id = x.Role.Id,
+                        Code = x.Role.Code,
+                        Name = x.Role.Name
+                    },
+                }).ToList();
             AppUser.BaseLanguage = CurrentContext.Language;
             return AppUser;
         }

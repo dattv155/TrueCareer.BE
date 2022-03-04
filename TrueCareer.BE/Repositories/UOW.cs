@@ -2,7 +2,7 @@ using TrueSight.Common;
 using TrueCareer.Common;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
-using TrueCareer.Models;
+using TrueCareer.BE.Models;
 using TrueCareer.Repositories;
 using System;
 

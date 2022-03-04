@@ -14,6 +14,9 @@ namespace TrueCareer.Rpc.app_user
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
+        public string OtpCode { get; set; }
+        public DateTime? OtpExpired { get; set; }
+        public string Token { get; set; }
         public string DisplayName { get; set; }
         public long SexId { get; set; }
         public DateTime? Birthday { get; set; }
@@ -23,6 +26,7 @@ namespace TrueCareer.Rpc.app_user
         public Guid RowId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public List<AppUser_AppUserRoleMappingDTO> AppUserRoleMappings { get; set; }
         public AppUser_AppUserDTO() {}
         public AppUser_AppUserDTO(AppUser AppUser)
         {
@@ -31,6 +35,8 @@ namespace TrueCareer.Rpc.app_user
             this.Email = AppUser.Email;
             this.Phone = AppUser.Phone;
             this.Password = AppUser.Password;
+            this.OtpCode = AppUser.OtpCode;
+            this.OtpExpired = AppUser.OtpExpired;
             this.DisplayName = AppUser.DisplayName;
             this.SexId = AppUser.SexId;
             this.Birthday = AppUser.Birthday;

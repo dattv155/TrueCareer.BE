@@ -31,7 +31,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture;
 using Z.EntityFramework.Extensions;
-using TrueCareer.Models;
+using TrueCareer.BE.Models;
 using TrueCareer.Rpc;
 using TrueCareer.Handlers;
 using TrueCareer.Services;

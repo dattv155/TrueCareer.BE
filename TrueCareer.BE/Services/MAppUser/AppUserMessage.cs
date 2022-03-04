@@ -38,6 +38,13 @@ namespace TrueCareer.Services.MAppUser
             CoverImageOverLength,
             SexEmpty,
             SexNotExisted,
+            UsernameNotExisted,
+            PasswordNotMatch,
+            UserExisted,
+            PasswordConfirmationNotMatch,
+            EmailNotExisted,
+            OtpCodeInvalid,
+            OtpExpired
         }
     }
 }

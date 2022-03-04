@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace TrueCareer.Models
+namespace TrueCareer.BE.Models
 {
     public partial class MajorDAO
     {

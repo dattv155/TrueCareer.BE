@@ -11,6 +11,16 @@ using OfficeOpenXml;
 using TrueCareer.Repositories;
 using TrueCareer.Entities;
 using TrueCareer.Enums;
+using System.Security.Cryptography;
+using System.Text;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace TrueCareer.Services.MAppUser
 {
@@ -25,6 +35,12 @@ namespace TrueCareer.Services.MAppUser
         Task<List<AppUser>> BulkDelete(List<AppUser> AppUsers);
         Task<List<AppUser>> Import(List<AppUser> AppUsers);
         Task<AppUserFilter> ToFilter(AppUserFilter AppUserFilter);
+        Task<AppUser> Login(AppUser AppUser);
+        Task<AppUser> Register(AppUser AppUser);
+        Task<AppUser> ChangePassword(AppUser AppUser);
+        Task<AppUser> ForgotPassword(AppUser AppUser);
+        Task<AppUser> VerifyOtpCode(AppUser AppUser);
+        Task<AppUser> RecoveryPassword(AppUser AppUser);
     }
 
     public class AppUserService : BaseService, IAppUserService
@@ -33,22 +49,23 @@ namespace TrueCareer.Services.MAppUser
         private IRabbitManager RabbitManager;
         private ILogging Logging;
         private ICurrentContext CurrentContext;
-        
         private IAppUserValidator AppUserValidator;
+        private IConfiguration Configuration;
 
         public AppUserService(
             IUOW UOW,
             ICurrentContext CurrentContext,
             IRabbitManager RabbitManager,
             IAppUserValidator AppUserValidator,
-            ILogging Logging
+            ILogging Logging,
+            IConfiguration Configuration
         )
         {
             this.UOW = UOW;
             this.RabbitManager = RabbitManager;
             this.CurrentContext = CurrentContext;
             this.Logging = Logging;
-           
+            this.Configuration = Configuration;
             this.AppUserValidator = AppUserValidator;
         }
         public async Task<int> Count(AppUserFilter AppUserFilter)
@@ -95,6 +112,9 @@ namespace TrueCareer.Services.MAppUser
 
             try
             {
+                AppUser.Id = 0;
+                var Password = AppUser.Password;
+                AppUser.Password = HashPassword(Password);
                 await UOW.AppUserRepository.Create(AppUser);
                 AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
                 Logging.CreateAuditLog(AppUser, new { }, nameof(AppUserService));
@@ -235,6 +255,249 @@ namespace TrueCareer.Services.MAppUser
             
             Sexes = Sexes.Distinct().ToList();
             RabbitManager.PublishList(Sexes, RoutingKeyEnum.SexUsed.Code);
+        }
+        private string CreateToken(long id, string userName, Guid rowId, double? expiredTime = null)
+        {
+            if (expiredTime == null)
+                expiredTime = double.TryParse(Configuration["Config:ExpiredTime"], out double time) ? time : 0;
+
+            string PrivateRSAKeyBase64 = Configuration["Config:PrivateRSAKey"];
+            byte[] PrivateRSAKeyBytes = Convert.FromBase64String(PrivateRSAKeyBase64);
+            string PrivateRSAKey = Encoding.Default.GetString(PrivateRSAKeyBytes);
+
+            RSAParameters rsaParams;
+            using (var tr = new StringReader(PrivateRSAKey))
+            {
+                var pemReader = new PemReader(tr);
+                var keyPair = pemReader.ReadObject() as AsymmetricCipherKeyPair;
+                if (keyPair == null)
+                {
+                    throw new Exception("Could not read RSA private key");
+                }
+                var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
+                rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
+            }
+
+            RSA rsa = RSA.Create();
+            rsa.ImportParameters(rsaParams);
+
+            var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+            {
+                CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
+            };
+            var jwt = new JwtSecurityToken(
+                claims: new Claim[] {
+                    new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                    new Claim(ClaimTypes.Name, userName),
+                    new Claim(ClaimTypes.PrimarySid, rowId.ToString()),
+                    
+                },
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddSeconds(expiredTime.Value),
+                signingCredentials: signingCredentials
+            );
+
+            string Token = new JwtSecurityTokenHandler().WriteToken(jwt);
+            return Token;
+        }
+
+        private string HashPassword(string password)
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+            byte[] hash = pbkdf2.GetBytes(20);
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+            string savedPasswordHash = Convert.ToBase64String(hashBytes);
+            return savedPasswordHash;
+        }
+
+        public async Task<AppUser> Login(AppUser AppUser)
+        {
+            if (!await AppUserValidator.Login(AppUser))
+                return AppUser;
+            AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
+            CurrentContext.UserId = AppUser.Id;
+            AppUser.Token = CreateToken(AppUser.Id, AppUser.Username, AppUser.RowId);
+            return AppUser;
+        }
+
+        public async Task<AppUser> Register(AppUser AppUser)
+        {
+            if (!await AppUserValidator.Register(AppUser))
+                return AppUser;
+
+            try
+            {
+                AppUser.Id = 0;
+                var Password = AppUser.Password;
+                AppUser.Password = HashPassword(Password);
+                await UOW.AppUserRepository.Create(AppUser);
+                AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
+                Logging.CreateAuditLog(AppUser, new { }, nameof(AppUserService));
+                return AppUser;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(AppUserService));
+            }
+            return null;
+        }
+
+        public async Task<AppUser> ChangePassword(AppUser AppUser)
+        {
+            if (!await AppUserValidator.ChangePassword(AppUser))
+                return AppUser;
+            try
+            {
+                AppUser oldData = await UOW.AppUserRepository.Get(AppUser.Id);
+                oldData.Password = HashPassword(AppUser.NewPassword);
+
+                await UOW.AppUserRepository.Update(oldData);
+
+                var newData = await UOW.AppUserRepository.Get(AppUser.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Change Password AppUser",
+                    Body = $"Your password has been changed at {StaticParams.DateTimeNow.AddHours(7).ToString("HH:mm:ss dd-MM-yyyy")}",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
+        }
+
+        public async Task<AppUser> ForgotPassword(AppUser AppUser)
+        {
+            if (!await AppUserValidator.ForgotPassword(AppUser))
+                return AppUser;
+            try
+            {
+                AppUser oldData = (await UOW.AppUserRepository.List(new AppUserFilter
+                {
+                    Skip = 0,
+                    Take = 1,
+                    Email = new StringFilter { Equal = AppUser.Email },
+                    Selects = AppUserSelect.ALL
+                })).FirstOrDefault();
+
+                CurrentContext.UserId = oldData.Id;
+
+                oldData.OtpCode = GenerateOTPCode();
+                oldData.OtpExpired = StaticParams.DateTimeNow.AddHours(1);
+
+
+                await UOW.AppUserRepository.Update(oldData);
+
+
+                var newData = await UOW.AppUserRepository.Get(oldData.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Otp Code",
+                    Body = $"Otp Code recovery password: {newData.OtpCode}",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
+        }
+
+        public async Task<AppUser> VerifyOtpCode(AppUser AppUser)
+        {
+            if (!await AppUserValidator.VerifyOptCode(AppUser))
+                return AppUser;
+            AppUser appUser = (await UOW.AppUserRepository.List(new AppUserFilter
+            {
+                Skip = 0,
+                Take = 1,
+                Email = new StringFilter { Equal = AppUser.Email },
+                Selects = AppUserSelect.ALL
+            })).FirstOrDefault();
+            appUser.Token = CreateToken(appUser.Id, appUser.Username, appUser.RowId, 300);
+            return appUser;
+        }
+
+        public async Task<AppUser> RecoveryPassword(AppUser AppUser)
+        {
+            if (AppUser.Id == 0)
+                return null;
+            try
+            {
+                AppUser oldData = await UOW.AppUserRepository.Get(AppUser.Id);
+                CurrentContext.UserId = AppUser.Id;
+                oldData.Password = HashPassword(AppUser.Password);
+
+                await UOW.AppUserRepository.Update(oldData);
+
+
+                var newData = await UOW.AppUserRepository.Get(oldData.Id);
+
+                Mail mail = new Mail
+                {
+                    Subject = "Recovery Password",
+                    Body = $"Your password has been recovered.",
+                    Recipients = new List<string> { newData.Email },
+                    RowId = Guid.NewGuid()
+                };
+                RabbitManager.PublishSingle(mail, "Mail.Send");
+                Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
+                return newData;
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException == null)
+                {
+                    Logging.CreateSystemLog(ex, nameof(AppUserService));
+                    throw new MessageException(ex);
+                }
+                else
+                {
+                    Logging.CreateSystemLog(ex.InnerException, nameof(AppUserService));
+                    throw new MessageException(ex.InnerException);
+                }
+            }
+        }
+        private string GenerateOTPCode()
+        {
+            Random rand = new Random();
+            return rand.Next(100000, 999999).ToString();
         }
 
     }

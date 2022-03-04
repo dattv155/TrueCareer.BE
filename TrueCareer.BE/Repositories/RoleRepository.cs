@@ -2,7 +2,7 @@ using TrueSight.Common;
 using TrueCareer.Common;
 using TrueCareer.Helpers;
 using TrueCareer.Entities;
-using TrueCareer.Models;
+using TrueCareer.BE.Models;
 using TrueCareer.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using System;using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace TrueCareer.Models
+namespace TrueCareer.BE.Models
 {
     public partial class DataContext : DbContext
     {
         public virtual DbSet<ActiveTimeDAO> ActiveTime { get; set; }
+        public virtual DbSet<AggregatedCounterDAO> AggregatedCounter { get; set; }
         public virtual DbSet<AppUserDAO> AppUser { get; set; }
         public virtual DbSet<AppUserRoleMappingDAO> AppUserRoleMapping { get; set; }
         public virtual DbSet<ChoiceDAO> Choice { get; set; }
@@ -15,11 +16,17 @@ namespace TrueCareer.Models
         public virtual DbSet<ConnectionTypeDAO> ConnectionType { get; set; }
         public virtual DbSet<ConversationDAO> Conversation { get; set; }
         public virtual DbSet<ConversationParticipantDAO> ConversationParticipant { get; set; }
+        public virtual DbSet<CounterDAO> Counter { get; set; }
         public virtual DbSet<FavouriteMentorDAO> FavouriteMentor { get; set; }
         public virtual DbSet<FavouriteNewsDAO> FavouriteNews { get; set; }
+        public virtual DbSet<HashDAO> Hash { get; set; }
         public virtual DbSet<ImageDAO> Image { get; set; }
         public virtual DbSet<InformationDAO> Information { get; set; }
         public virtual DbSet<InformationTypeDAO> InformationType { get; set; }
+        public virtual DbSet<JobDAO> Job { get; set; }
+        public virtual DbSet<JobParameterDAO> JobParameter { get; set; }
+        public virtual DbSet<JobQueueDAO> JobQueue { get; set; }
+        public virtual DbSet<ListDAO> List { get; set; }
         public virtual DbSet<MajorDAO> Major { get; set; }
         public virtual DbSet<MbtiPersonalTypeDAO> MbtiPersonalType { get; set; }
         public virtual DbSet<MbtiPersonalTypeMajorMappingDAO> MbtiPersonalTypeMajorMapping { get; set; }
@@ -34,9 +41,13 @@ namespace TrueCareer.Models
         public virtual DbSet<NotificationDAO> Notification { get; set; }
         public virtual DbSet<QuestionDAO> Question { get; set; }
         public virtual DbSet<RoleDAO> Role { get; set; }
+        public virtual DbSet<SchemaDAO> Schema { get; set; }
         public virtual DbSet<SchoolDAO> School { get; set; }
         public virtual DbSet<SchoolMajorMappingDAO> SchoolMajorMapping { get; set; }
+        public virtual DbSet<ServerDAO> Server { get; set; }
+        public virtual DbSet<SetDAO> Set { get; set; }
         public virtual DbSet<SexDAO> Sex { get; set; }
+        public virtual DbSet<StateDAO> State { get; set; }
         public virtual DbSet<TopicDAO> Topic { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -48,7 +59,7 @@ namespace TrueCareer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=222.252.27.58,1500;Initial Catalog=TrueCareer;Persist Security Info=True;User ID=sa;Password=123@123a;multipleactiveresultsets=True;");
+                optionsBuilder.UseSqlServer("data source=222.252.27.58,1500;initial catalog=TrueCareer;persist security info=True;user id=sa;password=123@123a;multipleactiveresultsets=True;");
             }
         }
 
@@ -69,10 +80,24 @@ namespace TrueCareer.Models
                     .HasConstraintName("FK_ActiveTime_AppUser");
             });
 
+            modelBuilder.Entity<AggregatedCounterDAO>(entity =>
+            {
+                entity.HasKey(e => e.Key)
+                    .HasName("PK_HangFire_CounterAggregated");
+
+                entity.ToTable("AggregatedCounter", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_AggregatedCounter_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<AppUserDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Avatar).HasMaxLength(4000);
 
                 entity.Property(e => e.Birthday).HasColumnType("datetime");
@@ -90,6 +115,10 @@ namespace TrueCareer.Models
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(500);
+
+                entity.Property(e => e.OtpCode).HasMaxLength(50);
+
+                entity.Property(e => e.OtpExpired).HasColumnType("datetime");
 
                 entity.Property(e => e.Password).IsRequired();
 
@@ -153,8 +182,6 @@ namespace TrueCareer.Models
 
             modelBuilder.Entity<CommentDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Content)
                     .IsRequired()
                     .HasMaxLength(4000);
@@ -230,6 +257,23 @@ namespace TrueCareer.Models
                     .HasConstraintName("FK_ConversationParticipant_AppUser");
             });
 
+            modelBuilder.Entity<CounterDAO>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Counter", "HangFire");
+
+                entity.HasIndex(e => e.Key)
+                    .HasName("CX_HangFire_Counter")
+                    .IsClustered();
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<FavouriteMentorDAO>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -262,6 +306,22 @@ namespace TrueCareer.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FavouriteNews_AppUser");
+            });
+
+            modelBuilder.Entity<HashDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Field })
+                    .HasName("PK_HangFire_Hash");
+
+                entity.ToTable("Hash", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_Hash_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Field).HasMaxLength(100);
             });
 
             modelBuilder.Entity<ImageDAO>(entity =>
@@ -345,6 +405,76 @@ namespace TrueCareer.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(4000);
+            });
+
+            modelBuilder.Entity<JobDAO>(entity =>
+            {
+                entity.ToTable("Job", "HangFire");
+
+                entity.HasIndex(e => e.StateName)
+                    .HasName("IX_HangFire_Job_StateName")
+                    .HasFilter("([StateName] IS NOT NULL)");
+
+                entity.HasIndex(e => new { e.StateName, e.ExpireAt })
+                    .HasName("IX_HangFire_Job_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Arguments).IsRequired();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.InvocationData).IsRequired();
+
+                entity.Property(e => e.StateName).HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<JobParameterDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.Name })
+                    .HasName("PK_HangFire_JobParameter");
+
+                entity.ToTable("JobParameter", "HangFire");
+
+                entity.Property(e => e.Name).HasMaxLength(40);
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.JobParameters)
+                    .HasForeignKey(d => d.JobId)
+                    .HasConstraintName("FK_HangFire_JobParameter_Job");
+            });
+
+            modelBuilder.Entity<JobQueueDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.Queue, e.Id })
+                    .HasName("PK_HangFire_JobQueue");
+
+                entity.ToTable("JobQueue", "HangFire");
+
+                entity.Property(e => e.Queue).HasMaxLength(50);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FetchedAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<ListDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Id })
+                    .HasName("PK_HangFire_List");
+
+                entity.ToTable("List", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_List_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<MajorDAO>(entity =>
@@ -496,8 +626,6 @@ namespace TrueCareer.Models
 
             modelBuilder.Entity<MessageDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Content)
                     .IsRequired()
                     .HasMaxLength(4000);
@@ -517,11 +645,13 @@ namespace TrueCareer.Models
 
             modelBuilder.Entity<NewsDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
                 entity.Property(e => e.NewsContent).IsRequired();
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.News)
@@ -600,6 +730,16 @@ namespace TrueCareer.Models
                     .HasMaxLength(50);
             });
 
+            modelBuilder.Entity<SchemaDAO>(entity =>
+            {
+                entity.HasKey(e => e.Version)
+                    .HasName("PK_HangFire_Schema");
+
+                entity.ToTable("Schema", "HangFire");
+
+                entity.Property(e => e.Version).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<SchoolDAO>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -629,6 +769,39 @@ namespace TrueCareer.Models
                     .HasConstraintName("FK_SchoolMajorMapping_School");
             });
 
+            modelBuilder.Entity<ServerDAO>(entity =>
+            {
+                entity.ToTable("Server", "HangFire");
+
+                entity.HasIndex(e => e.LastHeartbeat)
+                    .HasName("IX_HangFire_Server_LastHeartbeat");
+
+                entity.Property(e => e.Id).HasMaxLength(100);
+
+                entity.Property(e => e.LastHeartbeat).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<SetDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Value })
+                    .HasName("PK_HangFire_Set");
+
+                entity.ToTable("Set", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_Set_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.HasIndex(e => new { e.Key, e.Score })
+                    .HasName("IX_HangFire_Set_Score");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Value).HasMaxLength(256);
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<SexDAO>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -640,6 +813,29 @@ namespace TrueCareer.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(4000);
+            });
+
+            modelBuilder.Entity<StateDAO>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.Id })
+                    .HasName("PK_HangFire_State");
+
+                entity.ToTable("State", "HangFire");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Reason).HasMaxLength(100);
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.States)
+                    .HasForeignKey(d => d.JobId)
+                    .HasConstraintName("FK_HangFire_State_Job");
             });
 
             modelBuilder.Entity<TopicDAO>(entity =>
