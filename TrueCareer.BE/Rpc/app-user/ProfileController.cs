@@ -15,7 +15,7 @@ namespace TrueCareer.Rpc.app_user
 {
     public class ProfileRoot
     {
-        public const string Login = "rpc/truecarreer/account/login";
+        public const string Login = "rpc/truecareer/account/login";
         public const string Register = "rpc/truecareer/account/register";
         public const string Get = "rpc/truecareer/profile/get";
         public const string Update = "rpc/truecareer/profile/update";
