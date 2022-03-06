@@ -9,3 +9,13 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+    - "rabbitmq"
+  rabbitmq:
+    image: rabbitmq
+    restart: always
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    
+
