@@ -19,7 +19,7 @@ namespace TrueCareer.Rpc.app_user
         public const string Register = "rpc/truecareer/account/register";
         public const string Get = "rpc/truecareer/profile/get";
         public const string Update = "rpc/truecareer/profile/update";
-        public const string SingleListSex = "rpc/truecareer/profile/single-list-sex";
+        public const string SingleListSex = "rpc/truecareer/profile/single-list-sexxx";
         public const string ChangePassword = "rpc/truecareer/profile/change-password";
         public const string ForgotPassword = "rpc/truecareer/profile/forgot-password";
         public const string VerifyOtpCode = "rpc/truecareer/profile/verify-otp-code";
