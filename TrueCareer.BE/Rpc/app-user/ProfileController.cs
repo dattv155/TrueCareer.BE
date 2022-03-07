@@ -201,6 +201,17 @@ namespace TrueCareer.Rpc.app_user
                 return BadRequest(AppUser_AppUserDTO);
         }
 
+        [Route(ProfileRoot.Get), HttpPost]
+        public async Task<ActionResult<AppUser_AppUserDTO>> GetForWeb()
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            var UserId = ExtractUserId();
+            AppUser AppUser = await AppUserService.Get(UserId);
+            AppUser_AppUserDTO AppUser_AppUserDTO = new AppUser_AppUserDTO(AppUser);
+            return AppUser_AppUserDTO;
+        }
+
         [Route(ProfileRoot.SingleListSex), HttpPost]
         public async Task<List<AppUser_SexDTO>> SingleListSex([FromBody] AppUser_SexFilterDTO AppUser_SexFilterDTO)
         {
