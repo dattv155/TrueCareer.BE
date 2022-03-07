@@ -3,9 +3,19 @@ services:
   web:
     build: .
     ports:
-      - "5005:80"
+      - "5005:8080"
     environment:
       - "TZ=Asia/Ho_Chi_Minh"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+    - "rabbitmq"
+  rabbitmq:
+    image: rabbitmq
+    restart: always
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    
+

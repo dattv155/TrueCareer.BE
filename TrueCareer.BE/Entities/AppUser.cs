@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TrueCareer.Entities
 {
-    public class AppUser : DataEntity,  IEquatable<AppUser>
+    public class AppUser : DataEntity, IEquatable<AppUser>
     {
         public long Id { get; set; }
         public string Username { get; set; }
@@ -59,8 +59,8 @@ namespace TrueCareer.Entities
         public DateFilter CreatedAt { get; set; }
         public DateFilter UpdatedAt { get; set; }
         public List<AppUserFilter> OrFilter { get; set; }
-        public AppUserOrder OrderBy {get; set;}
-        public AppUserSelect Selects {get; set;}
+        public AppUserOrder OrderBy { get; set; }
+        public AppUserSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -81,7 +81,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum AppUserSelect:long
+    public enum AppUserSelect : long
     {
         ALL = E.ALL,
         Id = E._0,
