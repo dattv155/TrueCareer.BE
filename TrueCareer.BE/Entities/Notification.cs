@@ -17,6 +17,9 @@ namespace TrueCareer.Entities
         public bool Unread { get; set; }
         public DateTime Time { get; set; }
         public string LinkWebsite { get; set; }
+        public string TitleMobile { get; set; }
+        public string ContentMobile { get; set; }
+        public string LinkMobile { get; set; }
         public AppUser Recipient { get; set; }
         public AppUser Sender { get; set; }
         public Guid RowId { get; set; }
@@ -25,13 +28,7 @@ namespace TrueCareer.Entities
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.TitleWeb != other.TitleWeb) return false;
-            if (this.ContentWeb != other.ContentWeb) return false;
-            if (this.SenderId != other.SenderId) return false;
-            if (this.RecipientId != other.RecipientId) return false;
-            if (this.Unread != other.Unread) return false;
-            if (this.Time != other.Time) return false;
-            if (this.LinkWebsite != other.LinkWebsite) return false;
+         
             return true;
         }
         public override int GetHashCode()

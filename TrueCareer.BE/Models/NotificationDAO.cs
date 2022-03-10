@@ -14,6 +14,9 @@ namespace TrueCareer.BE.Models
         public DateTime Time { get; set; }
         public string LinkWebsite { get; set; }
         public Guid RowId { get; set; }
+        public string TitleMobile { get; set; }
+        public string ContentMobile { get; set; }
+        public string LinkMobile { get; set; }
 
         public virtual AppUserDAO Recipient { get; set; }
         public virtual AppUserDAO Sender { get; set; }

@@ -681,15 +681,23 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<NotificationDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.ContentMobile)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.ContentWeb)
                     .IsRequired()
                     .HasMaxLength(4000);
 
+                entity.Property(e => e.LinkMobile).HasMaxLength(4000);
+
                 entity.Property(e => e.LinkWebsite).HasMaxLength(4000);
 
                 entity.Property(e => e.Time).HasColumnType("datetime");
+
+                entity.Property(e => e.TitleMobile)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.TitleWeb)
                     .IsRequired()

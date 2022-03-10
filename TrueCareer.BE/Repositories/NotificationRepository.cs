@@ -23,9 +23,11 @@ namespace TrueCareer.Repositories
         Task<Notification> Get(long Id);
         Task<bool> Create(Notification Notification);
         Task<bool> Update(Notification Notification);
-        Task<bool> Delete(Notification Notification);
+        Task<bool> Delete(long Id);
         Task<bool> BulkMerge(List<Notification> Notifications);
         Task<bool> BulkDelete(List<Notification> Notifications);
+        Task<bool> Read(long Id);
+        Task<bool> BulkCreate(List<Notification> notifications);
     }
     public class NotificationRepository : INotificationRepository
     {
@@ -344,11 +346,9 @@ namespace TrueCareer.Repositories
             return true;
         }
 
-        public async Task<bool> Delete(Notification Notification)
+        public async Task<bool> Delete(long Id)
         {
-            await DataContext.Notification
-                .Where(x => x.Id == Notification.Id)
-                .DeleteFromQueryAsync();
+            await DataContext.Notification.Where(n => n.Id == Id).DeleteFromQueryAsync();
             return true;
         }
         
@@ -395,6 +395,42 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(Notification Notification)
         {
         }
-        
+
+        public async Task<bool> BulkCreate(List<Notification> UserNotifications)
+        {
+            UserNotifications.ForEach(u => u.RowId = Guid.NewGuid());
+            List<NotificationDAO> UserNotificationDAOs = UserNotifications.Select(x => new NotificationDAO
+            {
+                SenderId = x.SenderId,
+                RecipientId = x.RecipientId,
+                TitleMobile = x.TitleMobile,
+                ContentMobile = x.ContentMobile,
+                TitleWeb = x.TitleWeb,
+                ContentWeb = x.ContentWeb,
+                Time = x.Time,
+                LinkMobile = x.LinkMobile,
+                LinkWebsite = x.LinkWebsite,
+                Unread = true,
+                RowId = x.RowId,
+            }).ToList();
+            DataContext.Notification.AddRange(UserNotificationDAOs);
+            await DataContext.SaveChangesAsync();
+            foreach (NotificationDAO UserNotificationDAO in UserNotificationDAOs)
+            {
+                Notification UserNotification = UserNotifications.Where(u => u.RowId == UserNotificationDAO.RowId).FirstOrDefault();
+                UserNotification.Id = UserNotificationDAO.Id;
+            }
+            return true;
+        }
+
+        public async Task<bool> Read(long Id)
+        {
+            await DataContext.Notification.Where(n => n.Id == Id)
+              .UpdateFromQueryAsync(n => new NotificationDAO
+              {
+                  Unread = false,
+              });
+            return true;
+        }
     }
 }

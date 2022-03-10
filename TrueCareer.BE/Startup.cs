@@ -35,6 +35,7 @@ using TrueCareer.BE.Models;
 using TrueCareer.Rpc;
 using TrueCareer.Handlers;
 using TrueCareer.Services;
+using TrueCareer.Hub;
 
 namespace TrueCareer
 {
@@ -204,6 +205,7 @@ namespace TrueCareer
             };
             onChange();
             ChangeToken.OnChange(() => Configuration.GetReloadToken(), onChange);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -215,6 +217,7 @@ namespace TrueCareer
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<UserNotificationHub>("/rpc/truecareer/signalr");
                 endpoints.MapControllers();
             });
 
