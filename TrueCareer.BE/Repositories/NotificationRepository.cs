@@ -318,6 +318,9 @@ namespace TrueCareer.Repositories
             NotificationDAO.Unread = Notification.Unread;
             NotificationDAO.Time = Notification.Time;
             NotificationDAO.LinkWebsite = Notification.LinkWebsite;
+            NotificationDAO.ContentMobile = Notification.ContentMobile;
+            NotificationDAO.LinkMobile = Notification.LinkMobile;
+            NotificationDAO.TitleMobile = Notification.TitleMobile;
             NotificationDAO.RowId = Guid.NewGuid();
             DataContext.Notification.Add(NotificationDAO);
             await DataContext.SaveChangesAsync();
