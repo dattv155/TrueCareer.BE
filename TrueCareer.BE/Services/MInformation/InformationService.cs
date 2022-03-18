@@ -228,22 +228,5 @@ namespace TrueCareer.Services.MInformation
             return filter;
         }
 
-        private void Sync(List<Information> Information)
-        {
-            List<InformationType> InformationTypes = new List<InformationType>();
-            List<Topic> Topics = new List<Topic>();
-            List<AppUser> AppUsers = new List<AppUser>();
-            InformationTypes.AddRange(Information.Select(x => new InformationType { Id = x.InformationTypeId }));
-            Topics.AddRange(Information.Select(x => new Topic { Id = x.TopicId }));
-            AppUsers.AddRange(Information.Select(x => new AppUser { Id = x.UserId }));
-            
-            InformationTypes = InformationTypes.Distinct().ToList();
-            Topics = Topics.Distinct().ToList();
-            AppUsers = AppUsers.Distinct().ToList();
-            RabbitManager.PublishList(InformationTypes, RoutingKeyEnum.InformationTypeUsed.Code);
-            RabbitManager.PublishList(Topics, RoutingKeyEnum.TopicUsed.Code);
-            RabbitManager.PublishList(AppUsers, RoutingKeyEnum.AppUserUsed.Code);
-        }
-
     }
 }

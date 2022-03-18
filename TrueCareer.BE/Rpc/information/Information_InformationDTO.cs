@@ -16,7 +16,7 @@ namespace TrueCareer.Rpc.information
         public DateTime StartAt { get; set; }
         public string Role { get; set; }
         public string Image { get; set; }
-        public long TopicId { get; set; }
+        public long? TopicId { get; set; }
         public long UserId { get; set; }
         public DateTime EndAt { get; set; }
         public Information_InformationTypeDTO InformationType { get; set; }

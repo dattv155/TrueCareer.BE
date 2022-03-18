@@ -16,11 +16,11 @@ namespace TrueCareer.Entities
         public DateTime StartAt { get; set; }
         public string Role { get; set; }
         public string Image { get; set; }
-        public long TopicId { get; set; }
+        public long? TopicId { get; set; }
         public long UserId { get; set; }
         public DateTime EndAt { get; set; }
         public InformationType InformationType { get; set; }
-        public Topic Topic { get; set; }
+        public Topic? Topic { get; set; }
         public AppUser User { get; set; }
         public Guid RowId { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -31,15 +31,6 @@ namespace TrueCareer.Entities
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.InformationTypeId != other.InformationTypeId) return false;
-            if (this.Name != other.Name) return false;
-            if (this.Description != other.Description) return false;
-            if (this.StartAt != other.StartAt) return false;
-            if (this.Role != other.Role) return false;
-            if (this.Image != other.Image) return false;
-            if (this.TopicId != other.TopicId) return false;
-            if (this.UserId != other.UserId) return false;
-            if (this.EndAt != other.EndAt) return false;
             return true;
         }
         public override int GetHashCode()
