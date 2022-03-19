@@ -24,6 +24,7 @@ namespace TrueCareer.Rpc.information
         public const string Master = Module + "/information/information-master";
         public const string Detail = Module + "/information/information-detail";
         public const string Preview = Module + "/information/information-preview";
+
         private const string Default = Rpc + Module + "/information";
         public const string Count = Default + "/count";
         public const string List = Default + "/list";
@@ -43,6 +44,15 @@ namespace TrueCareer.Rpc.information
         public const string SingleListInformationType = Default + "/single-list-information-type";
         public const string SingleListTopic = Default + "/single-list-topic";
         public const string SingleListAppUser = Default + "/single-list-app-user";
+
+        public const string CountReview = Default + "/count-review";
+        public const string ListReview = Default + "/list-review";
+        public const string CountNews = Default + "/count-news";
+        public const string ListNews = Default + "/list-news";
+        public const string ListRecommendMentor = Default + "/list-recommend-mentor";
+        public const string GetTopic = Default + "/get-topic";
+        public const string UploadFile = Default + "/upload-file";
+        public const string UploadImage = Default + "/upload-image";
 
 
         public static Dictionary<string, long> Filters = new Dictionary<string, long>
