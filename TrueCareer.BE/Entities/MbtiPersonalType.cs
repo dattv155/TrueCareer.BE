@@ -12,13 +12,12 @@ namespace TrueCareer.Entities
         public long Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+        public string Value { get; set; }
         
         public bool Equals(MbtiPersonalType other)
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.Name != other.Name) return false;
-            if (this.Code != other.Code) return false;
             return true;
         }
         public override int GetHashCode()

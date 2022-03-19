@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrueCareer.Common;
+using TrueCareer.Entities;
 using TrueCareer.Services.MAppUser;
 using TrueCareer.Services.MInformation;
 using TrueCareer.Services.MMentorReview;
@@ -37,6 +38,8 @@ namespace TrueCareer.Rpc.user_information
             this.AppUserService = AppUserService;
             this.CurrentContext = CurrentContext;
         }
+        
+
 
     }
 }

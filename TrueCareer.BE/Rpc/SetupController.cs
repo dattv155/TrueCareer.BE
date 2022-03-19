@@ -33,9 +33,9 @@ namespace TrueCareer.Rpc
             InitInformationTypeEnum();
             InitMbtiPersonalTypeEnum();
             InitMbtiSingleTypeEnum();
-
             InitNewsStatusEnum();
             InitSexEnum();
+            InitMentorApprovalStatusEnum();
             return Ok();
 
         }

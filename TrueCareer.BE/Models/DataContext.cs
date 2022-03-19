@@ -551,7 +551,7 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorApprovalStatusDAO>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Code)
                     .IsRequired()
