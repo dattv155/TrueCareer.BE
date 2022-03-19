@@ -33,9 +33,9 @@ namespace TrueCareer.Rpc
             InitInformationTypeEnum();
             InitMbtiPersonalTypeEnum();
             InitMbtiSingleTypeEnum();
-
             InitNewsStatusEnum();
             InitSexEnum();
+            InitMentorApprovalStatusEnum();
             return Ok();
 
         }
@@ -90,7 +90,8 @@ namespace TrueCareer.Rpc
             {
                 Id = x.Id,
                 Code = x.Code,
-                Name = x.Name
+                Name = x.Name,
+                Value = x.Value
             }).ToList();
 
             DataContext.MbtiPersonalType.BulkSynchronize(MbtiPersonalTypes);
