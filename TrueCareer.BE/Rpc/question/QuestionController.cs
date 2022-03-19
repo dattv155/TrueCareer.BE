@@ -149,7 +149,7 @@ namespace TrueCareer.Rpc.question
                 return BadRequest(Questions.Where(x => !x.IsValidated));
             return true;
         }
-        
+
         [Route(QuestionRoute.Import), HttpPost]
         public async Task<ActionResult> Import(IFormFile file)
         {

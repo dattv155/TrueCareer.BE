@@ -18,6 +18,7 @@ using TrueCareer.Services.MTopic;
 using TrueCareer.Services.MAppUser;
 using TrueCareer.Services.MNews;
 using TrueCareer.Services.MMentorReview;
+using TrueCareer.Service;
 
 namespace TrueCareer.Rpc.information
 {
@@ -30,6 +31,7 @@ namespace TrueCareer.Rpc.information
         private INewsService NewsService;
         private IMentorReviewService MentorReviewService;
         private ICurrentContext CurrentContext;
+        private IFileService FileService;
         public InformationController(
             IInformationTypeService InformationTypeService,
             ITopicService TopicService,
@@ -37,7 +39,8 @@ namespace TrueCareer.Rpc.information
             IInformationService InformationService,
             INewsService NewsService,
             IMentorReviewService MentorReviewService,
-            ICurrentContext CurrentContext
+            ICurrentContext CurrentContext,
+            IFileService FileService
         )
         {
             this.InformationTypeService = InformationTypeService;
@@ -47,6 +50,7 @@ namespace TrueCareer.Rpc.information
             this.NewsService = NewsService;
             this.MentorReviewService = MentorReviewService;
             this.CurrentContext = CurrentContext;
+            this.FileService = FileService;
         }
 
         [Route(InformationRoute.List), HttpPost]
@@ -161,7 +165,54 @@ namespace TrueCareer.Rpc.information
                 .Select(c => new Information_NewsDTO(c)).ToList();
             return Information_NewsDTOs;
         }
+        [Route(InformationRoute.CountReview), HttpPost]
+        public async Task<ActionResult<int>> CountReview([FromBody] Information_MentorReviewFilterDTO Information_MentorReviewFilterDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
 
+            MentorReviewFilter MentorReviewFilter = ConvertMentorReviewFilterDTOToFilterEntity(Information_MentorReviewFilterDTO);
+            MentorReviewFilter = await MentorReviewService.ToFilter(MentorReviewFilter);
+            int count = await MentorReviewService.Count(MentorReviewFilter);
+            return count;
+        }
+        [Route(InformationRoute.ListReview), HttpPost]
+        public async Task<ActionResult<List<Information_MentorReviewDTO>>> ListReview([FromBody] Information_MentorReviewFilterDTO Information_MentorReviewFilterDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            MentorReviewFilter MentorReviewFilter = ConvertMentorReviewFilterDTOToFilterEntity(Information_MentorReviewFilterDTO);
+            MentorReviewFilter = await MentorReviewService.ToFilter(MentorReviewFilter);
+            List<MentorReview> MentorReviews = await MentorReviewService.List(MentorReviewFilter);
+            List<Information_MentorReviewDTO> Information_MentorReviewDTOs = MentorReviews
+                .Select(c => new Information_MentorReviewDTO(c)).ToList();
+            return Information_MentorReviewDTOs;
+        }
+        [Route(InformationRoute.UploadFile), HttpPost]
+        public async Task<ActionResult<List<Information_FileDTO>>> MultiUpload([FromForm] List<IFormFile> files)
+        {
+            List<Information_FileDTO> Information_FileDTOs = new List<Information_FileDTO>();
+            foreach (IFormFile file in files)
+            {
+                Entities.File File = new Entities.File();
+                string time = DateTime.Now.ToString("yyyyMMddhhmmss");
+                File.Path = $"/rpc/truecareer/file/download/information/{time}/{file.FileName}";
+                MemoryStream memoryStream = new MemoryStream();
+                file.CopyTo(memoryStream);
+                File.Content = memoryStream.ToArray();
+                File.Size = File.Content.Length;
+                File.OriginalName = file.FileName;
+                File = await FileService.Create(File);
+                Information_FileDTO Information_FileDTO = new Information_FileDTO(File);
+                Information_FileDTOs.Add(Information_FileDTO);
+            }
+            return Information_FileDTOs;
+        }
+
+        [Route(InformationRoute.UploadImage), HttpPost]
+
+        [Route(InformationRoute.GetTopic), HttpPost]
 
         private async Task<bool> HasPermission(long Id)
         {
@@ -266,6 +317,24 @@ namespace TrueCareer.Rpc.information
             NewsFilter.CreatedAt = Information_NewsFilterDTO.CreatedAt;
             NewsFilter.UpdatedAt = Information_NewsFilterDTO.UpdatedAt;
             return NewsFilter;
+        }
+        private MentorReviewFilter ConvertMentorReviewFilterDTOToFilterEntity(Information_MentorReviewFilterDTO Information_MentorReviewFilterDTO)
+        {
+            MentorReviewFilter MentorReviewFilter = new MentorReviewFilter();
+            MentorReviewFilter.Selects = MentorReviewSelect.ALL;
+            MentorReviewFilter.Skip = Information_MentorReviewFilterDTO.Skip;
+            MentorReviewFilter.Take = Information_MentorReviewFilterDTO.Take;
+            MentorReviewFilter.OrderBy = Information_MentorReviewFilterDTO.OrderBy;
+            MentorReviewFilter.OrderType = Information_MentorReviewFilterDTO.OrderType;
+
+            MentorReviewFilter.Id = Information_MentorReviewFilterDTO.Id;
+            MentorReviewFilter.Description = Information_MentorReviewFilterDTO.Description;
+            MentorReviewFilter.ContentReview = Information_MentorReviewFilterDTO.ContentReview;
+            MentorReviewFilter.Star = Information_MentorReviewFilterDTO.Star;
+            MentorReviewFilter.MentorId = Information_MentorReviewFilterDTO.MentorId;
+            MentorReviewFilter.CreatorId = Information_MentorReviewFilterDTO.CreatorId;
+            MentorReviewFilter.Time = Information_MentorReviewFilterDTO.Time;
+            return MentorReviewFilter;
         }
     }
 }
