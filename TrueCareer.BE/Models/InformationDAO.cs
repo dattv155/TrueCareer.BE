@@ -12,7 +12,7 @@ namespace TrueCareer.BE.Models
         public DateTime StartAt { get; set; }
         public string Role { get; set; }
         public string Image { get; set; }
-        public long TopicId { get; set; }
+        public long? TopicId { get; set; }
         public long UserId { get; set; }
         public DateTime EndAt { get; set; }
         public DateTime CreatedAt { get; set; }

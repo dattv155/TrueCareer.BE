@@ -32,6 +32,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<MbtiPersonalTypeMajorMappingDAO> MbtiPersonalTypeMajorMapping { get; set; }
         public virtual DbSet<MbtiResultDAO> MbtiResult { get; set; }
         public virtual DbSet<MbtiSingleTypeDAO> MbtiSingleType { get; set; }
+        public virtual DbSet<MentorApprovalStatusDAO> MentorApprovalStatus { get; set; }
         public virtual DbSet<MentorConnectionDAO> MentorConnection { get; set; }
         public virtual DbSet<MentorMenteeConnectionDAO> MentorMenteeConnection { get; set; }
         public virtual DbSet<MentorReviewDAO> MentorReview { get; set; }
@@ -347,8 +348,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<InformationDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.DeletedAt).HasColumnType("datetime");
@@ -384,7 +383,6 @@ namespace TrueCareer.BE.Models
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.Information)
                     .HasForeignKey(d => d.TopicId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Information_Topic");
 
                 entity.HasOne(d => d.User)
@@ -541,6 +539,19 @@ namespace TrueCareer.BE.Models
             modelBuilder.Entity<MbtiSingleTypeDAO>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<MentorApprovalStatusDAO>(entity =>
+            {
+                entity.HasNoKey();
 
                 entity.Property(e => e.Code)
                     .IsRequired()

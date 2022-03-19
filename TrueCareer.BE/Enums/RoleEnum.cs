@@ -8,10 +8,12 @@ namespace TrueCareer.Enums
 {
     public class RoleEnum
     {
-        public static GenericEnum A1 = new GenericEnum { Id = 1, Code = "", Name = "" };
+        public static GenericEnum ADMIN = new GenericEnum { Id = 1, Code = "ADMIN", Name = "Admin" };
+        public static GenericEnum MENTOR = new GenericEnum { Id = 2, Code = "MENTOR", Name = "Mentor" };
+        public static GenericEnum MENTEE = new GenericEnum { Id = 3, Code = "MENTEE", Name = "Mentee" };
         public static List<GenericEnum> RoleEnumList = new List<GenericEnum>
         {
-            A1,
+            ADMIN, MENTOR, MENTEE
         };
     }
 }
