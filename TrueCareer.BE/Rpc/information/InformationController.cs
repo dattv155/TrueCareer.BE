@@ -16,6 +16,8 @@ using TrueCareer.Services.MInformation;
 using TrueCareer.Services.MInformationType;
 using TrueCareer.Services.MTopic;
 using TrueCareer.Services.MAppUser;
+using TrueCareer.Services.MNews;
+using TrueCareer.Services.MMentorReview;
 
 namespace TrueCareer.Rpc.information
 {
@@ -25,12 +27,16 @@ namespace TrueCareer.Rpc.information
         private ITopicService TopicService;
         private IAppUserService AppUserService;
         private IInformationService InformationService;
+        private INewsService NewsService;
+        private IMentorReviewService MentorReviewService;
         private ICurrentContext CurrentContext;
         public InformationController(
             IInformationTypeService InformationTypeService,
             ITopicService TopicService,
             IAppUserService AppUserService,
             IInformationService InformationService,
+            INewsService NewsService,
+            IMentorReviewService MentorReviewService,
             ICurrentContext CurrentContext
         )
         {
@@ -38,19 +44,9 @@ namespace TrueCareer.Rpc.information
             this.TopicService = TopicService;
             this.AppUserService = AppUserService;
             this.InformationService = InformationService;
+            this.NewsService = NewsService;
+            this.MentorReviewService = MentorReviewService;
             this.CurrentContext = CurrentContext;
-        }
-
-        [Route(InformationRoute.Count), HttpPost]
-        public async Task<ActionResult<int>> Count([FromBody] Information_InformationFilterDTO Information_InformationFilterDTO)
-        {
-            if (!ModelState.IsValid)
-                throw new BindException(ModelState);
-
-            InformationFilter InformationFilter = ConvertFilterDTOToFilterEntity(Information_InformationFilterDTO);
-            InformationFilter = await InformationService.ToFilter(InformationFilter);
-            int count = await InformationService.Count(InformationFilter);
-            return count;
         }
 
         [Route(InformationRoute.List), HttpPost]
@@ -73,9 +69,6 @@ namespace TrueCareer.Rpc.information
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
 
-            if (!await HasPermission(Information_InformationDTO.Id))
-                return Forbid();
-
             Information Information = await InformationService.Get(Information_InformationDTO.Id);
             return new Information_InformationDTO(Information);
         }
@@ -85,9 +78,6 @@ namespace TrueCareer.Rpc.information
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
-            if (!await HasPermission(Information_InformationDTO.Id))
-                return Forbid();
 
             Information Information = ConvertDTOToEntity(Information_InformationDTO);
             Information = await InformationService.Create(Information);
@@ -103,9 +93,6 @@ namespace TrueCareer.Rpc.information
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
-            if (!await HasPermission(Information_InformationDTO.Id))
-                return Forbid();
 
             Information Information = ConvertDTOToEntity(Information_InformationDTO);
             Information = await InformationService.Update(Information);
@@ -121,9 +108,6 @@ namespace TrueCareer.Rpc.information
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-
-            if (!await HasPermission(Information_InformationDTO.Id))
-                return Forbid();
 
             Information Information = ConvertDTOToEntity(Information_InformationDTO);
             Information = await InformationService.Delete(Information);
@@ -153,26 +137,31 @@ namespace TrueCareer.Rpc.information
                 return BadRequest(Information.Where(x => !x.IsValidated));
             return true;
         }
-        
-      
-
-        [Route(InformationRoute.ExportTemplate), HttpPost]
-        public async Task<ActionResult> ExportTemplate([FromBody] Information_InformationFilterDTO Information_InformationFilterDTO)
+        [Route(InformationRoute.CountNews), HttpPost]
+        public async Task<ActionResult<int>> CountNews([FromBody] Information_NewsFilterDTO Information_NewsFilterDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
-            string path = "Templates/Information_Template.xlsx";
-            byte[] arr = System.IO.File.ReadAllBytes(path);
-            MemoryStream input = new MemoryStream(arr);
-            MemoryStream output = new MemoryStream();
-            dynamic Data = new ExpandoObject();
-            using (var document = StaticParams.DocumentFactory.Open(input, output, "xlsx"))
-            {
-                document.Process(Data);
-            };
-            return File(output.ToArray(), "application/octet-stream", "Information.xlsx");
+
+            NewsFilter NewsFilter = ConvertNewsFilterDTOToFilterEntity(Information_NewsFilterDTO);
+            NewsFilter = await NewsService.ToFilter(NewsFilter);
+            int count = await NewsService.Count(NewsFilter);
+            return count;
         }
+        [Route(InformationRoute.ListNews), HttpPost]
+        public async Task<ActionResult<List<Information_NewsDTO>>> ListNews([FromBody] Information_NewsFilterDTO Information_NewsFilterDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            NewsFilter NewsFilter = ConvertNewsFilterDTOToFilterEntity(Information_NewsFilterDTO);
+            NewsFilter = await NewsService.ToFilter(NewsFilter);
+            List<News> News = await NewsService.List(NewsFilter);
+            List<Information_NewsDTO> Information_NewsDTOs = News
+                .Select(c => new Information_NewsDTO(c)).ToList();
+            return Information_NewsDTOs;
+        }
+
 
         private async Task<bool> HasPermission(long Id)
         {
@@ -258,6 +247,25 @@ namespace TrueCareer.Rpc.information
             InformationFilter.CreatedAt = Information_InformationFilterDTO.CreatedAt;
             InformationFilter.UpdatedAt = Information_InformationFilterDTO.UpdatedAt;
             return InformationFilter;
+        }
+        private NewsFilter ConvertNewsFilterDTOToFilterEntity(Information_NewsFilterDTO Information_NewsFilterDTO)
+        {
+            NewsFilter NewsFilter = new NewsFilter();
+            NewsFilter.Selects = NewsSelect.ALL;
+            NewsFilter.Skip = Information_NewsFilterDTO.Skip;
+            NewsFilter.Take = Information_NewsFilterDTO.Take;
+            NewsFilter.OrderBy = Information_NewsFilterDTO.OrderBy;
+            NewsFilter.OrderType = Information_NewsFilterDTO.OrderType;
+
+            NewsFilter.Id = Information_NewsFilterDTO.Id;
+            NewsFilter.CreatorId = Information_NewsFilterDTO.CreatorId;
+            NewsFilter.NewsContent = Information_NewsFilterDTO.NewsContent;
+            NewsFilter.LikeCounting = Information_NewsFilterDTO.LikeCounting;
+            NewsFilter.WatchCounting = Information_NewsFilterDTO.WatchCounting;
+            NewsFilter.NewsStatusId = Information_NewsFilterDTO.NewsStatusId;
+            NewsFilter.CreatedAt = Information_NewsFilterDTO.CreatedAt;
+            NewsFilter.UpdatedAt = Information_NewsFilterDTO.UpdatedAt;
+            return NewsFilter;
         }
     }
 }

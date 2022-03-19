@@ -160,8 +160,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<ChoiceDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.ChoiceContent)
                     .IsRequired()
                     .HasMaxLength(4000);
@@ -477,8 +475,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MajorDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasMaxLength(4000);
@@ -521,8 +517,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MbtiResultDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.MbtiPersonalType)
                     .WithMany(p => p.MbtiResults)
                     .HasForeignKey(d => d.MbtiPersonalTypeId)
@@ -729,8 +723,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<QuestionDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description).HasMaxLength(4000);
 
                 entity.Property(e => e.QuestionContent)
@@ -761,8 +753,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<SchoolDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description).IsRequired();
 
                 entity.Property(e => e.Name)
@@ -859,8 +849,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<TopicDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Cost)
                     .HasColumnType("decimal(20, 4)")
                     .HasDefaultValueSql("((0.00))");
