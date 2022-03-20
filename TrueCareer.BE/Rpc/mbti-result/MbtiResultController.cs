@@ -12,6 +12,7 @@ using System.IO;
 using OfficeOpenXml;
 using System.Dynamic;
 using TrueCareer.Entities;
+using TrueCareer.Enums;
 using TrueCareer.Services.MMbtiResult;
 using TrueCareer.Services.MMbtiPersonalType;
 using TrueCareer.Services.MAppUser;
@@ -148,6 +149,82 @@ namespace TrueCareer.Rpc.mbti_result
             if (MbtiResults.Any(x => !x.IsValidated))
                 return BadRequest(MbtiResults.Where(x => !x.IsValidated));
             return true;
+        }
+        
+        [Route(MbtiResultRoute.CalcResult), HttpPost]
+        public async Task<ActionResult<MbtiResult_MbtiResultDTO>> CalcResult([FromBody] List<long> SingleTypeIds)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            double E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, J = 0, P = 0;
+            string result = "";
+
+            foreach (var Id in SingleTypeIds)
+            {
+                if (Id == MbtiSingleTypeEnum.Extroverts.Id)
+                {
+                    E++;
+                } else if (Id == MbtiSingleTypeEnum.Introverts.Id)
+                {
+                    I++;
+                } else if (Id == MbtiSingleTypeEnum.Sensors.Id)
+                {
+                    S++;
+                } else if (Id == MbtiSingleTypeEnum.Intuitives.Id)
+                {
+                    N++;
+                } else if (Id == MbtiSingleTypeEnum.Thinkers.Id)
+                {
+                    T++;
+                } else if (Id == MbtiSingleTypeEnum.Feelers.Id)
+                {
+                    F++;
+                } else if (Id == MbtiSingleTypeEnum.Judgers.Id)
+                {
+                    J++;
+                } else if (Id == MbtiSingleTypeEnum.Perceivers.Id)
+                {
+                    P++;
+                }
+            }
+
+            double EPercent, IPercent, SPercent, NPercent, TPercent, FPercent, JPercent, PPercent;
+            EPercent = Math.Floor(E / 10 * 100);
+            IPercent = Math.Floor(I / 10 * 100);
+            SPercent = Math.Floor(S / 20 * 100);
+            NPercent = Math.Floor(N / 20 * 100);
+            TPercent = Math.Floor(T / 20 * 100);
+            FPercent = Math.Floor(F / 20 * 100);
+            JPercent = Math.Floor(J / 20 * 100);
+            PPercent = Math.Floor(P / 20 * 100);
+            
+            result += (EPercent >= IPercent) ? "E" : "I";
+            result += (SPercent >= NPercent) ? "S" : "N";
+            result += (TPercent >= FPercent) ? "T" : "F";
+            result += (JPercent >= PPercent) ? "J" : "P";
+            
+            List<MbtiPersonalType> MbtiPersonalTypes = MbtiPersonalTypeEnum.MbtiPersonalTypeEnumList.Select(x => new MbtiPersonalType
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name,
+                Value = x.Value
+            }).ToList();
+            
+            MbtiPersonalType MbtiPersonalType = MbtiPersonalTypes.Where(x => x.Code.ToString() == result).FirstOrDefault();
+            MbtiResult MbtiResult = new MbtiResult();
+
+            MbtiResult.UserId = CurrentContext.UserId;
+            MbtiResult.MbtiPersonalTypeId = MbtiPersonalType == null ? 0 : MbtiPersonalType.Id;
+            MbtiResult.MbtiPersonalType = MbtiPersonalType;
+            
+            MbtiResult = await MbtiResultService.Create(MbtiResult);
+            MbtiResult_MbtiResultDTO MbtiResult_MbtiResultDTO = new MbtiResult_MbtiResultDTO(MbtiResult);
+            if (MbtiResult.IsValidated)
+                return MbtiResult_MbtiResultDTO;
+            else
+                return BadRequest(MbtiResult_MbtiResultDTO);
         }
         
         [Route(MbtiResultRoute.Import), HttpPost]
