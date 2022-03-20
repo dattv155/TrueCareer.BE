@@ -74,6 +74,10 @@ namespace TrueCareer.Rpc.file
         {
             List<string> paths = new List<string>();
             paths.Add("");
+            paths.Add("rpc");
+            paths.Add("truecareer");
+            paths.Add("file");
+            paths.Add("download");
             if (!string.IsNullOrWhiteSpace(path01)) paths.Add(path01.ToLower());
             if (!string.IsNullOrWhiteSpace(path02)) paths.Add(path02.ToLower());
             if (!string.IsNullOrWhiteSpace(path03)) paths.Add(path03.ToLower());
