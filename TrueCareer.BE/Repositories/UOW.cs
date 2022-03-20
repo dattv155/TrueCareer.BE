@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TrueCareer.BE.Models;
 using TrueCareer.Repositories;
 using System;
+using MongoDB.Driver;
 
 namespace TrueCareer.Repositories
 {
@@ -43,12 +44,13 @@ namespace TrueCareer.Repositories
         ISchoolRepository SchoolRepository { get; }
         ISexRepository SexRepository { get; }
         ITopicRepository TopicRepository { get; }
+        IFileRepository FileRepository { get; }
     }
 
     public class UOW : IUOW
     {
         private DataContext DataContext;
-
+        protected IMongoClient MongoClient = null;
         public IActiveTimeRepository ActiveTimeRepository { get; private set; }
         public IAppUserRepository AppUserRepository { get; private set; }
         public IChoiceRepository ChoiceRepository { get; private set; }
@@ -78,11 +80,12 @@ namespace TrueCareer.Repositories
         public ISchoolRepository SchoolRepository { get; private set; }
         public ISexRepository SexRepository { get; private set; }
         public ITopicRepository TopicRepository { get; private set; }
+        public IFileRepository FileRepository { get; private set; }
 
-        public UOW(DataContext DataContext)
+        public UOW(DataContext DataContext, IConfiguration Configuration)
         {
             this.DataContext = DataContext;
-
+            MongoClient = new MongoClient(Configuration["MongoConnection:ConnectionString"]);
             ActiveTimeRepository = new ActiveTimeRepository(DataContext);
             AppUserRepository = new AppUserRepository(DataContext);
             ChoiceRepository = new ChoiceRepository(DataContext);
@@ -112,6 +115,7 @@ namespace TrueCareer.Repositories
             SchoolRepository = new SchoolRepository(DataContext);
             SexRepository = new SexRepository(DataContext);
             TopicRepository = new TopicRepository(DataContext);
+            FileRepository = new FileRepository(DataContext, MongoClient);
         }
         public async Task Begin()
         {

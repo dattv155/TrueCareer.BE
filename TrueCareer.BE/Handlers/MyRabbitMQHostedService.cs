@@ -50,7 +50,7 @@ namespace TrueCareer.Handlers
                 sqlOptions.AddTempTableSupport();
             });
             DataContext context = new DataContext(optionsBuilder.Options);
-            IUOW UOW = new UOW(context);
+            IUOW UOW = new UOW(context, Configuration);
             ICurrentContext CurrentContext = new CurrentContext
             {
                 UserId = 0,

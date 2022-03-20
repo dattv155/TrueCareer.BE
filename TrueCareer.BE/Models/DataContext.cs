@@ -19,6 +19,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<CounterDAO> Counter { get; set; }
         public virtual DbSet<FavouriteMentorDAO> FavouriteMentor { get; set; }
         public virtual DbSet<FavouriteNewsDAO> FavouriteNews { get; set; }
+        public virtual DbSet<FileDAO> File { get; set; }
         public virtual DbSet<HashDAO> Hash { get; set; }
         public virtual DbSet<ImageDAO> Image { get; set; }
         public virtual DbSet<InformationDAO> Information { get; set; }
@@ -308,6 +309,25 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FavouriteNews_AppUser");
+            });
+
+            modelBuilder.Entity<FileDAO>(entity =>
+            {
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.GridId).HasMaxLength(500);
+
+                entity.Property(e => e.Key).HasMaxLength(500);
+
+                entity.Property(e => e.MimeType).HasMaxLength(500);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.OriginalName).HasMaxLength(500);
+
+                entity.Property(e => e.Path).HasMaxLength(4000);
             });
 
             modelBuilder.Entity<HashDAO>(entity =>
