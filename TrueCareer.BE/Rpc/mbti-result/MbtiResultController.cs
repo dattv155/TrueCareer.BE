@@ -203,16 +203,17 @@ namespace TrueCareer.Rpc.mbti_result
             result += (SPercent >= NPercent) ? "S" : "N";
             result += (TPercent >= FPercent) ? "T" : "F";
             result += (JPercent >= PPercent) ? "J" : "P";
-            
-            List<MbtiPersonalType> MbtiPersonalTypes = MbtiPersonalTypeEnum.MbtiPersonalTypeEnumList.Select(x => new MbtiPersonalType
+
+            MbtiPersonalTypeFilter MbtiPersonalTypeFilter = new MbtiPersonalTypeFilter
             {
-                Id = x.Id,
-                Code = x.Code,
-                Name = x.Name,
-                Value = x.Value
-            }).ToList();
+                Skip = 0,
+                Take = int.MaxValue,
+                Selects = MbtiPersonalTypeSelect.ALL
+            };
+            List<MbtiPersonalType> MbtiPersonalTypes = await MbtiPersonalTypeService.List(MbtiPersonalTypeFilter);
             
             MbtiPersonalType MbtiPersonalType = MbtiPersonalTypes.Where(x => x.Code.ToString() == result).FirstOrDefault();
+
             MbtiResult MbtiResult = new MbtiResult();
 
             MbtiResult.UserId = CurrentContext.UserId;
@@ -461,6 +462,7 @@ namespace TrueCareer.Rpc.mbti_result
                 Id = MbtiResult_MbtiResultDTO.MbtiPersonalType.Id,
                 Name = MbtiResult_MbtiResultDTO.MbtiPersonalType.Name,
                 Code = MbtiResult_MbtiResultDTO.MbtiPersonalType.Code,
+                Value = MbtiResult_MbtiResultDTO.MbtiPersonalType.Value
             };
             MbtiResult.User = MbtiResult_MbtiResultDTO.User == null ? null : new AppUser
             {

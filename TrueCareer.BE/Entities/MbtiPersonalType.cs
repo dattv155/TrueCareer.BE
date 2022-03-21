@@ -31,6 +31,7 @@ namespace TrueCareer.Entities
         public IdFilter Id { get; set; }
         public StringFilter Name { get; set; }
         public StringFilter Code { get; set; }
+        public StringFilter Value { get; set; }
         public List<MbtiPersonalTypeFilter> OrFilter { get; set; }
         public MbtiPersonalTypeOrder OrderBy {get; set;}
         public MbtiPersonalTypeSelect Selects {get; set;}
@@ -51,5 +52,6 @@ namespace TrueCareer.Entities
         Id = E._0,
         Name = E._1,
         Code = E._2,
+        Value = E._3,
     }
 }

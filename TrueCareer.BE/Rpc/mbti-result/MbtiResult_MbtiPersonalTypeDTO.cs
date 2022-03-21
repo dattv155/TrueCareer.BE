@@ -16,6 +16,9 @@ namespace TrueCareer.Rpc.mbti_result
         
         public string Code { get; set; }
         
+        public string Value { get; set; }
+        
+        
         public MbtiResult_MbtiPersonalTypeDTO() {}
         public MbtiResult_MbtiPersonalTypeDTO(MbtiPersonalType MbtiPersonalType)
         {
@@ -25,6 +28,8 @@ namespace TrueCareer.Rpc.mbti_result
             this.Name = MbtiPersonalType.Name;
             
             this.Code = MbtiPersonalType.Code;
+            
+            this.Value = MbtiPersonalType.Value;
             
             this.Informations = MbtiPersonalType.Informations;
             this.Warnings = MbtiPersonalType.Warnings;
@@ -40,6 +45,8 @@ namespace TrueCareer.Rpc.mbti_result
         public StringFilter Name { get; set; }
         
         public StringFilter Code { get; set; }
+        
+        public StringFilter Value { get; set; }
         
         public MbtiPersonalTypeOrder OrderBy { get; set; }
     }

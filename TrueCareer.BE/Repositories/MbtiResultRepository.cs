@@ -110,6 +110,7 @@ namespace TrueCareer.Repositories
                     Id = q.MbtiPersonalType.Id,
                     Name = q.MbtiPersonalType.Name,
                     Code = q.MbtiPersonalType.Code,
+                    Value = q.MbtiPersonalType.Value,
                 } : null,
                 User = filter.Selects.Contains(MbtiResultSelect.User) && q.User != null ? new AppUser
                 {
@@ -171,6 +172,7 @@ namespace TrueCareer.Repositories
                     Id = x.MbtiPersonalType.Id,
                     Name = x.MbtiPersonalType.Name,
                     Code = x.MbtiPersonalType.Code,
+                    Value = x.MbtiPersonalType.Value,
                 },
                 User = x.User == null ? null : new AppUser
                 {
@@ -205,6 +207,7 @@ namespace TrueCareer.Repositories
                     Id = x.MbtiPersonalType.Id,
                     Name = x.MbtiPersonalType.Name,
                     Code = x.MbtiPersonalType.Code,
+                    Value = x.MbtiPersonalType.Value
                 },
                 User = x.User == null ? null : new AppUser
                 {

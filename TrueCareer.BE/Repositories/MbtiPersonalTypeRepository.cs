@@ -36,6 +36,7 @@ namespace TrueCareer.Repositories
             query = query.Where(q => q.Id, filter.Id);
             query = query.Where(q => q.Name, filter.Name);
             query = query.Where(q => q.Code, filter.Code);
+            query = query.Where(q => q.Value, filter.Value);
             return query;
         }
 
@@ -50,6 +51,7 @@ namespace TrueCareer.Repositories
                 queryable = queryable.Where(q => q.Id, MbtiPersonalTypeFilter.Id);
                 queryable = queryable.Where(q => q.Name, MbtiPersonalTypeFilter.Name);
                 queryable = queryable.Where(q => q.Code, MbtiPersonalTypeFilter.Code);
+                queryable = queryable.Where(q => q.Value, MbtiPersonalTypeFilter.Value);
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
@@ -99,6 +101,7 @@ namespace TrueCareer.Repositories
                 Id = filter.Selects.Contains(MbtiPersonalTypeSelect.Id) ? q.Id : default(long),
                 Name = filter.Selects.Contains(MbtiPersonalTypeSelect.Name) ? q.Name : default(string),
                 Code = filter.Selects.Contains(MbtiPersonalTypeSelect.Code) ? q.Code : default(string),
+                Value = filter.Selects.Contains(MbtiPersonalTypeSelect.Value) ? q.Value : default(string),
             }).ToListAsync();
             return MbtiPersonalTypes;
         }
@@ -141,6 +144,7 @@ namespace TrueCareer.Repositories
                 Id = x.Id,
                 Name = x.Name,
                 Code = x.Code,
+                Value = x.Value
             }).ToListAsync();
             
 
