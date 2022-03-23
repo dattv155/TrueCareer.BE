@@ -3,34 +3,32 @@ using System.Collections.Generic;
 
 namespace TrueCareer.BE.Models
 {
-    public partial class ConversationDAO
+    public partial class GlobalUserDAO
     {
-        public ConversationDAO()
+        public GlobalUserDAO()
         {
             ConversationMessages = new HashSet<ConversationMessageDAO>();
             ConversationParticipants = new HashSet<ConversationParticipantDAO>();
             ConversationReadHistories = new HashSet<ConversationReadHistoryDAO>();
+            Conversations = new HashSet<ConversationDAO>();
+            FirebaseTokens = new HashSet<FirebaseTokenDAO>();
         }
 
         public long Id { get; set; }
-        public long ConversationTypeId { get; set; }
-        public long? ConversationConfigurationId { get; set; }
-        public long? FacebookConfigurationId { get; set; }
-        public string Name { get; set; }
+        public long GlobalUserTypeId { get; set; }
+        public string Username { get; set; }
+        public string DisplayName { get; set; }
         public string Avatar { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public Guid RowId { get; set; }
-        public string Hash { get; set; }
-        public long? LatestGlobalUserId { get; set; }
-        public string LatestContent { get; set; }
 
-        public virtual ConversationConfigurationDAO ConversationConfiguration { get; set; }
-        public virtual ConversationTypeDAO ConversationType { get; set; }
-        public virtual GlobalUserDAO LatestGlobalUser { get; set; }
+        public virtual GlobalUserTypeDAO GlobalUserType { get; set; }
         public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
         public virtual ICollection<ConversationParticipantDAO> ConversationParticipants { get; set; }
         public virtual ICollection<ConversationReadHistoryDAO> ConversationReadHistories { get; set; }
+        public virtual ICollection<ConversationDAO> Conversations { get; set; }
+        public virtual ICollection<FirebaseTokenDAO> FirebaseTokens { get; set; }
     }
 }

@@ -2,17 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using TrueSight.Common;
 
 namespace TrueCareer.Entities
 {
-    public class MentorApprovalStatus : DataEntity, IEquatable<MentorApprovalStatus>
+    public class UnitOfTime : DataEntity, IEquatable<UnitOfTime>
     {
         public long Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
 
-        public bool Equals(MentorApprovalStatus other)
+        public long? StartAt { get; set; }
+        public long? EndAt { get; set; }
+
+        public bool Equals(UnitOfTime other)
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
@@ -24,18 +28,18 @@ namespace TrueCareer.Entities
         }
     }
 
-    public class MentorApprovalStatusFilter : FilterEntity
+    public class UnitOfTimeFilter : FilterEntity
     {
         public IdFilter Id { get; set; }
         public StringFilter Code { get; set; }
         public StringFilter Name { get; set; }
-        public List<MentorApprovalStatusFilter> OrFilter { get; set; }
-        public MentorApprovalStatusOrder OrderBy { get; set; }
-        public MentorApprovalStatusSelect Selects { get; set; }
+        public List<UnitOfTimeFilter> OrFilter { get; set; }
+        public UnitOfTimeOrder OrderBy { get; set; }
+        public UnitOfTimeSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum MentorApprovalStatusOrder
+    public enum UnitOfTimeOrder
     {
         Id = 0,
         Code = 1,
@@ -43,7 +47,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum MentorApprovalStatusSelect : long
+    public enum UnitOfTimeSelect : long
     {
         ALL = E.ALL,
         Id = E._0,
