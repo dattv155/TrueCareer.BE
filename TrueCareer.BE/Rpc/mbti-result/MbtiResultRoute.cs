@@ -35,6 +35,8 @@ namespace TrueCareer.Rpc.mbti_result
         public const string ExportTemplate = Default + "/export-template";
         public const string BulkDelete = Default + "/bulk-delete";
         
+        public const string CalcResult = Default + "/calc-result";
+        
         public const string FilterListMbtiPersonalType = Default + "/filter-list-mbti-personal-type";
         public const string FilterListAppUser = Default + "/filter-list-app-user";
 

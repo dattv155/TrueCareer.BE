@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using OfficeOpenXml;
 using System.Dynamic;
+using TrueCareer.BE.Models;
 using TrueCareer.Entities;
+using TrueCareer.Enums;
 using TrueCareer.Services.MChoice;
 using TrueCareer.Services.MMbtiSingleType;
 using TrueCareer.Services.MQuestion;
@@ -155,13 +157,13 @@ namespace TrueCareer.Rpc.choice
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            MbtiSingleTypeFilter MbtiSingleTypeFilter = new MbtiSingleTypeFilter
+            List<MbtiSingleType> MbtiSingleTypes = MbtiSingleTypeEnum.MbtiSingleTypeEnumList.Select(x => new MbtiSingleType
             {
-                Skip = 0,
-                Take = int.MaxValue,
-                Selects = MbtiSingleTypeSelect.ALL
-            };
-            List<MbtiSingleType> MbtiSingleTypes = await MbtiSingleTypeService.List(MbtiSingleTypeFilter);
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name
+            }).ToList();
+            
             QuestionFilter QuestionFilter = new QuestionFilter
             {
                 Skip = 0,
