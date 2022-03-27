@@ -21,8 +21,6 @@ namespace TrueCareer.Repositories
         ICommentRepository CommentRepository { get; }
         IConnectionStatusRepository ConnectionStatusRepository { get; }
         IConnectionTypeRepository ConnectionTypeRepository { get; }
-        IConversationRepository ConversationRepository { get; }
-        IConversationParticipantRepository ConversationParticipantRepository { get; }
         IFavouriteMentorRepository FavouriteMentorRepository { get; }
         IFavouriteNewsRepository FavouriteNewsRepository { get; }
         IImageRepository ImageRepository { get; }
@@ -35,7 +33,6 @@ namespace TrueCareer.Repositories
         IMentorConnectionRepository MentorConnectionRepository { get; }
         IMentorMenteeConnectionRepository MentorMenteeConnectionRepository { get; }
         IMentorReviewRepository MentorReviewRepository { get; }
-        IMessageRepository MessageRepository { get; }
         INewsRepository NewsRepository { get; }
         INewsStatusRepository NewsStatusRepository { get; }
         INotificationRepository NotificationRepository { get; }
@@ -57,8 +54,6 @@ namespace TrueCareer.Repositories
         public ICommentRepository CommentRepository { get; private set; }
         public IConnectionStatusRepository ConnectionStatusRepository { get; private set; }
         public IConnectionTypeRepository ConnectionTypeRepository { get; private set; }
-        public IConversationRepository ConversationRepository { get; private set; }
-        public IConversationParticipantRepository ConversationParticipantRepository { get; private set; }
         public IFavouriteMentorRepository FavouriteMentorRepository { get; private set; }
         public IFavouriteNewsRepository FavouriteNewsRepository { get; private set; }
         public IImageRepository ImageRepository { get; private set; }
@@ -71,7 +66,6 @@ namespace TrueCareer.Repositories
         public IMentorConnectionRepository MentorConnectionRepository { get; private set; }
         public IMentorMenteeConnectionRepository MentorMenteeConnectionRepository { get; private set; }
         public IMentorReviewRepository MentorReviewRepository { get; private set; }
-        public IMessageRepository MessageRepository { get; private set; }
         public INewsRepository NewsRepository { get; private set; }
         public INewsStatusRepository NewsStatusRepository { get; private set; }
         public INotificationRepository NotificationRepository { get; private set; }
@@ -92,8 +86,6 @@ namespace TrueCareer.Repositories
             CommentRepository = new CommentRepository(DataContext);
             ConnectionStatusRepository = new ConnectionStatusRepository(DataContext);
             ConnectionTypeRepository = new ConnectionTypeRepository(DataContext);
-            ConversationRepository = new ConversationRepository(DataContext);
-            ConversationParticipantRepository = new ConversationParticipantRepository(DataContext);
             FavouriteMentorRepository = new FavouriteMentorRepository(DataContext);
             FavouriteNewsRepository = new FavouriteNewsRepository(DataContext);
             ImageRepository = new ImageRepository(DataContext);
@@ -106,7 +98,6 @@ namespace TrueCareer.Repositories
             MentorConnectionRepository = new MentorConnectionRepository(DataContext);
             MentorMenteeConnectionRepository = new MentorMenteeConnectionRepository(DataContext);
             MentorReviewRepository = new MentorReviewRepository(DataContext);
-            MessageRepository = new MessageRepository(DataContext);
             NewsRepository = new NewsRepository(DataContext);
             NewsStatusRepository = new NewsStatusRepository(DataContext);
             NotificationRepository = new NotificationRepository(DataContext);

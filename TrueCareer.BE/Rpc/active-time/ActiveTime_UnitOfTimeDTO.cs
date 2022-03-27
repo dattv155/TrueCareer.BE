@@ -15,6 +15,10 @@ namespace TrueCareer.Rpc.active_time
 
         public string Name { get; set; }
 
+        public long? StartAt { get; set; }
+
+        public long? EndAt { get; set; }
+
         public ActiveTime_UnitOfTimeDTO() { }
         public ActiveTime_UnitOfTimeDTO(UnitOfTime UnitOfTime)
         {
@@ -24,6 +28,9 @@ namespace TrueCareer.Rpc.active_time
             this.Code = UnitOfTime.Code;
 
             this.Name = UnitOfTime.Name;
+
+            this.StartAt = UnitOfTime.StartAt;
+            this.EndAt = UnitOfTime.EndAt;
 
             this.Informations = UnitOfTime.Informations;
             this.Warnings = UnitOfTime.Warnings;

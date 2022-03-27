@@ -40,8 +40,8 @@ namespace TrueCareer.Services.MActiveTime
 
         public async Task<bool> Create(ActiveTime ActiveTime)
         {
-            await ValidateStartAt(ActiveTime);
-            await ValidateEndAt(ActiveTime);
+            await ValidateActiveDate(ActiveTime);
+
             await ValidateMentor(ActiveTime);
             return ActiveTime.IsValidated;
         }
@@ -50,8 +50,8 @@ namespace TrueCareer.Services.MActiveTime
         {
             if (await ValidateId(ActiveTime))
             {
-                await ValidateStartAt(ActiveTime);
-                await ValidateEndAt(ActiveTime);
+                await ValidateActiveDate(ActiveTime);
+
                 await ValidateMentor(ActiveTime);
             }
             return ActiveTime.IsValidated;
@@ -95,22 +95,15 @@ namespace TrueCareer.Services.MActiveTime
             return ActiveTime.IsValidated;
         }
 
-        private async Task<bool> ValidateStartAt(ActiveTime ActiveTime)
+        private async Task<bool> ValidateActiveDate(ActiveTime ActiveTime)
         {       
-            if(ActiveTime.StartAt <= new DateTime(2000, 1, 1))
+            if(ActiveTime.ActiveDate <= new DateTime(2000, 1, 1))
             {
-                ActiveTime.AddError(nameof(ActiveTimeValidator), nameof(ActiveTime.StartAt), ActiveTimeMessage.Error.StartAtEmpty, ActiveTimeMessage);
+                ActiveTime.AddError(nameof(ActiveTimeValidator), nameof(ActiveTime.ActiveDate), ActiveTimeMessage.Error.StartAtEmpty, ActiveTimeMessage);
             }
             return true;
         }
-        private async Task<bool> ValidateEndAt(ActiveTime ActiveTime)
-        {       
-            if(ActiveTime.EndAt <= new DateTime(2000, 1, 1))
-            {
-                ActiveTime.AddError(nameof(ActiveTimeValidator), nameof(ActiveTime.EndAt), ActiveTimeMessage.Error.EndAtEmpty, ActiveTimeMessage);
-            }
-            return true;
-        }
+
         private async Task<bool> ValidateMentor(ActiveTime ActiveTime)
         {       
             if(ActiveTime.MentorId == 0)

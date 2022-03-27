@@ -14,6 +14,7 @@ using System.Dynamic;
 using TrueCareer.Entities;
 using TrueCareer.Services.MActiveTime;
 using TrueCareer.Services.MAppUser;
+using TrueCareer.Enums;
 
 namespace TrueCareer.Rpc.active_time
 {
@@ -157,7 +158,18 @@ namespace TrueCareer.Rpc.active_time
                 Take = int.MaxValue,
                 Selects = AppUserSelect.ALL
             };
+            UnitOfTimeFilter UnitOfTimeFilter = new UnitOfTimeFilter { 
+                Skip = 0,
+                Take = int.MaxValue,
+                Selects = UnitOfTimeSelect.ALL
+            };
+
             List<AppUser> Mentors = await AppUserService.List(MentorFilter);
+            List<UnitOfTime> UnitOfTimes = UnitOfTimeEnum.UnitOfTimeEnumList.Select(x => new UnitOfTime {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name
+            }).ToList();
             List<ActiveTime> ActiveTimes = new List<ActiveTime>();
             using (ExcelPackage excelPackage = new ExcelPackage(file.OpenReadStream()))
             {
@@ -170,6 +182,7 @@ namespace TrueCareer.Rpc.active_time
                 int StartAtColumn = 1 + StartColumn;
                 int EndAtColumn = 2 + StartColumn;
                 int MentorIdColumn = 3 + StartColumn;
+                int UnitOfTimeIdColumn = 4 + StartColumn;
 
                 for (int i = StartRow; i <= worksheet.Dimension.End.Row; i++)
                 {
@@ -179,14 +192,14 @@ namespace TrueCareer.Rpc.active_time
                     string StartAtValue = worksheet.Cells[i, StartAtColumn].Value?.ToString();
                     string EndAtValue = worksheet.Cells[i, EndAtColumn].Value?.ToString();
                     string MentorIdValue = worksheet.Cells[i, MentorIdColumn].Value?.ToString();
-                    
+                    string UnitOfTimeIdValue = worksheet.Cells[i, UnitOfTimeIdColumn].Value?.ToString();
+
                     ActiveTime ActiveTime = new ActiveTime();
-                    ActiveTime.StartAt = DateTime.TryParse(StartAtValue, out DateTime StartAt) ? StartAt : DateTime.Now;
-                    ActiveTime.EndAt = DateTime.TryParse(EndAtValue, out DateTime EndAt) ? EndAt : DateTime.Now;
+                    ActiveTime.ActiveDate = DateTime.TryParse(StartAtValue, out DateTime ActiveDate) ? ActiveDate : DateTime.Now;
                     AppUser Mentor = Mentors.Where(x => x.Id.ToString() == MentorIdValue).FirstOrDefault();
                     ActiveTime.MentorId = Mentor == null ? 0 : Mentor.Id;
                     ActiveTime.Mentor = Mentor;
-                    
+                    ActiveTime.UnitOfTime = UnitOfTimes.Where(x => x.Id.ToString() == UnitOfTimeIdValue).FirstOrDefault();
                     ActiveTimes.Add(ActiveTime);
                 }
             }
@@ -204,10 +217,10 @@ namespace TrueCareer.Rpc.active_time
                         string Error = $"Dòng {i + 2} có lỗi:";
                         if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.Id)))
                             Error += ActiveTime.Errors[nameof(ActiveTime.Id)];
-                        if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.StartAt)))
-                            Error += ActiveTime.Errors[nameof(ActiveTime.StartAt)];
-                        if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.EndAt)))
-                            Error += ActiveTime.Errors[nameof(ActiveTime.EndAt)];
+                        if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.ActiveDate)))
+                            Error += ActiveTime.Errors[nameof(ActiveTime.ActiveDate)];
+                        if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.UnitOfTimeId)))
+                            Error += ActiveTime.Errors[nameof(ActiveTime.UnitOfTimeId)];
                         if (ActiveTime.Errors.ContainsKey(nameof(ActiveTime.MentorId)))
                             Error += ActiveTime.Errors[nameof(ActiveTime.MentorId)];
                         Errors.Add(Error);
@@ -247,8 +260,8 @@ namespace TrueCareer.Rpc.active_time
                     ActiveTimeData.Add(new Object[]
                     {
                         ActiveTime.Id,
-                        ActiveTime.StartAt,
-                        ActiveTime.EndAt,
+                        ActiveTime.ActiveDate,
+                        ActiveTime.UnitOfTimeId,
                         ActiveTime.MentorId,
                     });
                 }
@@ -343,8 +356,8 @@ namespace TrueCareer.Rpc.active_time
             ActiveTime_ActiveTimeDTO.TrimString();
             ActiveTime ActiveTime = new ActiveTime();
             ActiveTime.Id = ActiveTime_ActiveTimeDTO.Id;
-            ActiveTime.StartAt = ActiveTime_ActiveTimeDTO.StartAt;
-            ActiveTime.EndAt = ActiveTime_ActiveTimeDTO.EndAt;
+            ActiveTime.ActiveDate = ActiveTime_ActiveTimeDTO.ActiveDate;
+            ActiveTime.UnitOfTimeId = ActiveTime_ActiveTimeDTO.UnitOfTimeId;
             ActiveTime.MentorId = ActiveTime_ActiveTimeDTO.MentorId;
             ActiveTime.Mentor = ActiveTime_ActiveTimeDTO.Mentor == null ? null : new AppUser
             {
@@ -358,6 +371,14 @@ namespace TrueCareer.Rpc.active_time
                 Birthday = ActiveTime_ActiveTimeDTO.Mentor.Birthday,
                 Avatar = ActiveTime_ActiveTimeDTO.Mentor.Avatar,
                 CoverImage = ActiveTime_ActiveTimeDTO.Mentor.CoverImage,
+            };
+            ActiveTime.UnitOfTime = ActiveTime_ActiveTimeDTO.UnitOfTime == null ? null : new UnitOfTime
+            {
+                Id = ActiveTime_ActiveTimeDTO.UnitOfTime.Id,
+                Name = ActiveTime_ActiveTimeDTO.UnitOfTime.Name,
+                Code = ActiveTime_ActiveTimeDTO.UnitOfTime.Code,
+                StartAt = ActiveTime_ActiveTimeDTO.UnitOfTime.StartAt,
+                EndAt = ActiveTime_ActiveTimeDTO.UnitOfTime.EndAt
             };
             ActiveTime.BaseLanguage = CurrentContext.Language;
             return ActiveTime;
@@ -373,8 +394,8 @@ namespace TrueCareer.Rpc.active_time
             ActiveTimeFilter.OrderType = ActiveTime_ActiveTimeFilterDTO.OrderType;
 
             ActiveTimeFilter.Id = ActiveTime_ActiveTimeFilterDTO.Id;
-            ActiveTimeFilter.StartAt = ActiveTime_ActiveTimeFilterDTO.StartAt;
-            ActiveTimeFilter.EndAt = ActiveTime_ActiveTimeFilterDTO.EndAt;
+            ActiveTimeFilter.UnitOfTimeId = ActiveTime_ActiveTimeFilterDTO.UnitOfTimeId;
+            ActiveTimeFilter.ActiveDate = ActiveTime_ActiveTimeFilterDTO.ActiveDate;
             ActiveTimeFilter.MentorId = ActiveTime_ActiveTimeFilterDTO.MentorId;
             return ActiveTimeFilter;
         }

@@ -196,10 +196,10 @@ namespace TrueCareer.Services.MActiveTime
                 {
                     if (FilterPermissionDefinition.Name == nameof(subFilter.Id))
                         subFilter.Id = FilterBuilder.Merge(subFilter.Id, FilterPermissionDefinition.IdFilter);
-                    if (FilterPermissionDefinition.Name == nameof(subFilter.StartAt))
-                        subFilter.StartAt = FilterBuilder.Merge(subFilter.StartAt, FilterPermissionDefinition.DateFilter);
-                    if (FilterPermissionDefinition.Name == nameof(subFilter.EndAt))
-                        subFilter.EndAt = FilterBuilder.Merge(subFilter.EndAt, FilterPermissionDefinition.DateFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.ActiveDate))
+                        subFilter.ActiveDate = FilterBuilder.Merge(subFilter.ActiveDate, FilterPermissionDefinition.DateFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.UnitOfTimeId))
+                        subFilter.UnitOfTimeId = FilterBuilder.Merge(subFilter.UnitOfTimeId, FilterPermissionDefinition.IdFilter);
                     if (FilterPermissionDefinition.Name == nameof(subFilter.MentorId))
                         subFilter.MentorId = FilterBuilder.Merge(subFilter.MentorId, FilterPermissionDefinition.IdFilter);
                     if (FilterPermissionDefinition.Name == nameof(CurrentContext.UserId) && FilterPermissionDefinition.IdFilter != null)
