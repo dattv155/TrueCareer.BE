@@ -15,13 +15,11 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<ConnectionStatusDAO> ConnectionStatus { get; set; }
         public virtual DbSet<ConnectionTypeDAO> ConnectionType { get; set; }
         public virtual DbSet<ConversationDAO> Conversation { get; set; }
-        public virtual DbSet<Conversation1DAO> Conversation1 { get; set; }
         public virtual DbSet<ConversationAttachmentDAO> ConversationAttachment { get; set; }
         public virtual DbSet<ConversationAttachmentTypeDAO> ConversationAttachmentType { get; set; }
         public virtual DbSet<ConversationConfigurationDAO> ConversationConfiguration { get; set; }
         public virtual DbSet<ConversationMessageDAO> ConversationMessage { get; set; }
         public virtual DbSet<ConversationParticipantDAO> ConversationParticipant { get; set; }
-        public virtual DbSet<ConversationParticipant1DAO> ConversationParticipant1 { get; set; }
         public virtual DbSet<ConversationReadHistoryDAO> ConversationReadHistory { get; set; }
         public virtual DbSet<ConversationTypeDAO> ConversationType { get; set; }
         public virtual DbSet<CounterDAO> Counter { get; set; }
@@ -47,8 +45,8 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<MentorApprovalStatusDAO> MentorApprovalStatus { get; set; }
         public virtual DbSet<MentorConnectionDAO> MentorConnection { get; set; }
         public virtual DbSet<MentorMenteeConnectionDAO> MentorMenteeConnection { get; set; }
+        public virtual DbSet<MentorRegisterRequestDAO> MentorRegisterRequest { get; set; }
         public virtual DbSet<MentorReviewDAO> MentorReview { get; set; }
-        public virtual DbSet<MessageDAO> Message { get; set; }
         public virtual DbSet<NewsDAO> News { get; set; }
         public virtual DbSet<NewsStatusDAO> NewsStatus { get; set; }
         public virtual DbSet<NotificationDAO> Notification { get; set; }
@@ -63,6 +61,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<StateDAO> State { get; set; }
         public virtual DbSet<StatusDAO> Status { get; set; }
         public virtual DbSet<TopicDAO> Topic { get; set; }
+        public virtual DbSet<UnitOfTimeDAO> UnitOfTime { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -81,17 +80,19 @@ namespace TrueCareer.BE.Models
         {
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.EndAt).HasColumnType("datetime");
-
-                entity.Property(e => e.StartAt).HasColumnType("datetime");
+                entity.Property(e => e.ActiveDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Mentor)
                     .WithMany(p => p.ActiveTimes)
                     .HasForeignKey(d => d.MentorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ActiveTime_AppUser");
+
+                entity.HasOne(d => d.UnitOfTime)
+                    .WithMany(p => p.ActiveTimes)
+                    .HasForeignKey(d => d.UnitOfTimeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActiveTime_UnitOfTime");
             });
 
             modelBuilder.Entity<AggregatedCounterDAO>(entity =>
@@ -276,23 +277,6 @@ namespace TrueCareer.BE.Models
                     .HasConstraintName("FK_Conversation_GlobalUser");
             });
 
-            modelBuilder.Entity<Conversation1DAO>(entity =>
-            {
-                entity.ToTable("Conversation");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.Hash).HasMaxLength(4000);
-
-                entity.Property(e => e.LatestContent).HasMaxLength(4000);
-
-                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-            });
-
             modelBuilder.Entity<ConversationAttachmentDAO>(entity =>
             {
                 entity.ToTable("ConversationAttachment", "CON");
@@ -426,25 +410,6 @@ namespace TrueCareer.BE.Models
                     .HasConstraintName("FK_Participant_GlobalUser");
             });
 
-            modelBuilder.Entity<ConversationParticipant1DAO>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("ConversationParticipant");
-
-                entity.HasOne(d => d.Conversation)
-                    .WithMany()
-                    .HasForeignKey(d => d.ConversationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConversationParticipant_Conversation");
-
-                entity.HasOne(d => d.User)
-                    .WithMany()
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConversationParticipant_AppUser");
-            });
-
             modelBuilder.Entity<ConversationReadHistoryDAO>(entity =>
             {
                 entity.ToTable("ConversationReadHistory", "CON");
@@ -498,8 +463,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<FavouriteMentorDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Mentor)
                     .WithMany(p => p.FavouriteMentorMentors)
                     .HasForeignKey(d => d.MentorId)
@@ -515,8 +478,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<FavouriteNewsDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.News)
                     .WithMany(p => p.FavouriteNews)
                     .HasForeignKey(d => d.NewsId)
@@ -631,8 +592,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<ImageDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.DeletedAt).HasColumnType("datetime");
@@ -864,8 +823,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorConnectionDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Url)
                     .IsRequired()
                     .HasMaxLength(4000);
@@ -885,8 +842,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorMenteeConnectionDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Connection)
                     .WithMany(p => p.MentorMenteeConnections)
                     .HasForeignKey(d => d.ConnectionId)
@@ -912,10 +867,17 @@ namespace TrueCareer.BE.Models
                     .HasConstraintName("FK_MentorMenteeConnection_AppUser");
             });
 
+            modelBuilder.Entity<MentorRegisterRequestDAO>(entity =>
+            {
+                entity.HasOne(d => d.Topic)
+                    .WithMany(p => p.MentorRegisterRequests)
+                    .HasForeignKey(d => d.TopicId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MentorRegisterRequest_Topic");
+            });
+
             modelBuilder.Entity<MentorReviewDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.ContentReview).IsRequired();
 
                 entity.Property(e => e.Description).HasMaxLength(4000);
@@ -933,25 +895,6 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.MentorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MentorReview_AppUser");
-            });
-
-            modelBuilder.Entity<MessageDAO>(entity =>
-            {
-                entity.Property(e => e.Content)
-                    .IsRequired()
-                    .HasMaxLength(4000);
-
-                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Conversation)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.ConversationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Message_Conversation");
             });
 
             modelBuilder.Entity<NewsDAO>(entity =>
@@ -1179,6 +1122,19 @@ namespace TrueCareer.BE.Models
                     .HasMaxLength(4000);
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(4000);
+            });
+
+            modelBuilder.Entity<UnitOfTimeDAO>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(4000);
+
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(4000);
             });

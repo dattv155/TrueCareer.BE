@@ -42,8 +42,8 @@ namespace TrueCareer.Rpc.active_time
         public static Dictionary<string, long> Filters = new Dictionary<string, long>
         {
             { nameof(ActiveTimeFilter.Id), FieldTypeEnum.ID.Id },
-            { nameof(ActiveTimeFilter.StartAt), FieldTypeEnum.DATE.Id },
-            { nameof(ActiveTimeFilter.EndAt), FieldTypeEnum.DATE.Id },
+            { nameof(ActiveTimeFilter.ActiveDate), FieldTypeEnum.DATE.Id },
+            { nameof(ActiveTimeFilter.UnitOfTimeId), FieldTypeEnum.ID.Id },
             { nameof(ActiveTimeFilter.MentorId), FieldTypeEnum.ID.Id },
         };
 

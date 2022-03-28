@@ -8,6 +8,7 @@ namespace TrueCareer.BE.Models
         public TopicDAO()
         {
             Information = new HashSet<InformationDAO>();
+            MentorRegisterRequests = new HashSet<MentorRegisterRequestDAO>();
         }
 
         public long Id { get; set; }
@@ -16,5 +17,6 @@ namespace TrueCareer.BE.Models
         public decimal Cost { get; set; }
 
         public virtual ICollection<InformationDAO> Information { get; set; }
+        public virtual ICollection<MentorRegisterRequestDAO> MentorRegisterRequests { get; set; }
     }
 }

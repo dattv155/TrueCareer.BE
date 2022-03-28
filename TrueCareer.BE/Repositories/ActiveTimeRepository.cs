@@ -40,8 +40,8 @@ namespace TrueCareer.Repositories
             if (filter == null)
                 return query.Where(q => false);
             query = query.Where(q => q.Id, filter.Id);
-            query = query.Where(q => q.StartAt, filter.StartAt);
-            query = query.Where(q => q.EndAt, filter.EndAt);
+            query = query.Where(q => q.ActiveDate, filter.ActiveDate);
+            query = query.Where(q => q.UnitOfTimeId, filter.UnitOfTimeId);
             query = query.Where(q => q.MentorId, filter.MentorId);
             return query;
         }
@@ -55,8 +55,8 @@ namespace TrueCareer.Repositories
             {
                 IQueryable<ActiveTimeDAO> queryable = query;
                 queryable = queryable.Where(q => q.Id, ActiveTimeFilter.Id);
-                queryable = queryable.Where(q => q.StartAt, ActiveTimeFilter.StartAt);
-                queryable = queryable.Where(q => q.EndAt, ActiveTimeFilter.EndAt);
+                queryable = queryable.Where(q => q.ActiveDate, ActiveTimeFilter.ActiveDate);
+                queryable = queryable.Where(q => q.UnitOfTimeId, ActiveTimeFilter.UnitOfTimeId);
                 queryable = queryable.Where(q => q.MentorId, ActiveTimeFilter.MentorId);
                 initQuery = initQuery.Union(queryable);
             }
@@ -73,11 +73,11 @@ namespace TrueCareer.Repositories
                         case ActiveTimeOrder.Id:
                             query = query.OrderBy(q => q.Id);
                             break;
-                        case ActiveTimeOrder.StartAt:
-                            query = query.OrderBy(q => q.StartAt);
+                        case ActiveTimeOrder.ActiveDate:
+                            query = query.OrderBy(q => q.ActiveDate);
                             break;
-                        case ActiveTimeOrder.EndAt:
-                            query = query.OrderBy(q => q.EndAt);
+                        case ActiveTimeOrder.UnitOfTime:
+                            query = query.OrderBy(q => q.UnitOfTime);
                             break;
                         case ActiveTimeOrder.Mentor:
                             query = query.OrderBy(q => q.MentorId);
@@ -90,11 +90,11 @@ namespace TrueCareer.Repositories
                         case ActiveTimeOrder.Id:
                             query = query.OrderByDescending(q => q.Id);
                             break;
-                        case ActiveTimeOrder.StartAt:
-                            query = query.OrderByDescending(q => q.StartAt);
+                        case ActiveTimeOrder.ActiveDate:
+                            query = query.OrderByDescending(q => q.ActiveDate);
                             break;
-                        case ActiveTimeOrder.EndAt:
-                            query = query.OrderByDescending(q => q.EndAt);
+                        case ActiveTimeOrder.UnitOfTime:
+                            query = query.OrderByDescending(q => q.UnitOfTime);
                             break;
                         case ActiveTimeOrder.Mentor:
                             query = query.OrderByDescending(q => q.MentorId);
@@ -111,8 +111,9 @@ namespace TrueCareer.Repositories
             List<ActiveTime> ActiveTimes = await query.Select(q => new ActiveTime()
             {
                 Id = filter.Selects.Contains(ActiveTimeSelect.Id) ? q.Id : default(long),
-                StartAt = filter.Selects.Contains(ActiveTimeSelect.StartAt) ? q.StartAt : default(DateTime),
-                EndAt = filter.Selects.Contains(ActiveTimeSelect.EndAt) ? q.EndAt : default(DateTime),
+                ActiveDate = filter.Selects.Contains(ActiveTimeSelect.ActiveDate) ? q.ActiveDate : default(DateTime),
+                UnitOfTimeId = filter.Selects.Contains(ActiveTimeSelect.UnitOfTime) ? q.UnitOfTimeId : default(long),
+                UnitOfTime = filter.Selects.Contains(ActiveTimeSelect.UnitOfTime) && q.UnitOfTime != null ? new UnitOfTime { } : null,
                 MentorId = filter.Selects.Contains(ActiveTimeSelect.Mentor) ? q.MentorId : default(long),
                 Mentor = filter.Selects.Contains(ActiveTimeSelect.Mentor) && q.Mentor != null ? new AppUser
                 {
@@ -167,8 +168,15 @@ namespace TrueCareer.Repositories
             .Select(x => new ActiveTime()
             {
                 Id = x.Id,
-                StartAt = x.StartAt,
-                EndAt = x.EndAt,
+                ActiveDate = x.ActiveDate,
+                UnitOfTimeId = x.UnitOfTimeId,
+                UnitOfTime = x.UnitOfTime == null ? null : new UnitOfTime {
+                    Id = x.UnitOfTime.Id,
+                    Code = x.UnitOfTime.Code,
+                    Name = x.UnitOfTime.Name,
+                    StartAt = x.UnitOfTime.StartAt,
+                    EndAt = x.UnitOfTime.EndAt
+                },
                 MentorId = x.MentorId,
                 Mentor = x.Mentor == null ? null : new AppUser
                 {
@@ -196,8 +204,16 @@ namespace TrueCareer.Repositories
             .Select(x => new ActiveTime()
             {
                 Id = x.Id,
-                StartAt = x.StartAt,
-                EndAt = x.EndAt,
+                ActiveDate = x.ActiveDate,
+                UnitOfTimeId = x.UnitOfTimeId,
+                UnitOfTime = x.UnitOfTime == null ? null : new UnitOfTime
+                {
+                    Id = x.UnitOfTime.Id,
+                    Code = x.UnitOfTime.Code,
+                    Name = x.UnitOfTime.Name,
+                    StartAt = x.UnitOfTime.StartAt,
+                    EndAt = x.UnitOfTime.EndAt
+                },
                 MentorId = x.MentorId,
                 Mentor = x.Mentor == null ? null : new AppUser
                 {
@@ -224,8 +240,8 @@ namespace TrueCareer.Repositories
         {
             ActiveTimeDAO ActiveTimeDAO = new ActiveTimeDAO();
             ActiveTimeDAO.Id = ActiveTime.Id;
-            ActiveTimeDAO.StartAt = ActiveTime.StartAt;
-            ActiveTimeDAO.EndAt = ActiveTime.EndAt;
+            ActiveTimeDAO.UnitOfTimeId = ActiveTime.UnitOfTimeId;
+            ActiveTimeDAO.ActiveDate = ActiveTime.ActiveDate;
             ActiveTimeDAO.MentorId = ActiveTime.MentorId;
             DataContext.ActiveTime.Add(ActiveTimeDAO);
             await DataContext.SaveChangesAsync();
@@ -242,8 +258,8 @@ namespace TrueCareer.Repositories
             if (ActiveTimeDAO == null)
                 return false;
             ActiveTimeDAO.Id = ActiveTime.Id;
-            ActiveTimeDAO.StartAt = ActiveTime.StartAt;
-            ActiveTimeDAO.EndAt = ActiveTime.EndAt;
+            ActiveTimeDAO.ActiveDate = ActiveTime.ActiveDate;
+            ActiveTimeDAO.UnitOfTimeId = ActiveTime.UnitOfTimeId;
             ActiveTimeDAO.MentorId = ActiveTime.MentorId;
             await DataContext.SaveChangesAsync();
             await SaveReference(ActiveTime);
@@ -274,8 +290,8 @@ namespace TrueCareer.Repositories
                 {
                     ActiveTimeDAO = new ActiveTimeDAO();
                 }
-                ActiveTimeDAO.StartAt = ActiveTime.StartAt;
-                ActiveTimeDAO.EndAt = ActiveTime.EndAt;
+                ActiveTimeDAO.ActiveDate = ActiveTime.ActiveDate;
+                ActiveTimeDAO.UnitOfTimeId = ActiveTime.UnitOfTimeId;
                 ActiveTimeDAO.MentorId = ActiveTime.MentorId;
                 ActiveTimeDAOs.Add(ActiveTimeDAO);
             }
