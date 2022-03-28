@@ -33,9 +33,9 @@ using Thinktecture;
 using Z.EntityFramework.Extensions;
 using TrueCareer.BE.Models;
 using TrueCareer.Rpc;
-using TrueCareer.Handlers;
 using TrueCareer.Services;
 using TrueCareer.Hub;
+using TrueCareer.Handlers;
 
 namespace TrueCareer
 {

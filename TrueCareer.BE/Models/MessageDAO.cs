@@ -14,6 +14,6 @@ namespace TrueCareer.BE.Models
         public long ConversationId { get; set; }
         public Guid RowId { get; set; }
 
-        public virtual ConversationDAO Conversation { get; set; }
+        public virtual Conversation1DAO Conversation { get; set; }
     }
 }

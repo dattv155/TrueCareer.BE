@@ -1,7 +1,6 @@
 using TrueSight.Common;
 using System;
 using System.Collections.Generic;
-using TrueCareer.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -10,10 +9,20 @@ namespace TrueCareer.Entities
     public class Conversation : DataEntity,  IEquatable<Conversation>
     {
         public long Id { get; set; }
-        public string LatestContent { get; set; }
-        public long? LatestUserId { get; set; }
+        public long ConversationTypeId { get; set; }
+        public long? ConversationConfigurationId { get; set; }
+        public string Name { get; set; }
         public string Hash { get; set; }
-        public List<Message> Messages { get; set; }
+        public string Avatar { get; set; }
+        public long CountUnread { get; set; }
+        public string LatestContent { get; set; }
+        public long? LatestGlobalUserId { get; set; }
+        public GlobalUser LatestGlobalUser { get; set; }
+        public ConversationConfiguration ConversationConfiguration { get; set; }
+        public ConversationType ConversationType { get; set; }
+        public List<ConversationMessage> ConversationMessages { get; set; }
+        public List<ConversationParticipant> ConversationParticipants { get; set; }
+        public List<ConversationReadHistory> ConversationReadHistories { get; set; }
         public Guid RowId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -23,24 +32,9 @@ namespace TrueCareer.Entities
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.LatestContent != other.LatestContent) return false;
-            if (this.LatestUserId != other.LatestUserId) return false;
-            if (this.Hash != other.Hash) return false;
-            if (this.Messages?.Count != other.Messages?.Count) return false;
-            else if (this.Messages != null && other.Messages != null)
-            {
-                for (int i = 0; i < Messages.Count; i++)
-                {
-                    Message Message = Messages[i];
-                    Message otherMessage = other.Messages[i];
-                    if (Message == null && otherMessage != null)
-                        return false;
-                    if (Message != null && otherMessage == null)
-                        return false;
-                    if (Message.Equals(otherMessage) == false)
-                        return false;
-                }
-            }
+            if (this.ConversationTypeId != other.ConversationTypeId) return false;
+            if (this.Name != other.Name) return false;
+            if (this.Avatar != other.Avatar) return false;
             return true;
         }
         public override int GetHashCode()
@@ -52,23 +46,25 @@ namespace TrueCareer.Entities
     public class ConversationFilter : FilterEntity
     {
         public IdFilter Id { get; set; }
-        public StringFilter LatestContent { get; set; }
-        public IdFilter LatestUserId { get; set; }
+        public IdFilter ConversationTypeId { get; set; }
         public StringFilter Hash { get; set; }
+        public StringFilter Name { get; set; }
+        public StringFilter Avatar { get; set; }
         public DateFilter CreatedAt { get; set; }
         public DateFilter UpdatedAt { get; set; }
         public List<ConversationFilter> OrFilter { get; set; }
         public ConversationOrder OrderBy {get; set;}
         public ConversationSelect Selects {get; set;}
+        public long? GlobalUserId { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ConversationOrder
     {
         Id = 0,
-        LatestContent = 1,
-        LatestUser = 3,
-        Hash = 7,
+        ConversationType = 1,
+        Name = 2,
+        Avatar = 3,
         CreatedAt = 50,
         UpdatedAt = 51,
     }
@@ -78,8 +74,8 @@ namespace TrueCareer.Entities
     {
         ALL = E.ALL,
         Id = E._0,
-        LatestContent = E._1,
-        LatestUser = E._3,
-        Hash = E._7,
+        ConversationType = E._1,
+        Name = E._2,
+        Avatar = E._3,
     }
 }

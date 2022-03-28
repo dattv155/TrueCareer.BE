@@ -21,6 +21,7 @@ namespace TrueCareer.Repositories
         ICommentRepository CommentRepository { get; }
         IConnectionStatusRepository ConnectionStatusRepository { get; }
         IConnectionTypeRepository ConnectionTypeRepository { get; }
+        IConversationRepository ConversationRepository { get; }
         IFavouriteMentorRepository FavouriteMentorRepository { get; }
         IFavouriteNewsRepository FavouriteNewsRepository { get; }
         IImageRepository ImageRepository { get; }
@@ -42,12 +43,23 @@ namespace TrueCareer.Repositories
         ISexRepository SexRepository { get; }
         ITopicRepository TopicRepository { get; }
         IFileRepository FileRepository { get; }
+        IConversationConfigurationRepository ConversationConfigurationRepository { get; }
+        IConversationMessageRepository ConversationMessageRepository { get; }
+        IConversationTypeRepository ConversationTypeRepository { get; }
+        IConversationReadHistoryRepository ConversationReadHistoryRepository { get; }
+        IGlobalUserRepository GlobalUserRepository { get; }
     }
 
     public class UOW : IUOW
     {
         private DataContext DataContext;
         protected IMongoClient MongoClient = null;
+        public IConversationRepository ConversationRepository { get; private set; }
+        public IConversationConfigurationRepository ConversationConfigurationRepository { get; private set; }
+        public IConversationMessageRepository ConversationMessageRepository { get; private set; }
+        public IConversationTypeRepository ConversationTypeRepository { get; private set; }
+        public IConversationReadHistoryRepository ConversationReadHistoryRepository { get; private set; }
+        public IGlobalUserRepository GlobalUserRepository { get; private set; }
         public IActiveTimeRepository ActiveTimeRepository { get; private set; }
         public IAppUserRepository AppUserRepository { get; private set; }
         public IChoiceRepository ChoiceRepository { get; private set; }
@@ -86,6 +98,7 @@ namespace TrueCareer.Repositories
             CommentRepository = new CommentRepository(DataContext);
             ConnectionStatusRepository = new ConnectionStatusRepository(DataContext);
             ConnectionTypeRepository = new ConnectionTypeRepository(DataContext);
+            ConversationRepository = new ConversationRepository(DataContext);
             FavouriteMentorRepository = new FavouriteMentorRepository(DataContext);
             FavouriteNewsRepository = new FavouriteNewsRepository(DataContext);
             ImageRepository = new ImageRepository(DataContext);
@@ -107,6 +120,12 @@ namespace TrueCareer.Repositories
             SexRepository = new SexRepository(DataContext);
             TopicRepository = new TopicRepository(DataContext);
             FileRepository = new FileRepository(DataContext, MongoClient);
+            ConversationRepository = new ConversationRepository(DataContext);
+            ConversationConfigurationRepository = new ConversationConfigurationRepository(DataContext);
+            ConversationMessageRepository = new ConversationMessageRepository(DataContext);
+            ConversationTypeRepository = new ConversationTypeRepository(DataContext);
+            ConversationReadHistoryRepository = new ConversationReadHistoryRepository(DataContext);
+            GlobalUserRepository = new GlobalUserRepository(DataContext);
         }
         public async Task Begin()
         {
