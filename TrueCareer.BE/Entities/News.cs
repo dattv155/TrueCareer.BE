@@ -26,11 +26,6 @@ namespace TrueCareer.Entities
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.CreatorId != other.CreatorId) return false;
-            if (this.NewsContent != other.NewsContent) return false;
-            if (this.LikeCounting != other.LikeCounting) return false;
-            if (this.WatchCounting != other.WatchCounting) return false;
-            if (this.NewsStatusId != other.NewsStatusId) return false;
             return true;
         }
         public override int GetHashCode()
