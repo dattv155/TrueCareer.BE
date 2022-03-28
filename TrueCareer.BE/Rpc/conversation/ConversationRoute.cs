@@ -1,9 +1,8 @@
-using TrueSight.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrueCareer.Common;
+using TrueSight.Common;
 using TrueCareer.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +11,9 @@ using System.IO;
 using OfficeOpenXml;
 using TrueCareer.Entities;
 using TrueCareer.Services.MConversation;
-using TrueCareer.Services.MMessage;
+using TrueCareer.Services.MConversationMessage;
+using TrueCareer.Services.MConversationType;
+using TrueCareer.Services.MGlobalUser;
 
 namespace TrueCareer.Rpc.conversation
 {
@@ -29,82 +30,58 @@ namespace TrueCareer.Rpc.conversation
         public const string Create = Default + "/create";
         public const string Update = Default + "/update";
         public const string Delete = Default + "/delete";
-        public const string Import = Default + "/import";
-        public const string Export = Default + "/export";
-        public const string ExportTemplate = Default + "/export-template";
-        public const string BulkDelete = Default + "/bulk-delete";
-        
-        public const string FilterListMessage = Default + "/filter-list-message";
 
-        public const string SingleListMessage = Default + "/single-list-message";
+        public const string UploadAvatar = Default + "/upload-avatar";
+
+        public const string UploadFile = Default + "/upload-file";
+        public const string MultiUploadFile = Default + "/multi-upload-file";
+
+        public const string SingleListConversationMessage = Default + "/single-list-conversation-message";
+        public const string SingleListConversationType = Default + "/single-list-conversation-type";
+        public const string SingleListGlobalUser = Default + "/single-list-global-user";
+        public const string GetGlobalUser = Default + "/get-global-user";
 
 
         public static Dictionary<string, long> Filters = new Dictionary<string, long>
         {
-            { nameof(ConversationFilter.Id), FieldTypeEnum.ID.Id },
-            { nameof(ConversationFilter.LatestContent), FieldTypeEnum.STRING.Id },
-            { nameof(ConversationFilter.LatestUserId), FieldTypeEnum.ID.Id },
-            { nameof(ConversationFilter.Hash), FieldTypeEnum.STRING.Id },
         };
 
-        private static List<string> FilterList = new List<string> { 
-            FilterListMessage,
+
+        private static List<string> SingleList = new List<string> {
+            SingleListConversationMessage, SingleListConversationType, SingleListGlobalUser,
         };
-        private static List<string> SingleList = new List<string> { 
-            SingleListMessage, 
+        private static List<string> CountList = new List<string>
+        {
+
         };
-        private static List<string> CountList = new List<string> { 
-            
-        };
-        
+
         public static Dictionary<string, IEnumerable<string>> Action = new Dictionary<string, IEnumerable<string>>
         {
-            { "Tìm kiếm", new List<string> { 
+            { "Tìm kiếm", new List<string> {
                     Parent,
                     Master, Preview, Count, List,
-                    Get,  
-                }.Concat(FilterList)
+                    Get,  GetGlobalUser,
+                }
             },
-            { "Thêm", new List<string> { 
+            { "Thêm", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    Detail, Create, 
-                }.Concat(SingleList).Concat(FilterList).Concat(CountList)
+                    Detail, Create,
+                }.Concat(SingleList).Concat(CountList)
             },
 
-            { "Sửa", new List<string> { 
-                    Parent,            
-                    Master, Preview, Count, List, Get,
-                    Detail, Update, 
-                }.Concat(SingleList).Concat(FilterList).Concat(CountList)
-            },
-
-            { "Xoá", new List<string> { 
+            { "Sửa", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    Delete, 
-                }.Concat(SingleList).Concat(FilterList) 
+                    Detail, Update,
+                }.Concat(SingleList).Concat(CountList)
             },
 
-            { "Xoá nhiều", new List<string> { 
+            { "Xoá", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    BulkDelete 
-                }.Concat(FilterList) 
-            },
-
-            { "Xuất excel", new List<string> { 
-                    Parent,
-                    Master, Preview, Count, List, Get,
-                    Export 
-                }.Concat(FilterList) 
-            },
-
-            { "Nhập excel", new List<string> { 
-                    Parent,
-                    Master, Preview, Count, List, Get,
-                    ExportTemplate, Import 
-                }.Concat(FilterList) 
+                    Delete,
+                }.Concat(SingleList)
             },
         };
     }

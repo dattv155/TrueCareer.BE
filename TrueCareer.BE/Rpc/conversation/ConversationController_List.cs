@@ -12,7 +12,6 @@ using System.IO;
 using OfficeOpenXml;
 using TrueCareer.Entities;
 using TrueCareer.Services.MConversation;
-using TrueCareer.Services.MMessage;
 
 namespace TrueCareer.Rpc.conversation
 {

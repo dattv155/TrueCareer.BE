@@ -1,7 +1,6 @@
 using TrueSight.Common;
 using System;
 using System.Collections.Generic;
-using TrueCareer.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -11,16 +10,16 @@ namespace TrueCareer.Entities
     {
         public long Id { get; set; }
         public long ConversationId { get; set; }
-        public long UserId { get; set; }
+        public long GlobalUserId { get; set; }
         public Conversation Conversation { get; set; }
-        public AppUser User { get; set; }
+        public GlobalUser GlobalUser { get; set; }
         
         public bool Equals(ConversationParticipant other)
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
             if (this.ConversationId != other.ConversationId) return false;
-            if (this.UserId != other.UserId) return false;
+            if (this.GlobalUserId != other.GlobalUserId) return false;
             return true;
         }
         public override int GetHashCode()
@@ -33,7 +32,7 @@ namespace TrueCareer.Entities
     {
         public IdFilter Id { get; set; }
         public IdFilter ConversationId { get; set; }
-        public IdFilter UserId { get; set; }
+        public IdFilter GlobalUserId { get; set; }
         public List<ConversationParticipantFilter> OrFilter { get; set; }
         public ConversationParticipantOrder OrderBy {get; set;}
         public ConversationParticipantSelect Selects {get; set;}
@@ -44,7 +43,7 @@ namespace TrueCareer.Entities
     {
         Id = 0,
         Conversation = 1,
-        User = 2,
+        GlobalUser = 2,
     }
 
     [Flags]
@@ -53,6 +52,6 @@ namespace TrueCareer.Entities
         ALL = E.ALL,
         Id = E._0,
         Conversation = E._1,
-        User = E._2,
+        GlobalUser = E._2,
     }
 }

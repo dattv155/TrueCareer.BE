@@ -36,10 +36,32 @@ namespace TrueCareer.Rpc
             InitNewsStatusEnum();
             InitSexEnum();
             InitMentorApprovalStatusEnum();
+            InitGlobalUserTypeEnum();
+            InitConversationAttachmentTypeEnum();
             return Ok();
 
         }
+        public void InitConversationAttachmentTypeEnum()
+        {
+            List<ConversationAttachmentTypeDAO> ConversationAttachmentTypeEnumList = ConversationAttachmentTypeEnum.ConversationAttachmentTypeEnumList.Select(item => new ConversationAttachmentTypeDAO
+            {
+                Id = item.Id,
+                Code = item.Code,
+                Name = item.Name,
+            }).ToList();
+            DataContext.ConversationAttachmentType.BulkSynchronize(ConversationAttachmentTypeEnumList);
+        }
+        public void InitGlobalUserTypeEnum()
+        {
+            List<GlobalUserTypeDAO> GlobalUserTypeDAOs = GlobalUserTypeEnum.GlobalUserTypeEnumList.Select(x => new GlobalUserTypeDAO
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name
+            }).ToList();
 
+            DataContext.GlobalUserType.BulkSynchronize(GlobalUserTypeDAOs);
+        }
         public void InitRoleEnum()
         {
             List<RoleDAO> RoleDAOs = RoleEnum.RoleEnumList.Select(x => new RoleDAO

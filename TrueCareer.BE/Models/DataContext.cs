@@ -15,11 +15,22 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<ConnectionStatusDAO> ConnectionStatus { get; set; }
         public virtual DbSet<ConnectionTypeDAO> ConnectionType { get; set; }
         public virtual DbSet<ConversationDAO> Conversation { get; set; }
+        public virtual DbSet<Conversation1DAO> Conversation1 { get; set; }
+        public virtual DbSet<ConversationAttachmentDAO> ConversationAttachment { get; set; }
+        public virtual DbSet<ConversationAttachmentTypeDAO> ConversationAttachmentType { get; set; }
+        public virtual DbSet<ConversationConfigurationDAO> ConversationConfiguration { get; set; }
+        public virtual DbSet<ConversationMessageDAO> ConversationMessage { get; set; }
         public virtual DbSet<ConversationParticipantDAO> ConversationParticipant { get; set; }
+        public virtual DbSet<ConversationParticipant1DAO> ConversationParticipant1 { get; set; }
+        public virtual DbSet<ConversationReadHistoryDAO> ConversationReadHistory { get; set; }
+        public virtual DbSet<ConversationTypeDAO> ConversationType { get; set; }
         public virtual DbSet<CounterDAO> Counter { get; set; }
         public virtual DbSet<FavouriteMentorDAO> FavouriteMentor { get; set; }
         public virtual DbSet<FavouriteNewsDAO> FavouriteNews { get; set; }
         public virtual DbSet<FileDAO> File { get; set; }
+        public virtual DbSet<FirebaseTokenDAO> FirebaseToken { get; set; }
+        public virtual DbSet<GlobalUserDAO> GlobalUser { get; set; }
+        public virtual DbSet<GlobalUserTypeDAO> GlobalUserType { get; set; }
         public virtual DbSet<HashDAO> Hash { get; set; }
         public virtual DbSet<ImageDAO> Image { get; set; }
         public virtual DbSet<InformationDAO> Information { get; set; }
@@ -50,6 +61,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<SetDAO> Set { get; set; }
         public virtual DbSet<SexDAO> Sex { get; set; }
         public virtual DbSet<StateDAO> State { get; set; }
+        public virtual DbSet<StatusDAO> Status { get; set; }
         public virtual DbSet<TopicDAO> Topic { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -67,9 +79,6 @@ namespace TrueCareer.BE.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureTempTable<long>();
-            modelBuilder.ConfigureTempTable<Guid>();
-            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -230,6 +239,47 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<ConversationDAO>(entity =>
             {
+                entity.ToTable("Conversation", "CON");
+
+                entity.Property(e => e.Avatar).HasMaxLength(4000);
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Hash).HasMaxLength(4000);
+
+                entity.Property(e => e.LatestContent).HasMaxLength(500);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.RowId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ConversationConfiguration)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.ConversationConfigurationId)
+                    .HasConstraintName("FK_Conversation_ConversationConfiguration");
+
+                entity.HasOne(d => d.ConversationType)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.ConversationTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Conversation_ConversationType");
+
+                entity.HasOne(d => d.LatestGlobalUser)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.LatestGlobalUserId)
+                    .HasConstraintName("FK_Conversation_GlobalUser");
+            });
+
+            modelBuilder.Entity<Conversation1DAO>(entity =>
+            {
+                entity.ToTable("Conversation");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -243,9 +293,144 @@ namespace TrueCareer.BE.Models
                 entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<ConversationAttachmentDAO>(entity =>
+            {
+                entity.ToTable("ConversationAttachment", "CON");
+
+                entity.Property(e => e.Checksum).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Size).HasMaxLength(50);
+
+                entity.Property(e => e.Thumbnail).HasMaxLength(4000);
+
+                entity.Property(e => e.Type).HasMaxLength(50);
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasMaxLength(4000);
+
+                entity.HasOne(d => d.ConversationAttachmentType)
+                    .WithMany(p => p.ConversationAttachments)
+                    .HasForeignKey(d => d.ConversationAttachmentTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationAttachment_ConversationAttachmentType");
+
+                entity.HasOne(d => d.ConversationMessage)
+                    .WithMany(p => p.ConversationAttachments)
+                    .HasForeignKey(d => d.ConversationMessageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationAttachment_ConversationMessage");
+            });
+
+            modelBuilder.Entity<ConversationAttachmentTypeDAO>(entity =>
+            {
+                entity.ToTable("ConversationAttachmentType", "ENUM");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ConversationConfigurationDAO>(entity =>
+            {
+                entity.ToTable("ConversationConfiguration", "CON");
+
+                entity.Property(e => e.AppId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.AppName).HasMaxLength(500);
+
+                entity.Property(e => e.AppSecret).HasMaxLength(50);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("((2021))");
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
+
+                entity.Property(e => e.OaId).HasMaxLength(50);
+
+                entity.Property(e => e.OaSecretKey).HasMaxLength(50);
+
+                entity.Property(e => e.OaToken).HasMaxLength(500);
+
+                entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.ConversationType)
+                    .WithMany(p => p.ConversationConfigurations)
+                    .HasForeignKey(d => d.ConversationTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationConfiguration_ConversationType");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.ConversationConfigurations)
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationConfiguration_Status");
+            });
+
+            modelBuilder.Entity<ConversationMessageDAO>(entity =>
+            {
+                entity.ToTable("ConversationMessage", "CON");
+
+                entity.Property(e => e.Content).HasMaxLength(4000);
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.ConversationMessages)
+                    .HasForeignKey(d => d.ConversationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationMessage_Conversation");
+
+                entity.HasOne(d => d.GlobalUser)
+                    .WithMany(p => p.ConversationMessages)
+                    .HasForeignKey(d => d.GlobalUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationMessage_GlobalUser");
+            });
+
             modelBuilder.Entity<ConversationParticipantDAO>(entity =>
             {
+                entity.ToTable("ConversationParticipant", "CON");
+
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.ConversationParticipants)
+                    .HasForeignKey(d => d.ConversationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_Conversation");
+
+                entity.HasOne(d => d.GlobalUser)
+                    .WithMany(p => p.ConversationParticipants)
+                    .HasForeignKey(d => d.GlobalUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_GlobalUser");
+            });
+
+            modelBuilder.Entity<ConversationParticipant1DAO>(entity =>
+            {
                 entity.HasNoKey();
+
+                entity.ToTable("ConversationParticipant");
 
                 entity.HasOne(d => d.Conversation)
                     .WithMany()
@@ -258,6 +443,40 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConversationParticipant_AppUser");
+            });
+
+            modelBuilder.Entity<ConversationReadHistoryDAO>(entity =>
+            {
+                entity.ToTable("ConversationReadHistory", "CON");
+
+                entity.Property(e => e.ReadAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.ConversationReadHistories)
+                    .HasForeignKey(d => d.ConversationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationReadHistory_Conversation");
+
+                entity.HasOne(d => d.GlobalUser)
+                    .WithMany(p => p.ConversationReadHistories)
+                    .HasForeignKey(d => d.GlobalUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConversationReadHistory_GlobalUser");
+            });
+
+            modelBuilder.Entity<ConversationTypeDAO>(entity =>
+            {
+                entity.ToTable("ConversationType", "ENUM");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<CounterDAO>(entity =>
@@ -328,6 +547,70 @@ namespace TrueCareer.BE.Models
                 entity.Property(e => e.OriginalName).HasMaxLength(500);
 
                 entity.Property(e => e.Path).HasMaxLength(4000);
+            });
+
+            modelBuilder.Entity<FirebaseTokenDAO>(entity =>
+            {
+                entity.ToTable("FirebaseToken", "MDM");
+
+                entity.Property(e => e.DeviceModel).HasMaxLength(4000);
+
+                entity.Property(e => e.OsName).HasMaxLength(4000);
+
+                entity.Property(e => e.OsVersion).HasMaxLength(4000);
+
+                entity.Property(e => e.Token)
+                    .IsRequired()
+                    .HasMaxLength(4000);
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.GlobalUser)
+                    .WithMany(p => p.FirebaseTokens)
+                    .HasForeignKey(d => d.GlobalUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FirebaseToken_GlobalUser");
+            });
+
+            modelBuilder.Entity<GlobalUserDAO>(entity =>
+            {
+                entity.ToTable("GlobalUser", "MDM");
+
+                entity.HasIndex(e => e.RowId)
+                    .IsUnique();
+
+                entity.Property(e => e.Avatar).HasMaxLength(4000);
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DisplayName)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.HasOne(d => d.GlobalUserType)
+                    .WithMany(p => p.GlobalUsers)
+                    .HasForeignKey(d => d.GlobalUserTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GlobalUser_GlobalUserType");
+            });
+
+            modelBuilder.Entity<GlobalUserTypeDAO>(entity =>
+            {
+                entity.ToTable("GlobalUserType", "ENUM");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<HashDAO>(entity =>
@@ -868,6 +1151,21 @@ namespace TrueCareer.BE.Models
                     .WithMany(p => p.States)
                     .HasForeignKey(d => d.JobId)
                     .HasConstraintName("FK_HangFire_State_Job");
+            });
+
+            modelBuilder.Entity<StatusDAO>(entity =>
+            {
+                entity.ToTable("Status", "ENUM");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<TopicDAO>(entity =>

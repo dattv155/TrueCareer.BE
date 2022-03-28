@@ -7,18 +7,30 @@ namespace TrueCareer.BE.Models
     {
         public ConversationDAO()
         {
-            Messages = new HashSet<MessageDAO>();
+            ConversationMessages = new HashSet<ConversationMessageDAO>();
+            ConversationParticipants = new HashSet<ConversationParticipantDAO>();
+            ConversationReadHistories = new HashSet<ConversationReadHistoryDAO>();
         }
 
         public long Id { get; set; }
-        public string LatestContent { get; set; }
+        public long ConversationTypeId { get; set; }
+        public long? ConversationConfigurationId { get; set; }
+        public long? FacebookConfigurationId { get; set; }
+        public string Name { get; set; }
+        public string Avatar { get; set; }
         public DateTime CreatedAt { get; set; }
-        public long? LatestUserId { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public Guid RowId { get; set; }
         public string Hash { get; set; }
+        public long? LatestGlobalUserId { get; set; }
+        public string LatestContent { get; set; }
 
-        public virtual ICollection<MessageDAO> Messages { get; set; }
+        public virtual ConversationConfigurationDAO ConversationConfiguration { get; set; }
+        public virtual ConversationTypeDAO ConversationType { get; set; }
+        public virtual GlobalUserDAO LatestGlobalUser { get; set; }
+        public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
+        public virtual ICollection<ConversationParticipantDAO> ConversationParticipants { get; set; }
+        public virtual ICollection<ConversationReadHistoryDAO> ConversationReadHistories { get; set; }
     }
 }

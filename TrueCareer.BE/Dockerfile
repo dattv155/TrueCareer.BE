@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS base
 WORKDIR /app
-RUN apt-get update && apt-get install -y net-tools curl iputils-ping telnetd nano vim libc6-dev libgdiplus
+RUN apt-get update && apt-get install -y net-tools curl ipTrueCareer.BE-ping telnetd nano vim libc6-dev libgdiplus
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
