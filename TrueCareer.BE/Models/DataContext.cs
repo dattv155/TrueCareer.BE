@@ -869,11 +869,23 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorRegisterRequestDAO>(entity =>
             {
+                entity.HasOne(d => d.MentorApprovalStatus)
+                    .WithMany(p => p.MentorRegisterRequests)
+                    .HasForeignKey(d => d.MentorApprovalStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MentorRegisterRequest_MentorApprovalStatus");
+
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.MentorRegisterRequests)
                     .HasForeignKey(d => d.TopicId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MentorRegisterRequest_Topic");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MentorRegisterRequests)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MentorRegisterRequest_AppUser");
             });
 
             modelBuilder.Entity<MentorReviewDAO>(entity =>
@@ -1002,11 +1014,19 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<SchoolDAO>(entity =>
             {
+                entity.Property(e => e.CompleteTime)
+                    .HasMaxLength(4000)
+                    .HasComment("Số năm học");
+
                 entity.Property(e => e.Description).IsRequired();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(4000);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(50);
+
+                entity.Property(e => e.Rating).HasColumnType("decimal(20, 4)");
             });
 
             modelBuilder.Entity<SchoolMajorMappingDAO>(entity =>

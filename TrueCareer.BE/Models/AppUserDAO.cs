@@ -18,6 +18,7 @@ namespace TrueCareer.BE.Models
             MentorConnections = new HashSet<MentorConnectionDAO>();
             MentorMenteeConnectionMentees = new HashSet<MentorMenteeConnectionDAO>();
             MentorMenteeConnectionMentors = new HashSet<MentorMenteeConnectionDAO>();
+            MentorRegisterRequests = new HashSet<MentorRegisterRequestDAO>();
             MentorReviewCreators = new HashSet<MentorReviewDAO>();
             MentorReviewMentors = new HashSet<MentorReviewDAO>();
             News = new HashSet<NewsDAO>();
@@ -41,6 +42,9 @@ namespace TrueCareer.BE.Models
         public Guid RowId { get; set; }
         public string OtpCode { get; set; }
         public DateTime? OtpExpired { get; set; }
+        public string GIdToken { get; set; }
+        public string FbIdTolen { get; set; }
+        public string AIdToken { get; set; }
 
         public virtual SexDAO Sex { get; set; }
         public virtual ICollection<ActiveTimeDAO> ActiveTimes { get; set; }
@@ -54,6 +58,7 @@ namespace TrueCareer.BE.Models
         public virtual ICollection<MentorConnectionDAO> MentorConnections { get; set; }
         public virtual ICollection<MentorMenteeConnectionDAO> MentorMenteeConnectionMentees { get; set; }
         public virtual ICollection<MentorMenteeConnectionDAO> MentorMenteeConnectionMentors { get; set; }
+        public virtual ICollection<MentorRegisterRequestDAO> MentorRegisterRequests { get; set; }
         public virtual ICollection<MentorReviewDAO> MentorReviewCreators { get; set; }
         public virtual ICollection<MentorReviewDAO> MentorReviewMentors { get; set; }
         public virtual ICollection<NewsDAO> News { get; set; }

@@ -24,12 +24,6 @@ namespace TrueCareer.Entities
         public bool Equals(MentorMenteeConnection other)
         {
             if (other == null) return false;
-            if (this.MentorId != other.MentorId) return false;
-            if (this.MenteeId != other.MenteeId) return false;
-            if (this.ConnectionId != other.ConnectionId) return false;
-            if (this.FirstMessage != other.FirstMessage) return false;
-            if (this.ConnectionStatusId != other.ConnectionStatusId) return false;
-            if (this.ActiveTimeId != other.ActiveTimeId) return false;
             if (this.Id != other.Id) return false;
             return true;
         }

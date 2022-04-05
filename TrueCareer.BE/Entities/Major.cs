@@ -17,8 +17,6 @@ namespace TrueCareer.Entities
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.Name != other.Name) return false;
-            if (this.Description != other.Description) return false;
             return true;
         }
         public override int GetHashCode()

@@ -26,6 +26,5 @@
 
     <ItemGroup>
       <Folder Include="Resources\" />
-      <Folder Include="Rpc\mentor-register-request\" />
     </ItemGroup>
 </Project>

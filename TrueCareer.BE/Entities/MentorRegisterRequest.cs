@@ -17,6 +17,7 @@ namespace TrueCareer.Entities
         public long TopicId { get; set; }
         public Topic Topic { get; set; }
         public MentorApprovalStatus MentorApprovalStatus { get; set; }
+        public AppUser User { get; set; }
         public bool Equals(MentorRegisterRequest other)
         {
             return other != null && Id == other.Id;
