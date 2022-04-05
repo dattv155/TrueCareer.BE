@@ -158,6 +158,12 @@ namespace TrueCareer.Rpc.school
                 int IdColumn = 0 + StartColumn;
                 int NameColumn = 1 + StartColumn;
                 int DescriptionColumn = 2 + StartColumn;
+                int RatingColumn = 4 + StartColumn;
+                int CompleteTimeColumn = 5 + StartColumn;
+                int StudentCountColumn = 6 + StartColumn;
+                int PhoneNumberColumn = 7 + StartColumn;
+                int AddressColumn = 8 + StartColumn;
+                int SchoolImageColumn = 9 + StartColumn;
 
                 for (int i = StartRow; i <= worksheet.Dimension.End.Row; i++)
                 {
@@ -166,10 +172,22 @@ namespace TrueCareer.Rpc.school
                     string IdValue = worksheet.Cells[i, IdColumn].Value?.ToString();
                     string NameValue = worksheet.Cells[i, NameColumn].Value?.ToString();
                     string DescriptionValue = worksheet.Cells[i, DescriptionColumn].Value?.ToString();
+                    string RatingValue = worksheet.Cells[i, RatingColumn].Value?.ToString();
+                    string CompleteTimeValue = worksheet.Cells[i, CompleteTimeColumn].Value?.ToString();
+                    string StudentCountValue = worksheet.Cells[i, StudentCountColumn].Value?.ToString();
+                    string PhoneNumberValue = worksheet.Cells[i, PhoneNumberColumn].Value?.ToString();
+                    string AddressValue = worksheet.Cells[i, AddressColumn].Value?.ToString();
+                    string SchoolImageValue = worksheet.Cells[i, SchoolImageColumn].Value?.ToString();
                     
                     School School = new School();
                     School.Name = NameValue;
                     School.Description = DescriptionValue;
+                    School.Rating = decimal.TryParse(RatingValue, out decimal Rating) ? Rating : 0;
+                    School.CompleteTime = CompleteTimeValue;
+                    School.StudentCount = long.TryParse(StudentCountValue, out long StudentCount) ? StudentCount : 0;
+                    School.PhoneNumber = PhoneNumberValue;
+                    School.Address = AddressValue;
+                    School.SchoolImage = SchoolImageValue;
                     
                     Schools.Add(School);
                 }
@@ -192,6 +210,18 @@ namespace TrueCareer.Rpc.school
                             Error += School.Errors[nameof(School.Name)];
                         if (School.Errors.ContainsKey(nameof(School.Description)))
                             Error += School.Errors[nameof(School.Description)];
+                        if (School.Errors.ContainsKey(nameof(School.Rating)))
+                            Error += School.Errors[nameof(School.Rating)];
+                        if (School.Errors.ContainsKey(nameof(School.CompleteTime)))
+                            Error += School.Errors[nameof(School.CompleteTime)];
+                        if (School.Errors.ContainsKey(nameof(School.StudentCount)))
+                            Error += School.Errors[nameof(School.StudentCount)];
+                        if (School.Errors.ContainsKey(nameof(School.PhoneNumber)))
+                            Error += School.Errors[nameof(School.PhoneNumber)];
+                        if (School.Errors.ContainsKey(nameof(School.Address)))
+                            Error += School.Errors[nameof(School.Address)];
+                        if (School.Errors.ContainsKey(nameof(School.SchoolImage)))
+                            Error += School.Errors[nameof(School.SchoolImage)];
                         Errors.Add(Error);
                     }
                 }
@@ -220,6 +250,12 @@ namespace TrueCareer.Rpc.school
                     "Id",
                     "Name",
                     "Description",
+                    "Rating",
+                    "CompleteTime",
+                    "StudentCount",
+                    "PhoneNumber",
+                    "Address",
+                    "SchoolImage",
                 };
                 List<object[]> SchoolData = new List<object[]>();
                 for (int i = 0; i < Schools.Count; i++)
@@ -230,6 +266,12 @@ namespace TrueCareer.Rpc.school
                         School.Id,
                         School.Name,
                         School.Description,
+                        School.Rating,
+                        School.CompleteTime,
+                        School.StudentCount,
+                        School.PhoneNumber,
+                        School.Address,
+                        School.SchoolImage,
                     });
                 }
                 excel.GenerateWorksheet("School", SchoolHeaders, SchoolData);
@@ -283,6 +325,12 @@ namespace TrueCareer.Rpc.school
             School.Id = School_SchoolDTO.Id;
             School.Name = School_SchoolDTO.Name;
             School.Description = School_SchoolDTO.Description;
+            School.Rating = School_SchoolDTO.Rating;
+            School.CompleteTime = School_SchoolDTO.CompleteTime;
+            School.StudentCount = School_SchoolDTO.StudentCount;
+            School.PhoneNumber = School_SchoolDTO.PhoneNumber;
+            School.Address = School_SchoolDTO.Address;
+            School.SchoolImage = School_SchoolDTO.SchoolImage;
             School.BaseLanguage = CurrentContext.Language;
             return School;
         }
@@ -299,6 +347,12 @@ namespace TrueCareer.Rpc.school
             SchoolFilter.Id = School_SchoolFilterDTO.Id;
             SchoolFilter.Name = School_SchoolFilterDTO.Name;
             SchoolFilter.Description = School_SchoolFilterDTO.Description;
+            SchoolFilter.Rating = School_SchoolFilterDTO.Rating;
+            SchoolFilter.CompleteTime = School_SchoolFilterDTO.CompleteTime;
+            SchoolFilter.StudentCount = School_SchoolFilterDTO.StudentCount;
+            SchoolFilter.PhoneNumber = School_SchoolFilterDTO.PhoneNumber;
+            SchoolFilter.Address = School_SchoolFilterDTO.Address;
+            SchoolFilter.SchoolImage = School_SchoolFilterDTO.SchoolImage;
             return SchoolFilter;
         }
     }

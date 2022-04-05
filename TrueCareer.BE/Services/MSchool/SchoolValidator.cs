@@ -42,6 +42,12 @@ namespace TrueCareer.Services.MSchool
         {
             await ValidateName(School);
             await ValidateDescription(School);
+            await ValidateRating(School);
+            await ValidateCompleteTime(School);
+            await ValidateStudentCount(School);
+            await ValidatePhoneNumber(School);
+            await ValidateAddress(School);
+            await ValidateSchoolImage(School);
             return School.IsValidated;
         }
 
@@ -51,6 +57,12 @@ namespace TrueCareer.Services.MSchool
             {
                 await ValidateName(School);
                 await ValidateDescription(School);
+                await ValidateRating(School);
+                await ValidateCompleteTime(School);
+                await ValidateStudentCount(School);
+                await ValidatePhoneNumber(School);
+                await ValidateAddress(School);
+                await ValidateSchoolImage(School);
             }
             return School.IsValidated;
         }
@@ -114,6 +126,62 @@ namespace TrueCareer.Services.MSchool
             else if(School.Description.Count() > 500)
             {
                 School.AddError(nameof(SchoolValidator), nameof(School.Description), SchoolMessage.Error.DescriptionOverLength, SchoolMessage);
+            }
+            return School.IsValidated;
+        }
+        private async Task<bool> ValidateRating(School School)
+        {   
+            return true;
+        }
+        private async Task<bool> ValidateCompleteTime(School School)
+        {
+            if(string.IsNullOrEmpty(School.CompleteTime))
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.CompleteTime), SchoolMessage.Error.CompleteTimeEmpty, SchoolMessage);
+            }
+            else if(School.CompleteTime.Count() > 500)
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.CompleteTime), SchoolMessage.Error.CompleteTimeOverLength, SchoolMessage);
+            }
+            return School.IsValidated;
+        }
+        private async Task<bool> ValidateStudentCount(School School)
+        {   
+            return true;
+        }
+        private async Task<bool> ValidatePhoneNumber(School School)
+        {
+            if(string.IsNullOrEmpty(School.PhoneNumber))
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.PhoneNumber), SchoolMessage.Error.PhoneNumberEmpty, SchoolMessage);
+            }
+            else if(School.PhoneNumber.Count() > 500)
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.PhoneNumber), SchoolMessage.Error.PhoneNumberOverLength, SchoolMessage);
+            }
+            return School.IsValidated;
+        }
+        private async Task<bool> ValidateAddress(School School)
+        {
+            if(string.IsNullOrEmpty(School.Address))
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.Address), SchoolMessage.Error.AddressEmpty, SchoolMessage);
+            }
+            else if(School.Address.Count() > 500)
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.Address), SchoolMessage.Error.AddressOverLength, SchoolMessage);
+            }
+            return School.IsValidated;
+        }
+        private async Task<bool> ValidateSchoolImage(School School)
+        {
+            if(string.IsNullOrEmpty(School.SchoolImage))
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.SchoolImage), SchoolMessage.Error.SchoolImageEmpty, SchoolMessage);
+            }
+            else if(School.SchoolImage.Count() > 500)
+            {
+                School.AddError(nameof(SchoolValidator), nameof(School.SchoolImage), SchoolMessage.Error.SchoolImageOverLength, SchoolMessage);
             }
             return School.IsValidated;
         }

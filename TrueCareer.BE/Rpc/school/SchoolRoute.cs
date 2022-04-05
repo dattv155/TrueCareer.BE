@@ -41,6 +41,12 @@ namespace TrueCareer.Rpc.school
             { nameof(SchoolFilter.Id), FieldTypeEnum.ID.Id },
             { nameof(SchoolFilter.Name), FieldTypeEnum.STRING.Id },
             { nameof(SchoolFilter.Description), FieldTypeEnum.STRING.Id },
+            { nameof(SchoolFilter.Rating), FieldTypeEnum.DECIMAL.Id },
+            { nameof(SchoolFilter.CompleteTime), FieldTypeEnum.STRING.Id },
+            { nameof(SchoolFilter.StudentCount), FieldTypeEnum.LONG.Id },
+            { nameof(SchoolFilter.PhoneNumber), FieldTypeEnum.STRING.Id },
+            { nameof(SchoolFilter.Address), FieldTypeEnum.STRING.Id },
+            { nameof(SchoolFilter.SchoolImage), FieldTypeEnum.STRING.Id },
         };
 
         private static List<string> FilterList = new List<string> { 

@@ -25,6 +25,14 @@ namespace TrueCareer.Services.MSchool
             NameOverLength,
             DescriptionEmpty,
             DescriptionOverLength,
+            CompleteTimeEmpty,
+            CompleteTimeOverLength,
+            PhoneNumberEmpty,
+            PhoneNumberOverLength,
+            AddressEmpty,
+            AddressOverLength,
+            SchoolImageEmpty,
+            SchoolImageOverLength,
         }
     }
 }

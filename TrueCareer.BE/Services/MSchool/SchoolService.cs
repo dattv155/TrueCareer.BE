@@ -200,6 +200,18 @@ namespace TrueCareer.Services.MSchool
                         subFilter.Name = FilterBuilder.Merge(subFilter.Name, FilterPermissionDefinition.StringFilter);
                     if (FilterPermissionDefinition.Name == nameof(subFilter.Description))
                         subFilter.Description = FilterBuilder.Merge(subFilter.Description, FilterPermissionDefinition.StringFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.Rating))
+                        subFilter.Rating = FilterBuilder.Merge(subFilter.Rating, FilterPermissionDefinition.DecimalFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.CompleteTime))
+                        subFilter.CompleteTime = FilterBuilder.Merge(subFilter.CompleteTime, FilterPermissionDefinition.StringFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.StudentCount))
+                        subFilter.StudentCount = FilterBuilder.Merge(subFilter.StudentCount, FilterPermissionDefinition.LongFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.PhoneNumber))
+                        subFilter.PhoneNumber = FilterBuilder.Merge(subFilter.PhoneNumber, FilterPermissionDefinition.StringFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.Address))
+                        subFilter.Address = FilterBuilder.Merge(subFilter.Address, FilterPermissionDefinition.StringFilter);
+                    if (FilterPermissionDefinition.Name == nameof(subFilter.SchoolImage))
+                        subFilter.SchoolImage = FilterBuilder.Merge(subFilter.SchoolImage, FilterPermissionDefinition.StringFilter);
                     if (FilterPermissionDefinition.Name == nameof(CurrentContext.UserId) && FilterPermissionDefinition.IdFilter != null)
                     {
                         if (FilterPermissionDefinition.IdFilter.Equal.HasValue && FilterPermissionDefinition.IdFilter.Equal.Value == CurrentUserEnum.IS.Id)

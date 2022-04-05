@@ -42,6 +42,12 @@ namespace TrueCareer.Repositories
             query = query.Where(q => q.Id, filter.Id);
             query = query.Where(q => q.Name, filter.Name);
             query = query.Where(q => q.Description, filter.Description);
+            query = query.Where(q => q.Rating, filter.Rating);
+            query = query.Where(q => q.CompleteTime, filter.CompleteTime);
+            query = query.Where(q => q.StudentCount, filter.StudentCount);
+            query = query.Where(q => q.PhoneNumber, filter.PhoneNumber);
+            query = query.Where(q => q.Address, filter.Address);
+            query = query.Where(q => q.SchoolImage, filter.SchoolImage);
             return query;
         }
 
@@ -56,6 +62,12 @@ namespace TrueCareer.Repositories
                 queryable = queryable.Where(q => q.Id, SchoolFilter.Id);
                 queryable = queryable.Where(q => q.Name, SchoolFilter.Name);
                 queryable = queryable.Where(q => q.Description, SchoolFilter.Description);
+                queryable = queryable.Where(q => q.Rating, SchoolFilter.Rating);
+                queryable = queryable.Where(q => q.CompleteTime, SchoolFilter.CompleteTime);
+                queryable = queryable.Where(q => q.StudentCount, SchoolFilter.StudentCount);
+                queryable = queryable.Where(q => q.PhoneNumber, SchoolFilter.PhoneNumber);
+                queryable = queryable.Where(q => q.Address, SchoolFilter.Address);
+                queryable = queryable.Where(q => q.SchoolImage, SchoolFilter.SchoolImage);
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
@@ -77,6 +89,24 @@ namespace TrueCareer.Repositories
                         case SchoolOrder.Description:
                             query = query.OrderBy(q => q.Description);
                             break;
+                        case SchoolOrder.Rating:
+                            query = query.OrderBy(q => q.Rating);
+                            break;
+                        case SchoolOrder.CompleteTime:
+                            query = query.OrderBy(q => q.CompleteTime);
+                            break;
+                        case SchoolOrder.StudentCount:
+                            query = query.OrderBy(q => q.StudentCount);
+                            break;
+                        case SchoolOrder.PhoneNumber:
+                            query = query.OrderBy(q => q.PhoneNumber);
+                            break;
+                        case SchoolOrder.Address:
+                            query = query.OrderBy(q => q.Address);
+                            break;
+                        case SchoolOrder.SchoolImage:
+                            query = query.OrderBy(q => q.SchoolImage);
+                            break;
                     }
                     break;
                 case OrderType.DESC:
@@ -90,6 +120,24 @@ namespace TrueCareer.Repositories
                             break;
                         case SchoolOrder.Description:
                             query = query.OrderByDescending(q => q.Description);
+                            break;
+                        case SchoolOrder.Rating:
+                            query = query.OrderByDescending(q => q.Rating);
+                            break;
+                        case SchoolOrder.CompleteTime:
+                            query = query.OrderByDescending(q => q.CompleteTime);
+                            break;
+                        case SchoolOrder.StudentCount:
+                            query = query.OrderByDescending(q => q.StudentCount);
+                            break;
+                        case SchoolOrder.PhoneNumber:
+                            query = query.OrderByDescending(q => q.PhoneNumber);
+                            break;
+                        case SchoolOrder.Address:
+                            query = query.OrderByDescending(q => q.Address);
+                            break;
+                        case SchoolOrder.SchoolImage:
+                            query = query.OrderByDescending(q => q.SchoolImage);
                             break;
                     }
                     break;
@@ -105,6 +153,12 @@ namespace TrueCareer.Repositories
                 Id = filter.Selects.Contains(SchoolSelect.Id) ? q.Id : default(long),
                 Name = filter.Selects.Contains(SchoolSelect.Name) ? q.Name : default(string),
                 Description = filter.Selects.Contains(SchoolSelect.Description) ? q.Description : default(string),
+                Rating = filter.Selects.Contains(SchoolSelect.Rating) ? q.Rating : default(decimal?),
+                CompleteTime = filter.Selects.Contains(SchoolSelect.CompleteTime) ? q.CompleteTime : default(string),
+                StudentCount = filter.Selects.Contains(SchoolSelect.StudentCount) ? q.StudentCount : default(long?),
+                PhoneNumber = filter.Selects.Contains(SchoolSelect.PhoneNumber) ? q.PhoneNumber : default(string),
+                Address = filter.Selects.Contains(SchoolSelect.Address) ? q.Address : default(string),
+                SchoolImage = filter.Selects.Contains(SchoolSelect.SchoolImage) ? q.SchoolImage : default(string),
                 RowId = q.RowId,
             }).ToListAsync();
             return Schools;
@@ -149,6 +203,12 @@ namespace TrueCareer.Repositories
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
+                Rating = x.Rating,
+                CompleteTime = x.CompleteTime,
+                StudentCount = x.StudentCount,
+                PhoneNumber = x.PhoneNumber,
+                Address = x.Address,
+                SchoolImage = x.SchoolImage,
             }).ToListAsync();
             
 
@@ -164,6 +224,12 @@ namespace TrueCareer.Repositories
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
+                Rating = x.Rating,
+                CompleteTime = x.CompleteTime,
+                StudentCount = x.StudentCount,
+                PhoneNumber = x.PhoneNumber,
+                Address = x.Address,
+                SchoolImage = x.SchoolImage,
             }).FirstOrDefaultAsync();
 
             if (School == null)
@@ -178,6 +244,12 @@ namespace TrueCareer.Repositories
             SchoolDAO.Id = School.Id;
             SchoolDAO.Name = School.Name;
             SchoolDAO.Description = School.Description;
+            SchoolDAO.Rating = School.Rating;
+            SchoolDAO.CompleteTime = School.CompleteTime;
+            SchoolDAO.StudentCount = School.StudentCount;
+            SchoolDAO.PhoneNumber = School.PhoneNumber;
+            SchoolDAO.Address = School.Address;
+            SchoolDAO.SchoolImage = School.SchoolImage;
             SchoolDAO.RowId = Guid.NewGuid();
             DataContext.School.Add(SchoolDAO);
             await DataContext.SaveChangesAsync();
@@ -196,6 +268,12 @@ namespace TrueCareer.Repositories
             SchoolDAO.Id = School.Id;
             SchoolDAO.Name = School.Name;
             SchoolDAO.Description = School.Description;
+            SchoolDAO.Rating = School.Rating;
+            SchoolDAO.CompleteTime = School.CompleteTime;
+            SchoolDAO.StudentCount = School.StudentCount;
+            SchoolDAO.PhoneNumber = School.PhoneNumber;
+            SchoolDAO.Address = School.Address;
+            SchoolDAO.SchoolImage = School.SchoolImage;
             await DataContext.SaveChangesAsync();
             await SaveReference(School);
             return true;
@@ -229,6 +307,12 @@ namespace TrueCareer.Repositories
                 }
                 SchoolDAO.Name = School.Name;
                 SchoolDAO.Description = School.Description;
+                SchoolDAO.Rating = School.Rating;
+                SchoolDAO.CompleteTime = School.CompleteTime;
+                SchoolDAO.StudentCount = School.StudentCount;
+                SchoolDAO.PhoneNumber = School.PhoneNumber;
+                SchoolDAO.Address = School.Address;
+                SchoolDAO.SchoolImage = School.SchoolImage;
                 SchoolDAOs.Add(SchoolDAO);
             }
             await DataContext.BulkMergeAsync(SchoolDAOs);
