@@ -51,6 +51,9 @@ namespace TrueCareer.Rpc.app_user
                 Username = AppUser_LoginDTO.Username,
                 Password = AppUser_LoginDTO.Password,
                 BaseLanguage = "vi",
+                GIdToken = AppUser_LoginDTO.GIdToken,
+                FbIdToken = AppUser_LoginDTO.FbIdToken,
+                AIdToken = AppUser_LoginDTO.AIdToken,
             };
             AppUser.BaseLanguage = CurrentContext.Language;
             AppUser = await AppUserService.Login(AppUser);

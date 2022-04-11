@@ -29,6 +29,12 @@ namespace TrueCareer.Entities
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public string PasswordConfirmation { get; set; }
+        
+        public string GIdToken { get; set; }
+        
+        public string FbIdToken { get; set; }
+        
+        public string AIdToken { get; set; }
         public List<AppUserRoleMapping> AppUserRoleMappings { get; set; }
 
         public bool Equals(AppUser other)
@@ -47,6 +53,9 @@ namespace TrueCareer.Entities
         public StringFilter Username { get; set; }
         public StringFilter Email { get; set; }
         public StringFilter Phone { get; set; }
+        public StringFilter GIdToken { get; set; }
+        public StringFilter FbIdToken { get; set; }
+        public StringFilter AIdToken { get; set; }
         public StringFilter Password { get; set; }
         public string OtpCode { get; set; }
         public DateTime? OtpExpired { get; set; }

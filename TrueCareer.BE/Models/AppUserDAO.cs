@@ -43,7 +43,7 @@ namespace TrueCareer.BE.Models
         public string OtpCode { get; set; }
         public DateTime? OtpExpired { get; set; }
         public string GIdToken { get; set; }
-        public string FbIdTolen { get; set; }
+        public string FbIdToken { get; set; }
         public string AIdToken { get; set; }
 
         public virtual SexDAO Sex { get; set; }

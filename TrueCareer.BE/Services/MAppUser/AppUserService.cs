@@ -43,7 +43,7 @@ namespace TrueCareer.Services.MAppUser
         Task<AppUser> RecoveryPassword(AppUser AppUser);
     }
 
-    public class AppUserService : BaseService, IAppUserService
+    public partial class AppUserService : BaseService, IAppUserService
     {
         private IUOW UOW;
         private IRabbitManager RabbitManager;
@@ -316,12 +316,31 @@ namespace TrueCareer.Services.MAppUser
 
         public async Task<AppUser> Login(AppUser AppUser)
         {
-            if (!await AppUserValidator.Login(AppUser))
-                return AppUser;
+            if (string.IsNullOrWhiteSpace(AppUser.GIdToken) &&
+                string.IsNullOrWhiteSpace(AppUser.FbIdToken) &&
+                string.IsNullOrWhiteSpace(AppUser.AIdToken))
+            {
+                if (!await AppUserValidator.Login(AppUser))
+                    return AppUser;
+                CurrentContext.UserId = AppUser.Id;
+                // Logging.CreateAuditLog(new { }, AppUser, nameof(AppUserService));
+            }
+            if (!string.IsNullOrWhiteSpace(AppUser.GIdToken))
+            {
+                AppUser = await GoogleLogin(AppUser.GIdToken);
+            }
+            if (!string.IsNullOrWhiteSpace(AppUser.FbIdToken))
+            {
+                AppUser = await FacebookLogin(AppUser.FbIdToken);
+            }
+            if (!string.IsNullOrWhiteSpace(AppUser.AIdToken))
+            {
+                AppUser = await AppleLogin(AppUser.AIdToken);
+            }
+            
             AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
-            CurrentContext.UserId = AppUser.Id;
             AppUser.Token = CreateToken(AppUser.Id, AppUser.Username, AppUser.RowId);
-            return AppUser;
+            return AppUser; 
         }
 
         public async Task<AppUser> Register(AppUser AppUser)
