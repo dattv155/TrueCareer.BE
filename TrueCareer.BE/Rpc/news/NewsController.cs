@@ -15,6 +15,7 @@ using TrueCareer.Entities;
 using TrueCareer.Services.MNews;
 using TrueCareer.Services.MAppUser;
 using TrueCareer.Services.MNewsStatus;
+using TrueCareer.Enums;
 
 namespace TrueCareer.Rpc.news
 {
@@ -86,6 +87,16 @@ namespace TrueCareer.Rpc.news
                 return Forbid();
 
             News News = ConvertDTOToEntity(News_NewsDTO);
+            
+            NewsStatus NewsStatus = new NewsStatus()
+            {
+                Id = NewsStatusEnum.PENDING.Id,
+                Code = NewsStatusEnum.PENDING.Code,
+                Name = NewsStatusEnum.PENDING.Name
+            };
+            News.NewsStatusId = NewsStatusEnum.PENDING.Id;
+            News.NewsStatus = NewsStatus;
+            
             News = await NewsService.Create(News);
             News_NewsDTO = new News_NewsDTO(News);
             if (News.IsValidated)
@@ -104,6 +115,64 @@ namespace TrueCareer.Rpc.news
                 return Forbid();
 
             News News = ConvertDTOToEntity(News_NewsDTO);
+            News = await NewsService.Update(News);
+            News_NewsDTO = new News_NewsDTO(News);
+            if (News.IsValidated)
+                return News_NewsDTO;
+            else
+                return BadRequest(News_NewsDTO);
+        }
+        
+        [Route(NewsRoute.ApproveNews), HttpPost]
+        public async Task<ActionResult<News_NewsDTO>> ApproveNews([FromBody] News_NewsDTO News_NewsDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            
+            if (!await HasPermission(News_NewsDTO.Id))
+                return Forbid();
+
+            News News = ConvertDTOToEntity(News_NewsDTO);
+            
+            NewsStatus NewsStatus = new NewsStatus()
+            {
+                Id = NewsStatusEnum.PENDING.Id,
+                Code = NewsStatusEnum.PENDING.Code,
+                Name = NewsStatusEnum.PENDING.Name
+            };
+
+            News.NewsStatusId = NewsStatus.Id;
+            News.NewsStatus = NewsStatus;
+            
+            News = await NewsService.Update(News);
+            News_NewsDTO = new News_NewsDTO(News);
+            if (News.IsValidated)
+                return News_NewsDTO;
+            else
+                return BadRequest(News_NewsDTO);
+        }
+        
+        [Route(NewsRoute.RejectNews), HttpPost]
+        public async Task<ActionResult<News_NewsDTO>> RejectNews([FromBody] News_NewsDTO News_NewsDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            
+            if (!await HasPermission(News_NewsDTO.Id))
+                return Forbid();
+
+            News News = ConvertDTOToEntity(News_NewsDTO);
+            
+            NewsStatus NewsStatus = new NewsStatus()
+            {
+                Id = NewsStatusEnum.REJECT.Id,
+                Code = NewsStatusEnum.REJECT.Code,
+                Name = NewsStatusEnum.REJECT.Name
+            };
+
+            News.NewsStatusId = NewsStatus.Id;
+            News.NewsStatus = NewsStatus;
+            
             News = await NewsService.Update(News);
             News_NewsDTO = new News_NewsDTO(News);
             if (News.IsValidated)
