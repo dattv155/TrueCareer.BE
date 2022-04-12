@@ -18,6 +18,7 @@ namespace TrueCareer.Services.MComment
     {
         Task<int> Count(CommentFilter CommentFilter);
         Task<List<Comment>> List(CommentFilter CommentFilter);
+        Task<List<Comment>> List(Guid DiscussionId, OrderType OrderType);
         Task<Comment> Get(long Id);
         Task<Comment> Create(Comment Comment);
         Task<Comment> Update(Comment Comment);
@@ -76,6 +77,21 @@ namespace TrueCareer.Services.MComment
             {
                 Logging.CreateSystemLog(ex, nameof(CommentService));
             }
+            return null;
+        }
+        
+        public async Task<List<Comment>> List(Guid DiscussionId, OrderType OrderType)
+        {
+            try
+            {
+                List<Comment> Comments = await UOW.CommentRepository.List(DiscussionId, OrderType);
+                return Comments;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(CommentService));
+            }
+
             return null;
         }
 

@@ -50,10 +50,9 @@ namespace TrueCareer.Rpc.comment
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-
-            CommentFilter CommentFilter = ConvertFilterDTOToFilterEntity(Comment_CommentFilterDTO);
-            CommentFilter = await CommentService.ToFilter(CommentFilter);
-            List<Comment> Comments = await CommentService.List(CommentFilter);
+            Guid DiscussionId = Comment_CommentFilterDTO.DiscussionId?.Equal ?? Guid.Empty;
+            
+            List<Comment> Comments = await CommentService.List(DiscussionId, Comment_CommentFilterDTO.OrderType);
             List<Comment_CommentDTO> Comment_CommentDTOs = Comments
                 .Select(c => new Comment_CommentDTO(c)).ToList();
             return Comment_CommentDTOs;

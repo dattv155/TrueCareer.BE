@@ -20,6 +20,7 @@ namespace TrueCareer.Repositories
         Task<int> Count(CommentFilter CommentFilter);
         Task<List<Comment>> List(CommentFilter CommentFilter);
         Task<List<Comment>> List(List<long> Ids);
+        Task<List<Comment>> List(Guid DiscussionId, OrderType OrderType);
         Task<Comment> Get(long Id);
         Task<bool> Create(Comment Comment);
         Task<bool> Update(Comment Comment);
@@ -160,7 +161,6 @@ namespace TrueCareer.Repositories
             List<Comment> Comments = await DynamicSelect(CommentDAOs, filter);
             return Comments;
         }
-
         public async Task<List<Comment>> List(List<long> Ids)
         {
             IdFilter IdFilter = new IdFilter { In = Ids };
@@ -191,6 +191,44 @@ namespace TrueCareer.Repositories
                     CoverImage = x.Creator.CoverImage,
                 },
             }).ToListAsync();
+            
+
+            return Comments;
+        }
+        
+        public async Task<List<Comment>> List(Guid DiscussionId, OrderType OrderType)
+        {
+            IQueryable<CommentDAO> query = DataContext.Comment
+                .Where(p => p.DiscussionId == DiscussionId && p.DeletedAt.HasValue == false);
+            if (OrderType == OrderType.ASC)
+                query = query.OrderBy(x => x.CreatedAt);
+            if (OrderType == OrderType.DESC)
+                query = query.OrderByDescending(x => x.CreatedAt);
+            
+            List<Comment> Comments = await query.AsNoTracking()
+                .Select(x => new Comment()
+                {
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
+                    DeletedAt = x.DeletedAt,
+                    Id = x.Id,
+                    Content = x.Content,
+                    CreatorId = x.CreatorId,
+                    DiscussionId = x.DiscussionId,
+                    Creator = x.Creator == null ? null : new AppUser
+                    {
+                        Id = x.Creator.Id,
+                        Username = x.Creator.Username,
+                        Email = x.Creator.Email,
+                        Phone = x.Creator.Phone,
+                        Password = x.Creator.Password,
+                        DisplayName = x.Creator.DisplayName,
+                        SexId = x.Creator.SexId,
+                        Birthday = x.Creator.Birthday,
+                        Avatar = x.Creator.Avatar,
+                        CoverImage = x.Creator.CoverImage,
+                    },
+                }).ToListAsync();
             
 
             return Comments;
