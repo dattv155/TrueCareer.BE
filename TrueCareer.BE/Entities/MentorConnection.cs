@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TrueCareer.Entities
 {
-    public class MentorConnection : DataEntity,  IEquatable<MentorConnection>
+    public class MentorConnection : DataEntity, IEquatable<MentorConnection>
     {
         public long Id { get; set; }
         public long MentorId { get; set; }
@@ -15,14 +15,11 @@ namespace TrueCareer.Entities
         public long ConnectionTypeId { get; set; }
         public ConnectionType ConnectionType { get; set; }
         public AppUser Mentor { get; set; }
-        
+
         public bool Equals(MentorConnection other)
         {
             if (other == null) return false;
             if (this.Id != other.Id) return false;
-            if (this.MentorId != other.MentorId) return false;
-            if (this.Url != other.Url) return false;
-            if (this.ConnectionTypeId != other.ConnectionTypeId) return false;
             return true;
         }
         public override int GetHashCode()
@@ -38,8 +35,8 @@ namespace TrueCareer.Entities
         public StringFilter Url { get; set; }
         public IdFilter ConnectionTypeId { get; set; }
         public List<MentorConnectionFilter> OrFilter { get; set; }
-        public MentorConnectionOrder OrderBy {get; set;}
-        public MentorConnectionSelect Selects {get; set;}
+        public MentorConnectionOrder OrderBy { get; set; }
+        public MentorConnectionSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -52,7 +49,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum MentorConnectionSelect:long
+    public enum MentorConnectionSelect : long
     {
         ALL = E.ALL,
         Id = E._0,
