@@ -11,6 +11,9 @@ using TrueCareer.Entities;
 using TrueCareer.Services.MMentorRegisterRequest;
 using TrueCareer.Service;
 using TrueCareer.Services.MTopic;
+using TrueCareer.Services.MMentorConnection;
+using TrueCareer.Services.MActiveTime;
+using TrueCareer.Enums;
 
 namespace TrueCareer.Rpc.mentor_register_request
 {
@@ -22,13 +25,17 @@ namespace TrueCareer.Rpc.mentor_register_request
         private IMentorRegisterRequestService MentorRegisterRequestService;
         private IFileService FileService;
         private ITopicService TopicService;
+        private IMentorConnectionService MentorConnectionService;
+        private IActiveTimeService ActiveTimeService;
         public MentorRegisterRequestController(
             IMajorService MajorService,
             IConnectionTypeService ConnectionTypeService,
             ICurrentContext CurrentContext,
             IMentorRegisterRequestService MentorRegisterRequestService,
             IFileService FileService,
-            ITopicService TopicService
+            ITopicService TopicService,
+            IMentorConnectionService MentorConnectionService,
+            IActiveTimeService ActiveTimeService
         )
         {
             this.MajorService = MajorService;
@@ -37,6 +44,8 @@ namespace TrueCareer.Rpc.mentor_register_request
             this.MentorRegisterRequestService = MentorRegisterRequestService;
             this.FileService = FileService;
             this.TopicService = TopicService;
+            this.MentorConnectionService = MentorConnectionService;
+            this.ActiveTimeService = ActiveTimeService;
         }
 
         [Route(MentorRegisterRequestRoute.Count), HttpPost]
@@ -132,8 +141,8 @@ namespace TrueCareer.Rpc.mentor_register_request
                 return BadRequest(MentorRegisterRequest_MentorRegisterRequestDTO);
         }
 
-       [Route(MentorRegisterRequestRoute.SaveTopic), HttpPost]
-       public async Task<ActionResult<MentorRegisterRequest_TopicDTO>> SaveTopic([FromBody] MentorRegisterRequest_TopicDTO MentorRegisterRequest_TopicDTO)
+        [Route(MentorRegisterRequestRoute.SaveTopic), HttpPost]
+        public async Task<ActionResult<MentorRegisterRequest_TopicDTO>> SaveTopic([FromBody] MentorRegisterRequest_TopicDTO MentorRegisterRequest_TopicDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
@@ -153,13 +162,121 @@ namespace TrueCareer.Rpc.mentor_register_request
             if (Topic.IsValidated)
             {
                 return MentorRegisterRequest_TopicDTO;
-            } else
+            }
+            else
             {
                 return BadRequest(MentorRegisterRequest_TopicDTO);
             }
         }
 
-        
+        [Route(MentorRegisterRequestRoute.SaveMentorConnection), HttpPost]
+        public async Task<ActionResult<MentorRegisterRequest_MentorConnectionDTO>> SaveMentorConnection([FromBody] MentorRegisterRequest_MentorConnectionDTO MentorRegisterRequest_MentorConnectionDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorRegisterRequest_MentorConnectionDTO.Id))
+                return Forbid();
+
+            MentorConnection MentorConnection = new MentorConnection()
+            {
+                Id = MentorRegisterRequest_MentorConnectionDTO.Id,
+                MentorId = MentorRegisterRequest_MentorConnectionDTO.MentorId,
+                Url = MentorRegisterRequest_MentorConnectionDTO.Url,
+                ConnectionTypeId = MentorRegisterRequest_MentorConnectionDTO.ConnectionTypeId
+            };
+            MentorConnection = await MentorConnectionService.Create(MentorConnection);
+            MentorRegisterRequest_MentorConnectionDTO = new MentorRegisterRequest_MentorConnectionDTO(MentorConnection);
+            if (MentorConnection.IsValidated)
+            {
+                return MentorRegisterRequest_MentorConnectionDTO;
+            }
+            else
+            {
+                return BadRequest(MentorRegisterRequest_MentorConnectionDTO);
+            }
+        }
+
+
+        [Route(MentorRegisterRequestRoute.SaveActiveTime), HttpPost]
+        public async Task<ActionResult<MentorRegisterRequest_ActiveTimeDTO>> SaveActiveTime([FromBody] MentorRegisterRequest_ActiveTimeDTO MentorRegisterRequest_ActiveTimeDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorRegisterRequest_ActiveTimeDTO.Id))
+                return Forbid();
+
+            ActiveTime ActiveTime = new ActiveTime()
+            {
+                Id = MentorRegisterRequest_ActiveTimeDTO.Id,
+                UnitOfTimeId = MentorRegisterRequest_ActiveTimeDTO.UnitOfTimeId, // bo sung constructor unit of time
+                ActiveDate = MentorRegisterRequest_ActiveTimeDTO.ActiveDate,
+                MentorId = MentorRegisterRequest_ActiveTimeDTO.MentorId // bo sung constructor app user
+            };
+            ActiveTime = await ActiveTimeService.Create(ActiveTime);
+            MentorRegisterRequest_ActiveTimeDTO = new MentorRegisterRequest_ActiveTimeDTO(ActiveTime);
+            if (ActiveTime.IsValidated)
+            {
+                return MentorRegisterRequest_ActiveTimeDTO;
+            }
+            else
+            {
+                return BadRequest(MentorRegisterRequest_ActiveTimeDTO);
+            }
+        }
+
+        [Route(MentorRegisterRequestRoute.Approve), HttpPost]
+        public async Task<ActionResult<MentorRegisterRequest_MentorRegisterRequestDTO>> Approve([FromBody] MentorRegisterRequest_MentorRegisterRequestDTO MentorRegisterRequest_MentorRegisterRequestDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorRegisterRequest_MentorRegisterRequestDTO.Id))
+                return Forbid();
+
+            MentorRegisterRequest MentorRegisterRequest = ConvertDTOToEntity(MentorRegisterRequest_MentorRegisterRequestDTO);
+            MentorApprovalStatus MentorApprovalStatus = new MentorApprovalStatus()
+            {
+                Id = MentorApprovalStatusEnum.APPROVE.Id,
+                Code = MentorApprovalStatusEnum.APPROVE.Code,
+                Name = MentorApprovalStatusEnum.APPROVE.Name
+            };
+            MentorRegisterRequest.MentorApprovalStatus = MentorApprovalStatus;
+            MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
+            MentorRegisterRequest = await MentorRegisterRequestService.Update(MentorRegisterRequest);
+            MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);
+            if (MentorRegisterRequest.IsValidated)
+                return MentorRegisterRequest_MentorRegisterRequestDTO;
+            else
+                return BadRequest(MentorRegisterRequest_MentorRegisterRequestDTO);
+        }
+
+        [Route(MentorRegisterRequestRoute.Reject), HttpPost]
+        public async Task<ActionResult<MentorRegisterRequest_MentorRegisterRequestDTO>> Reject([FromBody] MentorRegisterRequest_MentorRegisterRequestDTO MentorRegisterRequest_MentorRegisterRequestDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorRegisterRequest_MentorRegisterRequestDTO.Id))
+                return Forbid();
+
+            MentorRegisterRequest MentorRegisterRequest = ConvertDTOToEntity(MentorRegisterRequest_MentorRegisterRequestDTO);
+            MentorApprovalStatus MentorApprovalStatus = new MentorApprovalStatus()
+            {
+                Id = MentorApprovalStatusEnum.REJECT.Id,
+                Code = MentorApprovalStatusEnum.REJECT.Code,
+                Name = MentorApprovalStatusEnum.REJECT.Name
+            };
+            MentorRegisterRequest.MentorApprovalStatus = MentorApprovalStatus;
+            MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.REJECT.Id;
+            MentorRegisterRequest = await MentorRegisterRequestService.Update(MentorRegisterRequest);
+            MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);
+            if (MentorRegisterRequest.IsValidated)
+                return MentorRegisterRequest_MentorRegisterRequestDTO;
+            else
+                return BadRequest(MentorRegisterRequest_MentorRegisterRequestDTO);
+        }
 
 
         private async Task<bool> HasPermission(long Id)
@@ -214,7 +331,7 @@ namespace TrueCareer.Rpc.mentor_register_request
                 Avatar = MentorRegisterRequest_MentorRegisterRequestDTO.User.Avatar,
                 CoverImage = MentorRegisterRequest_MentorRegisterRequestDTO.User.CoverImage,
             };
-           
+
             MentorRegisterRequest.BaseLanguage = CurrentContext.Language;
             return MentorRegisterRequest;
         }

@@ -130,7 +130,7 @@ namespace TrueCareer.Rpc.conversation_message
                 return BadRequest(ConversationMessage_ConversationMessageDTO);
         }
         [Route(ConversationMessageRoute.Read), HttpPost]
-        public async Task<ActionResult<bool>> Read(long ConversationId, long GlobalUserId )
+        public async Task<ActionResult<bool>> Read(long ConversationId, long GlobalUserId)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
@@ -224,7 +224,7 @@ namespace TrueCareer.Rpc.conversation_message
             File = await FileService.Create(File);
             if (File == null)
                 return BadRequest();
-            File.Path = "/rpc/TrueCareer/public-file/download" + File.Path;
+            File.Path = "/rpc/truecareer/public-file/download" + File.Path;
             ConversationMessage_FileDTO ConversationMessage_FileDTO = new ConversationMessage_FileDTO(File);
             return Ok(ConversationMessage_FileDTO);
         }

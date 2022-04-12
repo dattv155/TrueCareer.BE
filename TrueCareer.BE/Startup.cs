@@ -36,6 +36,8 @@ using TrueCareer.Rpc;
 using TrueCareer.Services;
 using TrueCareer.Hub;
 using TrueCareer.Handlers;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 namespace TrueCareer
 {
@@ -49,7 +51,7 @@ namespace TrueCareer
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
             .AddEnvironmentVariables();
-            
+
             Configuration = builder.Build();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LicenseManager.AddLicense("2456;100-FPT", "3f0586d1-0216-5005-8b7a-9080b0bedb5e");
@@ -88,7 +90,7 @@ namespace TrueCareer
             });
             EntityFrameworkManager.ContextFactory = context =>
             {
-               var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+                var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DataContext"), sqlOptions =>
                 {
                     sqlOptions.AddTempTableSupport();
@@ -104,7 +106,7 @@ namespace TrueCareer
                 .AddClasses(classes => classes.AssignableTo<IServiceScoped>())
                      .AsImplementedInterfaces()
                      .WithScopedLifetime());
-            
+
             services.AddHangfire(configuration => configuration
              .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
              .UseSimpleAssemblyNameTypeSerializer()
@@ -192,6 +194,13 @@ namespace TrueCareer
 
             Action onChange = () =>
             {
+                string credential = Configuration["Firebase:Credential"];
+                var base64EncodedBytes = System.Convert.FromBase64String(credential);
+                credential = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+                var defaultApp = FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromJson(credential)
+                });
                 JobStorage.Current = new SqlServerStorage(Configuration.GetConnectionString("DataContext"));
                 using (var connection = JobStorage.Current.GetConnection())
                 {
@@ -231,7 +240,7 @@ namespace TrueCareer
                 c.RoutePrefix = "rpc/truecareer/swagger";
             });
             app.UseHangfireDashboard("/rpc/truecareer/hangfire");
-            
+
         }
     }
 }
