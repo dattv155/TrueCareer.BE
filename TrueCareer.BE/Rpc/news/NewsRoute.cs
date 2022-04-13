@@ -41,8 +41,8 @@ namespace TrueCareer.Rpc.news
         public const string SingleListAppUser = Default + "/single-list-app-user";
         public const string SingleListNewsStatus = Default + "/single-list-news-status";
         
-        public const string ApproveNews = Default + "/approve-news";
-        public const string RejectNews = Default + "/reject-news";
+        public const string ApproveNews = Default + "/approve";
+        public const string RejectNews = Default + "/reject";
 
 
         public static Dictionary<string, long> Filters = new Dictionary<string, long>
