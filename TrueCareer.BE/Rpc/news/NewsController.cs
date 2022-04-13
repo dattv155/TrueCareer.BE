@@ -136,9 +136,9 @@ namespace TrueCareer.Rpc.news
             
             NewsStatus NewsStatus = new NewsStatus()
             {
-                Id = NewsStatusEnum.PENDING.Id,
-                Code = NewsStatusEnum.PENDING.Code,
-                Name = NewsStatusEnum.PENDING.Name
+                Id = NewsStatusEnum.APPROVE.Id,
+                Code = NewsStatusEnum.APPROVE.Code,
+                Name = NewsStatusEnum.APPROVE.Name
             };
 
             News.NewsStatusId = NewsStatus.Id;
