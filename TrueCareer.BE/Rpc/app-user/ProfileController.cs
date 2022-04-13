@@ -27,18 +27,19 @@ namespace TrueCareer.Rpc.app_user
 
     }
     [Authorize]
-    public class ProfileController:ControllerBase
+    public class ProfileController : ControllerBase
     {
         private IAppUserService AppUserService;
         private ISexService SexService;
         private ICurrentContext CurrentContext;
         public ProfileController(
            IAppUserService AppUserService,
-           ICurrentContext CurrentContext
+           ICurrentContext CurrentContext, ISexService SexService
            )
         {
             this.AppUserService = AppUserService;
             this.CurrentContext = CurrentContext;
+            this.SexService = SexService;
         }
         [AllowAnonymous]
         [Route(ProfileRoot.Login), HttpPost]
@@ -82,8 +83,8 @@ namespace TrueCareer.Rpc.app_user
                 Email = AppUser_RegisterDTO.Email,
                 DisplayName = AppUser_RegisterDTO.DisplayName,
                 SexId = 1,
-                Avatar= "https://picsum.photos/200",
-                CoverImage= "https://picsum.photos/200/300",
+                Avatar = "https://picsum.photos/200",
+                CoverImage = "https://picsum.photos/200/300",
                 PasswordConfirmation = AppUser_RegisterDTO.PasswordConfirmation
             };
             AppUser = await AppUserService.Register(AppUser);
@@ -256,17 +257,6 @@ namespace TrueCareer.Rpc.app_user
                 Code = AppUser_AppUserDTO.Sex.Code,
                 Name = AppUser_AppUserDTO.Sex.Name,
             };
-            AppUser.AppUserRoleMappings = AppUser_AppUserDTO.AppUserRoleMappings?
-                .Select(x => new AppUserRoleMapping
-                {
-                    RoleId = x.RoleId,
-                    Role = x.Role == null ? null : new Role
-                    {
-                        Id = x.Role.Id,
-                        Code = x.Role.Code,
-                        Name = x.Role.Name,
-                    },
-                }).ToList();
             AppUser.BaseLanguage = CurrentContext.Language;
             return AppUser;
         }
