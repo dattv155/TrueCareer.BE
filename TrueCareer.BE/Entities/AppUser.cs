@@ -35,7 +35,6 @@ namespace TrueCareer.Entities
         public string FbIdToken { get; set; }
         
         public string AIdToken { get; set; }
-        public List<AppUserRoleMapping> AppUserRoleMappings { get; set; }
 
         public bool Equals(AppUser other)
         {

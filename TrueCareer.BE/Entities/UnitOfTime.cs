@@ -33,6 +33,8 @@ namespace TrueCareer.Entities
         public IdFilter Id { get; set; }
         public StringFilter Code { get; set; }
         public StringFilter Name { get; set; }
+        public LongFilter StartAt { get; set; }
+        public LongFilter EndAt { get; set; }
         public List<UnitOfTimeFilter> OrFilter { get; set; }
         public UnitOfTimeOrder OrderBy { get; set; }
         public UnitOfTimeSelect Selects { get; set; }
@@ -44,6 +46,8 @@ namespace TrueCareer.Entities
         Id = 0,
         Code = 1,
         Name = 2,
+        StartAt = 3,
+        EndAt = 4
     }
 
     [Flags]
@@ -53,5 +57,7 @@ namespace TrueCareer.Entities
         Id = E._0,
         Code = E._1,
         Name = E._2,
+        StartAt = E._3,
+        EndAt = E._4
     }
 }

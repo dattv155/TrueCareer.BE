@@ -9,7 +9,6 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<ActiveTimeDAO> ActiveTime { get; set; }
         public virtual DbSet<AggregatedCounterDAO> AggregatedCounter { get; set; }
         public virtual DbSet<AppUserDAO> AppUser { get; set; }
-        public virtual DbSet<AppUserRoleMappingDAO> AppUserRoleMapping { get; set; }
         public virtual DbSet<ChoiceDAO> Choice { get; set; }
         public virtual DbSet<CommentDAO> Comment { get; set; }
         public virtual DbSet<ConnectionStatusDAO> ConnectionStatus { get; set; }
@@ -147,29 +146,16 @@ namespace TrueCareer.BE.Models
                     .IsRequired()
                     .HasMaxLength(500);
 
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AppUsers)
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK_AppUser_Role");
+
                 entity.HasOne(d => d.Sex)
                     .WithMany(p => p.AppUsers)
                     .HasForeignKey(d => d.SexId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_AppUser_Sex");
-            });
-
-            modelBuilder.Entity<AppUserRoleMappingDAO>(entity =>
-            {
-                entity.HasKey(e => new { e.AppUserId, e.RoleId })
-                    .HasName("PK_AppUserRoleMapping_1");
-
-                entity.HasOne(d => d.AppUser)
-                    .WithMany(p => p.AppUserRoleMappings)
-                    .HasForeignKey(d => d.AppUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AppUserRoleMapping_AppUser");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AppUserRoleMappings)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AppUserRoleMapping_Role");
             });
 
             modelBuilder.Entity<ChoiceDAO>(entity =>

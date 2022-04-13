@@ -49,6 +49,7 @@ namespace TrueCareer.Repositories
         IConversationReadHistoryRepository ConversationReadHistoryRepository { get; }
         IGlobalUserRepository GlobalUserRepository { get; }
         IMentorRegisterRequestRepository MentorRegisterRequestRepository { get; }
+        IUnitOfTimeRepository UnitOfTimeRepository { get; }
     }
 
     public class UOW : IUOW
@@ -90,6 +91,8 @@ namespace TrueCareer.Repositories
         public IFileRepository FileRepository { get; private set; }
         public IMentorRegisterRequestRepository MentorRegisterRequestRepository { get; private set; }
 
+        public IUnitOfTimeRepository UnitOfTimeRepository { get; private set; }
+
         public UOW(DataContext DataContext, IConfiguration Configuration)
         {
             this.DataContext = DataContext;
@@ -129,6 +132,7 @@ namespace TrueCareer.Repositories
             ConversationReadHistoryRepository = new ConversationReadHistoryRepository(DataContext);
             GlobalUserRepository = new GlobalUserRepository(DataContext);
             MentorRegisterRequestRepository = new MentorRegisterRequestRepository(DataContext);
+            UnitOfTimeRepository = new UnitOfTimeRepository(DataContext);
         }
         public async Task Begin()
         {

@@ -385,17 +385,6 @@ namespace TrueCareer.Rpc.app_user
                 Code = AppUser_AppUserDTO.Sex.Code,
                 Name = AppUser_AppUserDTO.Sex.Name,
             };
-            AppUser.AppUserRoleMappings = AppUser_AppUserDTO.AppUserRoleMappings?
-                .Select(x => new AppUserRoleMapping
-                {
-                    RoleId = x.RoleId,
-                    Role = x.Role == null ? null : new Role
-                    {
-                        Id = x.Role.Id,
-                        Code = x.Role.Code,
-                        Name = x.Role.Name
-                    },
-                }).ToList();
             AppUser.BaseLanguage = CurrentContext.Language;
             return AppUser;
         }

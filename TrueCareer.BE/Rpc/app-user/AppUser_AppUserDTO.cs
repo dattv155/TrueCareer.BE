@@ -26,7 +26,6 @@ namespace TrueCareer.Rpc.app_user
         public Guid RowId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<AppUser_AppUserRoleMappingDTO> AppUserRoleMappings { get; set; }
         public AppUser_AppUserDTO() {}
         public AppUser_AppUserDTO(AppUser AppUser)
         {
