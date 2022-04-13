@@ -13,6 +13,7 @@ using TrueCareer.Service;
 using TrueCareer.Services.MTopic;
 using TrueCareer.Services.MMentorConnection;
 using TrueCareer.Services.MActiveTime;
+using TrueCareer.Services.MAppUser;
 using TrueCareer.Enums;
 
 namespace TrueCareer.Rpc.mentor_register_request
@@ -27,6 +28,7 @@ namespace TrueCareer.Rpc.mentor_register_request
         private ITopicService TopicService;
         private IMentorConnectionService MentorConnectionService;
         private IActiveTimeService ActiveTimeService;
+        private IAppUserService AppUserService;
         public MentorRegisterRequestController(
             IMajorService MajorService,
             IConnectionTypeService ConnectionTypeService,
@@ -35,7 +37,8 @@ namespace TrueCareer.Rpc.mentor_register_request
             IFileService FileService,
             ITopicService TopicService,
             IMentorConnectionService MentorConnectionService,
-            IActiveTimeService ActiveTimeService
+            IActiveTimeService ActiveTimeService,
+            IAppUserService AppUserService
         )
         {
             this.MajorService = MajorService;
@@ -46,6 +49,7 @@ namespace TrueCareer.Rpc.mentor_register_request
             this.TopicService = TopicService;
             this.MentorConnectionService = MentorConnectionService;
             this.ActiveTimeService = ActiveTimeService;
+            this.AppUserService = AppUserService;
         }
 
         [Route(MentorRegisterRequestRoute.Count), HttpPost]
@@ -97,6 +101,13 @@ namespace TrueCareer.Rpc.mentor_register_request
                 return Forbid();
 
             MentorRegisterRequest MentorRegisterRequest = ConvertDTOToEntity(MentorRegisterRequest_MentorRegisterRequestDTO);
+            MentorRegisterRequest.MentorApprovalStatus = new MentorApprovalStatus()
+            {
+                Id = MentorApprovalStatusEnum.PENDING.Id,
+                Code = MentorApprovalStatusEnum.PENDING.Code,
+                Name = MentorApprovalStatusEnum.PENDING.Name
+            };
+            MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.PENDING.Id;
             MentorRegisterRequest = await MentorRegisterRequestService.Create(MentorRegisterRequest);
             MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);
             if (MentorRegisterRequest.IsValidated)
@@ -244,6 +255,8 @@ namespace TrueCareer.Rpc.mentor_register_request
             };
             MentorRegisterRequest.MentorApprovalStatus = MentorApprovalStatus;
             MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
+            AppUser AppUser = await AppUserService.Get(MentorRegisterRequest_MentorRegisterRequestDTO.UserId);
+            await AppUserService.Update(AppUser);
             MentorRegisterRequest = await MentorRegisterRequestService.Update(MentorRegisterRequest);
             MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);
             if (MentorRegisterRequest.IsValidated)

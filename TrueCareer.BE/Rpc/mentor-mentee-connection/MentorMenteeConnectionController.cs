@@ -15,7 +15,9 @@ using TrueCareer.Entities;
 using TrueCareer.Services.MMentorMenteeConnection;
 using TrueCareer.Services.MMentorConnection;
 using TrueCareer.Services.MConnectionStatus;
+using TrueCareer.Services.MMentorReview;
 using TrueCareer.Services.MAppUser;
+using TrueCareer.Enums;
 
 namespace TrueCareer.Rpc.mentor_mentee_connection
 {
@@ -25,12 +27,14 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
         private IConnectionStatusService ConnectionStatusService;
         private IAppUserService AppUserService;
         private IMentorMenteeConnectionService MentorMenteeConnectionService;
+        private IMentorReviewService MentorReviewService;
         private ICurrentContext CurrentContext;
         public MentorMenteeConnectionController(
             IMentorConnectionService MentorConnectionService,
             IConnectionStatusService ConnectionStatusService,
             IAppUserService AppUserService,
             IMentorMenteeConnectionService MentorMenteeConnectionService,
+            IMentorReviewService MentorReviewService,
             ICurrentContext CurrentContext
         )
         {
@@ -38,6 +42,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
             this.ConnectionStatusService = ConnectionStatusService;
             this.AppUserService = AppUserService;
             this.MentorMenteeConnectionService = MentorMenteeConnectionService;
+            this.MentorReviewService = MentorReviewService;
             this.CurrentContext = CurrentContext;
         }
 
@@ -68,7 +73,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
         }
 
         [Route(MentorMenteeConnectionRoute.Get), HttpPost]
-        public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Get([FromBody]MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
+        public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Get([FromBody] MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
@@ -85,11 +90,18 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(MentorMenteeConnection_MentorMenteeConnectionDTO.Id))
                 return Forbid();
 
             MentorMenteeConnection MentorMenteeConnection = ConvertDTOToEntity(MentorMenteeConnection_MentorMenteeConnectionDTO);
+            MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.PENDING.Id;
+            MentorMenteeConnection.ConnectionStatus = new ConnectionStatus()
+            {
+                Id = ConnectionStatusEnum.PENDING.Id,
+                Code = ConnectionStatusEnum.PENDING.Code,
+                Name = ConnectionStatusEnum.PENDING.Name
+            };
             MentorMenteeConnection = await MentorMenteeConnectionService.Create(MentorMenteeConnection);
             MentorMenteeConnection_MentorMenteeConnectionDTO = new MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection);
             if (MentorMenteeConnection.IsValidated)
@@ -98,12 +110,135 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                 return BadRequest(MentorMenteeConnection_MentorMenteeConnectionDTO);
         }
 
+        [Route(MentorMenteeConnectionRoute.Approve), HttpPost]
+        public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Approve([FromBody] MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorMenteeConnection_MentorMenteeConnectionDTO.Id))
+                return Forbid();
+
+            MentorMenteeConnection MentorMenteeConnection = ConvertDTOToEntity(MentorMenteeConnection_MentorMenteeConnectionDTO);
+            MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.COMING_SOON.Id;
+            MentorMenteeConnection.ConnectionStatus = new ConnectionStatus()
+            {
+                Id = ConnectionStatusEnum.COMING_SOON.Id,
+                Code = ConnectionStatusEnum.COMING_SOON.Code,
+                Name = ConnectionStatusEnum.COMING_SOON.Name
+            };
+            MentorMenteeConnection = await MentorMenteeConnectionService.Update(MentorMenteeConnection);
+            MentorMenteeConnection_MentorMenteeConnectionDTO = new MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection);
+            if (MentorMenteeConnection.IsValidated)
+                return MentorMenteeConnection_MentorMenteeConnectionDTO;
+            else
+                return BadRequest(MentorMenteeConnection_MentorMenteeConnectionDTO);
+        }
+
+        [Route(MentorMenteeConnectionRoute.Reject), HttpPost]
+        public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Reject([FromBody] MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorMenteeConnection_MentorMenteeConnectionDTO.Id))
+                return Forbid();
+
+            MentorMenteeConnection MentorMenteeConnection = ConvertDTOToEntity(MentorMenteeConnection_MentorMenteeConnectionDTO);
+            MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.REJECTED.Id;
+            MentorMenteeConnection.ConnectionStatus = new ConnectionStatus()
+            {
+                Id = ConnectionStatusEnum.REJECTED.Id,
+                Code = ConnectionStatusEnum.REJECTED.Code,
+                Name = ConnectionStatusEnum.REJECTED.Name
+            };
+            MentorMenteeConnection = await MentorMenteeConnectionService.Update(MentorMenteeConnection);
+            MentorMenteeConnection_MentorMenteeConnectionDTO = new MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection);
+            if (MentorMenteeConnection.IsValidated)
+                return MentorMenteeConnection_MentorMenteeConnectionDTO;
+            else
+                return BadRequest(MentorMenteeConnection_MentorMenteeConnectionDTO);
+        }
+
+        [Route(MentorMenteeConnectionRoute.Cancel), HttpPost]
+        public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Cancel([FromBody] MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            if (!await HasPermission(MentorMenteeConnection_MentorMenteeConnectionDTO.Id))
+                return Forbid();
+
+            MentorMenteeConnection MentorMenteeConnection = ConvertDTOToEntity(MentorMenteeConnection_MentorMenteeConnectionDTO);
+            MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.CANCEL.Id;
+            MentorMenteeConnection.ConnectionStatus = new ConnectionStatus()
+            {
+                Id = ConnectionStatusEnum.CANCEL.Id,
+                Code = ConnectionStatusEnum.CANCEL.Code,
+                Name = ConnectionStatusEnum.CANCEL.Name
+            };
+            MentorMenteeConnection = await MentorMenteeConnectionService.Update(MentorMenteeConnection);
+            MentorMenteeConnection_MentorMenteeConnectionDTO = new MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection);
+            if (MentorMenteeConnection.IsValidated)
+                return MentorMenteeConnection_MentorMenteeConnectionDTO;
+            else
+                return BadRequest(MentorMenteeConnection_MentorMenteeConnectionDTO);
+        }
+        [Route(MentorMenteeConnectionRoute.Review), HttpPost]
+        public async Task<ActionResult<MentorMenteeConnection_MentorReviewDTO>> Review([FromBody] MentorMenteeConnection_MentorReviewDTO MentorMenteeConnection_MentorReviewDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            MentorReview MentorReview = new MentorReview()
+            {
+                Id = MentorMenteeConnection_MentorReviewDTO.Id,
+                Description = MentorMenteeConnection_MentorReviewDTO.Description,
+                ContentReview = MentorMenteeConnection_MentorReviewDTO.ContentReview,
+                Star = MentorMenteeConnection_MentorReviewDTO.Star,
+                CreatorId = MentorMenteeConnection_MentorReviewDTO.CreatorId,
+                MentorId = MentorMenteeConnection_MentorReviewDTO.MentorId,
+                Creator = MentorMenteeConnection_MentorReviewDTO.Creator == null ? null : new AppUser
+                {
+                    Id = MentorMenteeConnection_MentorReviewDTO.Creator.Id,
+                    Username = MentorMenteeConnection_MentorReviewDTO.Creator.Username,
+                    Email = MentorMenteeConnection_MentorReviewDTO.Creator.Email,
+                    Phone = MentorMenteeConnection_MentorReviewDTO.Creator.Phone,
+                    Password = MentorMenteeConnection_MentorReviewDTO.Creator.Password,
+                    DisplayName = MentorMenteeConnection_MentorReviewDTO.Creator.DisplayName,
+                    SexId = MentorMenteeConnection_MentorReviewDTO.Creator.SexId,
+                    Birthday = MentorMenteeConnection_MentorReviewDTO.Creator.Birthday,
+                    Avatar = MentorMenteeConnection_MentorReviewDTO.Creator.Avatar,
+                    CoverImage = MentorMenteeConnection_MentorReviewDTO.Creator.CoverImage,
+                },
+                Mentor = MentorMenteeConnection_MentorReviewDTO.Mentor == null ? null : new AppUser
+                {
+                    Id = MentorMenteeConnection_MentorReviewDTO.Mentor.Id,
+                    Username = MentorMenteeConnection_MentorReviewDTO.Mentor.Username,
+                    Email = MentorMenteeConnection_MentorReviewDTO.Mentor.Email,
+                    Phone = MentorMenteeConnection_MentorReviewDTO.Mentor.Phone,
+                    Password = MentorMenteeConnection_MentorReviewDTO.Mentor.Password,
+                    DisplayName = MentorMenteeConnection_MentorReviewDTO.Mentor.DisplayName,
+                    SexId = MentorMenteeConnection_MentorReviewDTO.Mentor.SexId,
+                    Birthday = MentorMenteeConnection_MentorReviewDTO.Mentor.Birthday,
+                    Avatar = MentorMenteeConnection_MentorReviewDTO.Mentor.Avatar,
+                    CoverImage = MentorMenteeConnection_MentorReviewDTO.Mentor.CoverImage,
+                }
+            };
+
+            MentorReview = await MentorReviewService.Create(MentorReview);
+            MentorMenteeConnection_MentorReviewDTO = new MentorMenteeConnection_MentorReviewDTO(MentorReview);
+            if (MentorReview.IsValidated)
+                return MentorMenteeConnection_MentorReviewDTO;
+            else
+                return BadRequest(MentorMenteeConnection_MentorReviewDTO);
+        }
+
         [Route(MentorMenteeConnectionRoute.Update), HttpPost]
         public async Task<ActionResult<MentorMenteeConnection_MentorMenteeConnectionDTO>> Update([FromBody] MentorMenteeConnection_MentorMenteeConnectionDTO MentorMenteeConnection_MentorMenteeConnectionDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(MentorMenteeConnection_MentorMenteeConnectionDTO.Id))
                 return Forbid();
 
@@ -133,7 +268,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
             else
                 return BadRequest(MentorMenteeConnection_MentorMenteeConnectionDTO);
         }
-        
+
         [Route(MentorMenteeConnectionRoute.BulkDelete), HttpPost]
         public async Task<ActionResult<bool>> BulkDelete([FromBody] List<long> Ids)
         {
@@ -153,7 +288,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                 return BadRequest(MentorMenteeConnections.Where(x => !x.IsValidated));
             return true;
         }
-        
+
         [Route(MentorMenteeConnectionRoute.Import), HttpPost]
         public async Task<ActionResult> Import(IFormFile file)
         {
@@ -214,7 +349,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                     string ConnectionStatusIdValue = worksheet.Cells[i, ConnectionStatusIdColumn].Value?.ToString();
                     string ActiveTimeIdValue = worksheet.Cells[i, ActiveTimeIdColumn].Value?.ToString();
                     string IdValue = worksheet.Cells[i, IdColumn].Value?.ToString();
-                    
+
                     MentorMenteeConnection MentorMenteeConnection = new MentorMenteeConnection();
                     MentorMenteeConnection.FirstMessage = FirstMessageValue;
                     MentorConnection Connection = Connections.Where(x => x.Id.ToString() == ConnectionIdValue).FirstOrDefault();
@@ -229,7 +364,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                     AppUser Mentor = Mentors.Where(x => x.Id.ToString() == MentorIdValue).FirstOrDefault();
                     MentorMenteeConnection.MentorId = Mentor == null ? 0 : Mentor.Id;
                     MentorMenteeConnection.Mentor = Mentor;
-                    
+
                     MentorMenteeConnections.Add(MentorMenteeConnection);
                 }
             }
@@ -265,13 +400,13 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                 return BadRequest(Errors);
             }
         }
-        
+
         [Route(MentorMenteeConnectionRoute.Export), HttpPost]
         public async Task<ActionResult> Export([FromBody] MentorMenteeConnection_MentorMenteeConnectionFilterDTO MentorMenteeConnection_MentorMenteeConnectionFilterDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             MemoryStream memoryStream = new MemoryStream();
             using (ExcelPackage excel = new ExcelPackage(memoryStream))
             {
@@ -309,7 +444,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                 }
                 excel.GenerateWorksheet("MentorMenteeConnection", MentorMenteeConnectionHeaders, MentorMenteeConnectionData);
                 #endregion
-                
+
                 #region MentorConnection
                 var MentorConnectionFilter = new MentorConnectionFilter();
                 MentorConnectionFilter.Selects = MentorConnectionSelect.ALL;
@@ -420,7 +555,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             string path = "Templates/MentorMenteeConnection_Template.xlsx";
             byte[] arr = System.IO.File.ReadAllBytes(path);
             MemoryStream input = new MemoryStream(arr);
