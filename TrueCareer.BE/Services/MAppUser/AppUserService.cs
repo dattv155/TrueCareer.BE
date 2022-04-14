@@ -24,7 +24,7 @@ using System.Security.Claims;
 
 namespace TrueCareer.Services.MAppUser
 {
-    public interface IAppUserService :  IServiceScoped
+    public interface IAppUserService : IServiceScoped
     {
         Task<int> Count(AppUserFilter AppUserFilter);
         Task<List<AppUser>> List(AppUserFilter AppUserFilter);
@@ -34,7 +34,7 @@ namespace TrueCareer.Services.MAppUser
         Task<AppUser> Delete(AppUser AppUser);
         Task<List<AppUser>> BulkDelete(List<AppUser> AppUsers);
         Task<List<AppUser>> Import(List<AppUser> AppUsers);
-        Task<AppUserFilter> ToFilter(AppUserFilter AppUserFilter);
+        AppUserFilter ToFilter(AppUserFilter AppUserFilter);
         Task<AppUser> Login(AppUser AppUser);
         Task<AppUser> Register(AppUser AppUser);
         Task<AppUser> ChangePassword(AppUser AppUser);
@@ -104,7 +104,7 @@ namespace TrueCareer.Services.MAppUser
                 return null;
             return AppUser;
         }
-        
+
         public async Task<AppUser> Create(AppUser AppUser)
         {
             if (!await AppUserValidator.Create(AppUser))
@@ -184,7 +184,7 @@ namespace TrueCareer.Services.MAppUser
             return null;
 
         }
-        
+
         public async Task<List<AppUser>> Import(List<AppUser> AppUsers)
         {
             if (!await AppUserValidator.Import(AppUsers))
@@ -201,9 +201,9 @@ namespace TrueCareer.Services.MAppUser
                 Logging.CreateSystemLog(ex, nameof(AppUserService));
             }
             return null;
-        }     
-        
-        public async Task<AppUserFilter> ToFilter(AppUserFilter filter)
+        }
+
+        public AppUserFilter ToFilter(AppUserFilter filter)
         {
             if (filter.OrFilter == null) filter.OrFilter = new List<AppUserFilter>();
             if (CurrentContext.Filters == null || CurrentContext.Filters.Count == 0) return filter;
@@ -252,7 +252,7 @@ namespace TrueCareer.Services.MAppUser
         {
             List<Sex> Sexes = new List<Sex>();
             Sexes.AddRange(AppUsers.Select(x => new Sex { Id = x.SexId }));
-            
+
             Sexes = Sexes.Distinct().ToList();
             RabbitManager.PublishList(Sexes, RoutingKeyEnum.SexUsed.Code);
         }
@@ -290,7 +290,7 @@ namespace TrueCareer.Services.MAppUser
                     new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                     new Claim(ClaimTypes.Name, userName),
                     new Claim(ClaimTypes.PrimarySid, rowId.ToString()),
-                    
+
                 },
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddSeconds(expiredTime.Value),
@@ -337,10 +337,10 @@ namespace TrueCareer.Services.MAppUser
             {
                 AppUser = await AppleLogin(AppUser.AIdToken);
             }
-            
+
             AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
             AppUser.Token = CreateToken(AppUser.Id, AppUser.Username, AppUser.RowId);
-            return AppUser; 
+            return AppUser;
         }
 
         public async Task<AppUser> Register(AppUser AppUser)
@@ -385,7 +385,7 @@ namespace TrueCareer.Services.MAppUser
                     Recipients = new List<string> { newData.Email },
                     RowId = Guid.NewGuid()
                 };
-                RabbitManager.PublishSingle(mail, "Mail.Send");
+
                 Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
                 return newData;
             }
@@ -437,7 +437,7 @@ namespace TrueCareer.Services.MAppUser
                     Recipients = new List<string> { newData.Email },
                     RowId = Guid.NewGuid()
                 };
-                RabbitManager.PublishSingle(mail, "Mail.Send");
+
                 Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
                 return newData;
             }
@@ -494,7 +494,7 @@ namespace TrueCareer.Services.MAppUser
                     Recipients = new List<string> { newData.Email },
                     RowId = Guid.NewGuid()
                 };
-                RabbitManager.PublishSingle(mail, "Mail.Send");
+
                 Logging.CreateAuditLog(newData, oldData, nameof(AppUserService));
                 return newData;
             }

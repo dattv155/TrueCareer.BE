@@ -50,6 +50,7 @@ namespace TrueCareer.Repositories
         IGlobalUserRepository GlobalUserRepository { get; }
         IMentorRegisterRequestRepository MentorRegisterRequestRepository { get; }
         IUnitOfTimeRepository UnitOfTimeRepository { get; }
+        IMailRepository MailRepository { get; }
     }
 
     public class UOW : IUOW
@@ -90,6 +91,7 @@ namespace TrueCareer.Repositories
         public ITopicRepository TopicRepository { get; private set; }
         public IFileRepository FileRepository { get; private set; }
         public IMentorRegisterRequestRepository MentorRegisterRequestRepository { get; private set; }
+        public IMailRepository MailRepository { get; private set; }
 
         public IUnitOfTimeRepository UnitOfTimeRepository { get; private set; }
 
@@ -133,6 +135,7 @@ namespace TrueCareer.Repositories
             GlobalUserRepository = new GlobalUserRepository(DataContext);
             MentorRegisterRequestRepository = new MentorRegisterRequestRepository(DataContext);
             UnitOfTimeRepository = new UnitOfTimeRepository(DataContext);
+            MailRepository = new MailRepository(DataContext);
         }
         public async Task Begin()
         {

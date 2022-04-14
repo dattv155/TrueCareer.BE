@@ -40,7 +40,7 @@ namespace TrueCareer.Rpc.app_user
                 throw new BindException(ModelState);
 
             AppUserFilter AppUserFilter = ConvertFilterDTOToFilterEntity(AppUser_AppUserFilterDTO);
-            AppUserFilter = await AppUserService.ToFilter(AppUserFilter);
+            AppUserFilter = AppUserService.ToFilter(AppUserFilter);
             int count = await AppUserService.Count(AppUserFilter);
             return count;
         }
@@ -52,7 +52,7 @@ namespace TrueCareer.Rpc.app_user
                 throw new BindException(ModelState);
 
             AppUserFilter AppUserFilter = ConvertFilterDTOToFilterEntity(AppUser_AppUserFilterDTO);
-            AppUserFilter = await AppUserService.ToFilter(AppUserFilter);
+            AppUserFilter = AppUserService.ToFilter(AppUserFilter);
             List<AppUser> AppUsers = await AppUserService.List(AppUserFilter);
             List<AppUser_AppUserDTO> AppUser_AppUserDTOs = AppUsers
                 .Select(c => new AppUser_AppUserDTO(c)).ToList();
@@ -60,7 +60,7 @@ namespace TrueCareer.Rpc.app_user
         }
 
         [Route(AppUserRoute.Get), HttpPost]
-        public async Task<ActionResult<AppUser_AppUserDTO>> Get([FromBody]AppUser_AppUserDTO AppUser_AppUserDTO)
+        public async Task<ActionResult<AppUser_AppUserDTO>> Get([FromBody] AppUser_AppUserDTO AppUser_AppUserDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
@@ -94,7 +94,7 @@ namespace TrueCareer.Rpc.app_user
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(AppUser_AppUserDTO.Id))
                 return Forbid();
 
@@ -124,7 +124,7 @@ namespace TrueCareer.Rpc.app_user
             else
                 return BadRequest(AppUser_AppUserDTO);
         }
-        
+
         [Route(AppUserRoute.BulkDelete), HttpPost]
         public async Task<ActionResult<bool>> BulkDelete([FromBody] List<long> Ids)
         {
@@ -132,7 +132,7 @@ namespace TrueCareer.Rpc.app_user
                 throw new BindException(ModelState);
 
             AppUserFilter AppUserFilter = new AppUserFilter();
-            AppUserFilter = await AppUserService.ToFilter(AppUserFilter);
+            AppUserFilter = AppUserService.ToFilter(AppUserFilter);
             AppUserFilter.Id = new IdFilter { In = Ids };
             AppUserFilter.Selects = AppUserSelect.Id;
             AppUserFilter.Skip = 0;
@@ -144,7 +144,7 @@ namespace TrueCareer.Rpc.app_user
                 return BadRequest(AppUsers.Where(x => !x.IsValidated));
             return true;
         }
-        
+
         [Route(AppUserRoute.Import), HttpPost]
         public async Task<ActionResult> Import(IFormFile file)
         {
@@ -190,7 +190,7 @@ namespace TrueCareer.Rpc.app_user
                     string BirthdayValue = worksheet.Cells[i, BirthdayColumn].Value?.ToString();
                     string AvatarValue = worksheet.Cells[i, AvatarColumn].Value?.ToString();
                     string CoverImageValue = worksheet.Cells[i, CoverImageColumn].Value?.ToString();
-                    
+
                     AppUser AppUser = new AppUser();
                     AppUser.Username = UsernameValue;
                     AppUser.Email = EmailValue;
@@ -203,7 +203,7 @@ namespace TrueCareer.Rpc.app_user
                     Sex Sex = Sexes.Where(x => x.Id.ToString() == SexIdValue).FirstOrDefault();
                     AppUser.SexId = Sex == null ? 0 : Sex.Id;
                     AppUser.Sex = Sex;
-                    
+
                     AppUsers.Add(AppUser);
                 }
             }
@@ -245,13 +245,13 @@ namespace TrueCareer.Rpc.app_user
                 return BadRequest(Errors);
             }
         }
-        
+
         [Route(AppUserRoute.Export), HttpPost]
         public async Task<ActionResult> Export([FromBody] AppUser_AppUserFilterDTO AppUser_AppUserFilterDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             MemoryStream memoryStream = new MemoryStream();
             using (ExcelPackage excel = new ExcelPackage(memoryStream))
             {
@@ -259,7 +259,7 @@ namespace TrueCareer.Rpc.app_user
                 var AppUserFilter = ConvertFilterDTOToFilterEntity(AppUser_AppUserFilterDTO);
                 AppUserFilter.Skip = 0;
                 AppUserFilter.Take = int.MaxValue;
-                AppUserFilter = await AppUserService.ToFilter(AppUserFilter);
+                AppUserFilter = AppUserService.ToFilter(AppUserFilter);
                 List<AppUser> AppUsers = await AppUserService.List(AppUserFilter);
 
                 var AppUserHeaders = new List<string>()
@@ -295,7 +295,7 @@ namespace TrueCareer.Rpc.app_user
                 }
                 excel.GenerateWorksheet("AppUser", AppUserHeaders, AppUserData);
                 #endregion
-                
+
                 #region Sex
                 var SexFilter = new SexFilter();
                 SexFilter.Selects = SexSelect.ALL;
@@ -334,7 +334,7 @@ namespace TrueCareer.Rpc.app_user
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             string path = "Templates/AppUser_Template.xlsx";
             byte[] arr = System.IO.File.ReadAllBytes(path);
             MemoryStream input = new MemoryStream(arr);
@@ -350,7 +350,7 @@ namespace TrueCareer.Rpc.app_user
         private async Task<bool> HasPermission(long Id)
         {
             AppUserFilter AppUserFilter = new AppUserFilter();
-            AppUserFilter = await AppUserService.ToFilter(AppUserFilter);
+            AppUserFilter = AppUserService.ToFilter(AppUserFilter);
             if (Id == 0)
             {
 
