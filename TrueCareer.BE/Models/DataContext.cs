@@ -36,6 +36,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<JobParameterDAO> JobParameter { get; set; }
         public virtual DbSet<JobQueueDAO> JobQueue { get; set; }
         public virtual DbSet<ListDAO> List { get; set; }
+        public virtual DbSet<MailDAO> Mail { get; set; }
         public virtual DbSet<MajorDAO> Major { get; set; }
         public virtual DbSet<MbtiPersonalTypeDAO> MbtiPersonalType { get; set; }
         public virtual DbSet<MbtiPersonalTypeMajorMappingDAO> MbtiPersonalTypeMajorMapping { get; set; }
@@ -722,6 +723,21 @@ namespace TrueCareer.BE.Models
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MailDAO>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Error).HasMaxLength(4000);
+
+                entity.Property(e => e.Password).HasMaxLength(500);
+
+                entity.Property(e => e.Recipients).IsRequired();
+
+                entity.Property(e => e.Username).HasMaxLength(500);
             });
 
             modelBuilder.Entity<MajorDAO>(entity =>
