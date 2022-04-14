@@ -227,6 +227,7 @@ namespace TrueCareer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<UserNotificationHub>("/rpc/truecareer/signalr");
+                endpoints.MapHub<ConversationHub>("/rpc/truecareer/conversation-hub");
                 endpoints.MapControllers();
             });
 
