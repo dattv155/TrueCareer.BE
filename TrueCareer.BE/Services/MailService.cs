@@ -15,7 +15,7 @@ using System.Net;
 using MailKit.Net.Imap;
 using MailKit;
 
-namespace Utils.Service
+namespace TrueCareer.Service
 {
     public interface IMailService : IServiceScoped
     {
@@ -55,16 +55,6 @@ namespace Utils.Service
         {
             try
             {
-                foreach (Attachment attachment in mail.Attachments)
-                {
-                    Entities.File File = new Entities.File
-                    {
-                        Path = $"/attachment/{StaticParams.DateTimeNow.ToString("yyyyMMdd")}/{Guid.NewGuid()}{attachment.Extension}",
-                        Content = attachment.Content,
-                    };
-                    File = await FileService.Create(File);
-                    attachment.Url = File.Path;
-                }
                 await UOW.MailRepository.Create(mail);
             }
             catch (Exception ex)
@@ -180,7 +170,7 @@ namespace Utils.Service
         private async Task<MimeMessage> CreateMail(Mail mail)
         {
             var mailMessage = new MimeMessage();
-            if(!string.IsNullOrWhiteSpace(emailConfig.DisplayName))
+            if (!string.IsNullOrWhiteSpace(emailConfig.DisplayName))
                 mailMessage.From.Add(new MailboxAddress(emailConfig.DisplayName, emailConfig.From));
             else
                 mailMessage.From.Add(new MailboxAddress(emailConfig.From, emailConfig.From));
@@ -204,26 +194,7 @@ namespace Utils.Service
             mailMessage.Subject = mail.Subject;
             var bodyBuilder = new BodyBuilder { HtmlBody = mail.Body };
 
-            if (mail.Attachments != null)
-            {
-                foreach (var attachment in mail.Attachments)
-                {
-                    string url = attachment.Url;
-                    url = url.Replace("/rpc/utils/file/download", "");
 
-                    Entities.File file = (await FileService.List(new FileFilter
-                    {
-                        Path = new StringFilter { Equal = url },
-                    })).FirstOrDefault();
-
-                    if (file != null)
-                    {
-                        file = await FileService.Download(file.Id);
-                        attachment.Content = file.Content;
-                        bodyBuilder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(file.MimeType));
-                    }
-                }
-            }
             mailMessage.Body = bodyBuilder.ToMessageBody();
             return mailMessage;
         }
