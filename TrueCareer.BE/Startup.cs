@@ -38,6 +38,7 @@ using TrueCareer.Hub;
 using TrueCareer.Handlers;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using TrueCareer.Config;
 
 namespace TrueCareer
 {
@@ -194,13 +195,19 @@ namespace TrueCareer
 
             Action onChange = () =>
             {
-                string credential = Configuration["Firebase:Credential"];
-                var base64EncodedBytes = System.Convert.FromBase64String(credential);
-                credential = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-                var defaultApp = FirebaseApp.Create(new AppOptions()
-                {
-                    Credential = GoogleCredential.FromJson(credential)
-                });
+                // string credential = Configuration["Firebase:Credential"];
+                // var base64EncodedBytes = System.Convert.FromBase64String(credential);
+                // credential = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+                // var defaultApp = FirebaseApp.Create(new AppOptions()
+                // {
+                //     Credential = GoogleCredential.FromJson(credential)
+                // });
+
+                var emailConfig = Configuration
+                .GetSection("EmailConfig")
+                .Get<EmailConfig>();
+                services.AddSingleton(emailConfig);
+
                 JobStorage.Current = new SqlServerStorage(Configuration.GetConnectionString("DataContext"));
                 using (var connection = JobStorage.Current.GetConnection())
                 {

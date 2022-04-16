@@ -12,5 +12,6 @@ namespace TrueCareer.Rpc
         public const string Authenticate = Default + "/authenticate";
         public const string Create = Default + "/create";
         public const string Resend = Default + "/resend";
+        public const string Send = Default + "/send";
     }
 }
