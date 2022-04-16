@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrueCareerRpc.mail
+namespace TrueCareer.Rpc.mail
 {
     public class Mail_MailDTO
     {
