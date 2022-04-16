@@ -727,8 +727,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MailDAO>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Error).HasMaxLength(4000);
