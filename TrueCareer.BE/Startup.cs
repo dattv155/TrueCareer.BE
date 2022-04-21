@@ -195,13 +195,15 @@ namespace TrueCareer
 
             Action onChange = () =>
             {
-                // string credential = Configuration["Firebase:Credential"];
-                // var base64EncodedBytes = System.Convert.FromBase64String(credential);
-                // credential = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-                // var defaultApp = FirebaseApp.Create(new AppOptions()
-                // {
-                //     Credential = GoogleCredential.FromJson(credential)
-                // });
+                var FirebaseConfig = Configuration
+                                   .GetSection("Firebase")
+                                   .Get<FirebaseConfig>();
+                var credential = Newtonsoft.Json.JsonConvert.SerializeObject(FirebaseConfig);
+
+                var defaultApp = FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromJson(credential)
+                });
 
                 var emailConfig = Configuration
                 .GetSection("EmailConfig")
