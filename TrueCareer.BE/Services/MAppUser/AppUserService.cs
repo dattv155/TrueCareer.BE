@@ -41,6 +41,8 @@ namespace TrueCareer.Services.MAppUser
         Task<AppUser> ForgotPassword(AppUser AppUser);
         Task<AppUser> VerifyOtpCode(AppUser AppUser);
         Task<AppUser> RecoveryPassword(AppUser AppUser);
+        Task<AppUser> GoogleLogin(string idToken);
+        Task<AppUser> FacebookLogin(string idToken);
     }
 
     public partial class AppUserService : BaseService, IAppUserService

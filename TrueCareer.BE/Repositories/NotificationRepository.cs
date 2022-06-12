@@ -71,7 +71,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<NotificationDAO> DynamicOrder(IQueryable<NotificationDAO> query, NotificationFilter filter)
         {
@@ -144,7 +144,7 @@ namespace TrueCareer.Repositories
         {
             List<Notification> Notifications = await query.Select(q => new Notification()
             {
-                Id = filter.Selects.Contains(NotificationSelect.Id) ? q.Id : default(long),
+                Id = q.Id,
                 TitleWeb = filter.Selects.Contains(NotificationSelect.TitleWeb) ? q.TitleWeb : default(string),
                 ContentWeb = filter.Selects.Contains(NotificationSelect.ContentWeb) ? q.ContentWeb : default(string),
                 SenderId = filter.Selects.Contains(NotificationSelect.Sender) ? q.SenderId : default(long),
@@ -164,6 +164,7 @@ namespace TrueCareer.Repositories
                     Birthday = q.Recipient.Birthday,
                     Avatar = q.Recipient.Avatar,
                     CoverImage = q.Recipient.CoverImage,
+
                 } : null,
                 Sender = filter.Selects.Contains(NotificationSelect.Sender) && q.Sender != null ? new AppUser
                 {
@@ -254,7 +255,7 @@ namespace TrueCareer.Repositories
                     CoverImage = x.Sender.CoverImage,
                 },
             }).ToListAsync();
-            
+
 
             return Notifications;
         }
@@ -285,6 +286,7 @@ namespace TrueCareer.Repositories
                     Birthday = x.Recipient.Birthday,
                     Avatar = x.Recipient.Avatar,
                     CoverImage = x.Recipient.CoverImage,
+                    RowId = x.Recipient.RowId
                 },
                 Sender = x.Sender == null ? null : new AppUser
                 {
@@ -306,11 +308,10 @@ namespace TrueCareer.Repositories
 
             return Notification;
         }
-        
+
         public async Task<bool> Create(Notification Notification)
         {
             NotificationDAO NotificationDAO = new NotificationDAO();
-            NotificationDAO.Id = Notification.Id;
             NotificationDAO.TitleWeb = Notification.TitleWeb;
             NotificationDAO.ContentWeb = Notification.ContentWeb;
             NotificationDAO.SenderId = Notification.SenderId;
@@ -354,7 +355,7 @@ namespace TrueCareer.Repositories
             await DataContext.Notification.Where(n => n.Id == Id).DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<Notification> Notifications)
         {
             IdFilter IdFilter = new IdFilter { In = Notifications.Select(x => x.Id).ToList() };

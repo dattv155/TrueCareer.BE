@@ -24,6 +24,8 @@ namespace TrueCareer.Rpc.app_user
         public const string ForgotPassword = "rpc/truecareer/profile/forgot-password";
         public const string VerifyOtpCode = "rpc/truecareer/profile/verify-otp-code";
         public const string RecoveryPassword = "rpc/truecareer/profile/recovery-password";
+        public const string GoogleLogin = "rpc/truecareer/account/google-login";
+        public const string FacebookLogin = "rpc/truecareer/account/facebook-login";
 
     }
     [Authorize]
@@ -64,6 +66,42 @@ namespace TrueCareer.Rpc.app_user
             {
                 Response.Cookies.Append("Token", AppUser.Token);
                 AppUser_AppUserDTO.Token = AppUser.Token;
+                return AppUser_AppUserDTO;
+            }
+            else
+                return BadRequest(AppUser_AppUserDTO);
+        }
+        [AllowAnonymous]
+        [Route(ProfileRoot.GoogleLogin), HttpPost]
+        public async Task<ActionResult<AppUser_AppUserDTO>> GoogleLogin([FromBody] AppUser_LoginDTO AppUser_LoginDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            AppUser AppUser = await AppUserService.GoogleLogin(AppUser_LoginDTO.GIdToken);
+            AppUser_AppUserDTO AppUser_AppUserDTO = new AppUser_AppUserDTO(AppUser);
+
+            if (AppUser.IsValidated)
+            {
+                // Response.Cookies.Append("Token", AppUser.Token);
+                // AppUser_AppUserDTO.Token = AppUser.Token;
+                return AppUser_AppUserDTO;
+            }
+            else
+                return BadRequest(AppUser_AppUserDTO);
+        }
+        [AllowAnonymous]
+        [Route(ProfileRoot.FacebookLogin), HttpPost]
+        public async Task<ActionResult<AppUser_AppUserDTO>> FacebookLogin([FromBody] AppUser_LoginDTO AppUser_LoginDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+            AppUser AppUser = await AppUserService.FacebookLogin(AppUser_LoginDTO.FbIdToken);
+            AppUser_AppUserDTO AppUser_AppUserDTO = new AppUser_AppUserDTO(AppUser);
+
+            if (AppUser.IsValidated)
+            {
+                // Response.Cookies.Append("Token", AppUser.Token);
+                // AppUser_AppUserDTO.Token = AppUser.Token;
                 return AppUser_AppUserDTO;
             }
             else

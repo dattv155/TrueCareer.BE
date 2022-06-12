@@ -29,12 +29,14 @@ namespace TrueCareer.Entities
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public string PasswordConfirmation { get; set; }
-        
+
         public string GIdToken { get; set; }
-        
+
         public string FbIdToken { get; set; }
-        
+
         public string AIdToken { get; set; }
+
+        public long RoleId { get; set; }
 
         public bool Equals(AppUser other)
         {

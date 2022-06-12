@@ -59,7 +59,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<QuestionDAO> DynamicOrder(IQueryable<QuestionDAO> query, QuestionFilter filter)
         {
@@ -106,6 +106,29 @@ namespace TrueCareer.Repositories
                 QuestionContent = filter.Selects.Contains(QuestionSelect.QuestionContent) ? q.QuestionContent : default(string),
                 Description = filter.Selects.Contains(QuestionSelect.Description) ? q.Description : default(string),
             }).ToListAsync();
+
+            IdFilter QuestionIdFilter = new IdFilter() { In = Questions.Select(s => s.Id).ToList() };
+            var Choices = await DataContext.Choice.AsNoTracking()
+            .Where(x => x.QuestionId > 0)
+            .Select(x => new Choice
+            {
+                Id = x.Id,
+                ChoiceContent = x.ChoiceContent,
+                Description = x.Description,
+                QuestionId = x.QuestionId,
+                MbtiSingleTypeId = x.MbtiSingleTypeId,
+                MbtiSingleType = new MbtiSingleType
+                {
+                    Id = x.MbtiSingleType.Id,
+                    Code = x.MbtiSingleType.Code,
+                    Name = x.MbtiSingleType.Name,
+                },
+            }).ToListAsync();
+            foreach (var Question in Questions)
+            {
+                Question.Choices = Choices.Where(x => x.QuestionId == Question.Id).ToList();
+            }
+
             return Questions;
         }
 
@@ -148,7 +171,7 @@ namespace TrueCareer.Repositories
                 QuestionContent = x.QuestionContent,
                 Description = x.Description,
             }).ToListAsync();
-            
+
             var ChoiceQuery = DataContext.Choice.AsNoTracking()
                 .Where(x => x.QuestionId, IdFilter);
             List<Choice> Choices = await ChoiceQuery
@@ -167,14 +190,12 @@ namespace TrueCareer.Repositories
                     },
                 }).ToListAsync();
 
-            foreach(Question Question in Questions)
+            foreach (Question Question in Questions)
             {
                 Question.Choices = Choices
                     .Where(x => x.QuestionId == Question.Id)
                     .ToList();
             }
-
-
             return Questions;
         }
 
@@ -210,7 +231,7 @@ namespace TrueCareer.Repositories
 
             return Question;
         }
-        
+
         public async Task<bool> Create(Question Question)
         {
             QuestionDAO QuestionDAO = new QuestionDAO();
@@ -246,7 +267,7 @@ namespace TrueCareer.Repositories
                 .DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<Question> Questions)
         {
             IdFilter IdFilter = new IdFilter { In = Questions.Select(x => x.Id).ToList() };
@@ -301,6 +322,6 @@ namespace TrueCareer.Repositories
                 await DataContext.Choice.BulkMergeAsync(ChoiceDAOs);
             }
         }
-        
+
     }
 }

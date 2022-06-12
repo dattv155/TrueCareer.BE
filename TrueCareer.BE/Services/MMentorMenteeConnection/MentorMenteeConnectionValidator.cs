@@ -52,11 +52,11 @@ namespace TrueCareer.Services.MMentorMenteeConnection
         {
             if (await ValidateId(MentorMenteeConnection))
             {
-                await ValidateFirstMessage(MentorMenteeConnection);
-                await ValidateConnection(MentorMenteeConnection);
-                await ValidateConnectionStatus(MentorMenteeConnection);
-                await ValidateMentee(MentorMenteeConnection);
-                await ValidateMentor(MentorMenteeConnection);
+                // await ValidateFirstMessage(MentorMenteeConnection);
+                // await ValidateConnection(MentorMenteeConnection);
+                // await ValidateConnectionStatus(MentorMenteeConnection);
+                // await ValidateMentee(MentorMenteeConnection);
+                // await ValidateMentor(MentorMenteeConnection);
             }
             return MentorMenteeConnection.IsValidated;
         }
@@ -68,7 +68,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             }
             return MentorMenteeConnection.IsValidated;
         }
-        
+
         public async Task<bool> BulkDelete(List<MentorMenteeConnection> MentorMenteeConnections)
         {
             foreach (MentorMenteeConnection MentorMenteeConnection in MentorMenteeConnections)
@@ -77,12 +77,12 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             }
             return MentorMenteeConnections.All(x => x.IsValidated);
         }
-        
+
         public async Task<bool> Import(List<MentorMenteeConnection> MentorMenteeConnections)
         {
             return true;
         }
-        
+
         private async Task<bool> ValidateId(MentorMenteeConnection MentorMenteeConnection)
         {
             MentorMenteeConnectionFilter MentorMenteeConnectionFilter = new MentorMenteeConnectionFilter
@@ -101,19 +101,19 @@ namespace TrueCareer.Services.MMentorMenteeConnection
 
         private async Task<bool> ValidateFirstMessage(MentorMenteeConnection MentorMenteeConnection)
         {
-            if(string.IsNullOrEmpty(MentorMenteeConnection.FirstMessage))
+            if (string.IsNullOrEmpty(MentorMenteeConnection.FirstMessage))
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.FirstMessage), MentorMenteeConnectionMessage.Error.FirstMessageEmpty, MentorMenteeConnectionMessage);
             }
-            else if(MentorMenteeConnection.FirstMessage.Count() > 500)
+            else if (MentorMenteeConnection.FirstMessage.Count() > 500)
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.FirstMessage), MentorMenteeConnectionMessage.Error.FirstMessageOverLength, MentorMenteeConnectionMessage);
             }
             return MentorMenteeConnection.IsValidated;
         }
         private async Task<bool> ValidateConnection(MentorMenteeConnection MentorMenteeConnection)
-        {       
-            if(MentorMenteeConnection.ConnectionId == 0)
+        {
+            if (MentorMenteeConnection.ConnectionId == 0)
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Connection), MentorMenteeConnectionMessage.Error.ConnectionEmpty, MentorMenteeConnectionMessage);
             }
@@ -121,9 +121,9 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             {
                 int count = await UOW.MentorConnectionRepository.CountAll(new MentorConnectionFilter
                 {
-                    Id = new IdFilter{ Equal =  MentorMenteeConnection.ConnectionId },
+                    Id = new IdFilter { Equal = MentorMenteeConnection.ConnectionId },
                 });
-                if(count == 0)
+                if (count == 0)
                 {
                     MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Connection), MentorMenteeConnectionMessage.Error.ConnectionNotExisted, MentorMenteeConnectionMessage);
                 }
@@ -131,14 +131,14 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             return true;
         }
         private async Task<bool> ValidateConnectionStatus(MentorMenteeConnection MentorMenteeConnection)
-        {       
-            if(MentorMenteeConnection.ConnectionStatusId == 0)
+        {
+            if (MentorMenteeConnection.ConnectionStatusId == 0)
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.ConnectionStatus), MentorMenteeConnectionMessage.Error.ConnectionStatusEmpty, MentorMenteeConnectionMessage);
             }
             else
             {
-                if(!ConnectionStatusEnum.ConnectionStatusEnumList.Any(x => MentorMenteeConnection.ConnectionStatusId == x.Id))
+                if (!ConnectionStatusEnum.ConnectionStatusEnumList.Any(x => MentorMenteeConnection.ConnectionStatusId == x.Id))
                 {
                     MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.ConnectionStatus), MentorMenteeConnectionMessage.Error.ConnectionStatusNotExisted, MentorMenteeConnectionMessage);
                 }
@@ -146,8 +146,8 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             return true;
         }
         private async Task<bool> ValidateMentee(MentorMenteeConnection MentorMenteeConnection)
-        {       
-            if(MentorMenteeConnection.MenteeId == 0)
+        {
+            if (MentorMenteeConnection.MenteeId == 0)
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Mentee), MentorMenteeConnectionMessage.Error.MenteeEmpty, MentorMenteeConnectionMessage);
             }
@@ -155,9 +155,9 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             {
                 int count = await UOW.AppUserRepository.CountAll(new AppUserFilter
                 {
-                    Id = new IdFilter{ Equal =  MentorMenteeConnection.MenteeId },
+                    Id = new IdFilter { Equal = MentorMenteeConnection.MenteeId },
                 });
-                if(count == 0)
+                if (count == 0)
                 {
                     MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Mentee), MentorMenteeConnectionMessage.Error.MenteeNotExisted, MentorMenteeConnectionMessage);
                 }
@@ -165,8 +165,8 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             return true;
         }
         private async Task<bool> ValidateMentor(MentorMenteeConnection MentorMenteeConnection)
-        {       
-            if(MentorMenteeConnection.MentorId == 0)
+        {
+            if (MentorMenteeConnection.MentorId == 0)
             {
                 MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Mentor), MentorMenteeConnectionMessage.Error.MentorEmpty, MentorMenteeConnectionMessage);
             }
@@ -174,9 +174,9 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             {
                 int count = await UOW.AppUserRepository.CountAll(new AppUserFilter
                 {
-                    Id = new IdFilter{ Equal =  MentorMenteeConnection.MentorId },
+                    Id = new IdFilter { Equal = MentorMenteeConnection.MentorId },
                 });
-                if(count == 0)
+                if (count == 0)
                 {
                     MentorMenteeConnection.AddError(nameof(MentorMenteeConnectionValidator), nameof(MentorMenteeConnection.Mentor), MentorMenteeConnectionMessage.Error.MentorNotExisted, MentorMenteeConnectionMessage);
                 }

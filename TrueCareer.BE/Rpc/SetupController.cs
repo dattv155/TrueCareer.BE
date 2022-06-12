@@ -38,6 +38,7 @@ namespace TrueCareer.Rpc
             InitMentorApprovalStatusEnum();
             InitGlobalUserTypeEnum();
             InitConversationAttachmentTypeEnum();
+            InitUnitOfTimeEnum();
             return Ok();
 
         }
@@ -161,6 +162,17 @@ namespace TrueCareer.Rpc
             }).ToList();
 
             DataContext.Sex.BulkSynchronize(Sexes);
+        }
+        public void InitUnitOfTimeEnum()
+        {
+            List<UnitOfTimeDAO> UnitOfTimes = UnitOfTimeEnum.UnitOfTimeEnumList.Select(x => new UnitOfTimeDAO
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name
+            }).ToList();
+
+            DataContext.UnitOfTime.BulkSynchronize(UnitOfTimes);
         }
 
     }
