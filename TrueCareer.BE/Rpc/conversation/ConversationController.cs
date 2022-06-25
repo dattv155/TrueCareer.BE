@@ -15,6 +15,7 @@ using TrueCareer.Services.MConversation;
 using TrueCareer.Services.MConversationMessage;
 using TrueCareer.Services.MConversationType;
 using TrueCareer.Services.MGlobalUser;
+using TrueCareer.Services.MAppUser;
 using TrueCareer.Service;
 using TrueCareer.Common;
 
@@ -25,6 +26,7 @@ namespace TrueCareer.Rpc.conversation
         private IConversationMessageService ConversationMessageService;
         private IConversationTypeService ConversationTypeService;
         private IGlobalUserService GlobalUserService;
+        private IAppUserService AppUserService;
         private IConversationService ConversationService;
         private IFileService FileService;
         private ICurrentContext CurrentContext;
@@ -32,6 +34,7 @@ namespace TrueCareer.Rpc.conversation
             IConversationMessageService ConversationMessageService,
             IConversationTypeService ConversationTypeService,
             IGlobalUserService GlobalUserService,
+            IAppUserService AppUserService,
             IConversationService ConversationService,
             IFileService FileService,
             ICurrentContext CurrentContext
@@ -40,6 +43,7 @@ namespace TrueCareer.Rpc.conversation
             this.ConversationMessageService = ConversationMessageService;
             this.ConversationTypeService = ConversationTypeService;
             this.GlobalUserService = GlobalUserService;
+            this.AppUserService = AppUserService;
             this.ConversationService = ConversationService;
             this.FileService = FileService;
             this.CurrentContext = CurrentContext;

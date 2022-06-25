@@ -41,7 +41,7 @@ namespace TrueCareer.Rpc.conversation
         public const string SingleListGlobalUser = Default + "/single-list-global-user";
         public const string GetGlobalUser = Default + "/get-global-user";
 
-
+ 
         public static Dictionary<string, long> Filters = new Dictionary<string, long>
         {
         };
