@@ -45,6 +45,7 @@ namespace TrueCareer.BE.Models
         public string FbIdTolen { get; set; }
         public string AIdToken { get; set; }
         public long? RoleId { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual RoleDAO Role { get; set; }
         public virtual SexDAO Sex { get; set; }
