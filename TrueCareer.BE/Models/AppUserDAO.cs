@@ -9,6 +9,10 @@ namespace TrueCareer.BE.Models
         {
             ActiveTimes = new HashSet<ActiveTimeDAO>();
             Comments = new HashSet<CommentDAO>();
+            ConversationMessages = new HashSet<ConversationMessageDAO>();
+            ConversationParticipants = new HashSet<ConversationParticipantDAO>();
+            ConversationReadHistories = new HashSet<ConversationReadHistoryDAO>();
+            Conversations = new HashSet<ConversationDAO>();
             FavouriteMentorMentors = new HashSet<FavouriteMentorDAO>();
             FavouriteMentorUsers = new HashSet<FavouriteMentorDAO>();
             FavouriteNews = new HashSet<FavouriteNewsDAO>();
@@ -45,11 +49,16 @@ namespace TrueCareer.BE.Models
         public string FbIdTolen { get; set; }
         public string AIdToken { get; set; }
         public long? RoleId { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual RoleDAO Role { get; set; }
         public virtual SexDAO Sex { get; set; }
         public virtual ICollection<ActiveTimeDAO> ActiveTimes { get; set; }
         public virtual ICollection<CommentDAO> Comments { get; set; }
+        public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
+        public virtual ICollection<ConversationParticipantDAO> ConversationParticipants { get; set; }
+        public virtual ICollection<ConversationReadHistoryDAO> ConversationReadHistories { get; set; }
+        public virtual ICollection<ConversationDAO> Conversations { get; set; }
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorMentors { get; set; }
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorUsers { get; set; }
         public virtual ICollection<FavouriteNewsDAO> FavouriteNews { get; set; }

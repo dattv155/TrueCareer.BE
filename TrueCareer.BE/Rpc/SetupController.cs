@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TrueCareer.BE.Models;
 using TrueCareer.Enums;
+using TrueCareer.Helpers;
 
 namespace TrueCareer.Rpc
 {
@@ -22,6 +23,7 @@ namespace TrueCareer.Rpc
         public ActionResult Init()
         {
             InitEnum();
+            InitGlobalUser();
             return Ok();
         }
         [HttpGet, Route(SetupRoot.InitEnum)]
@@ -173,6 +175,24 @@ namespace TrueCareer.Rpc
             }).ToList();
 
             DataContext.UnitOfTime.BulkSynchronize(UnitOfTimes);
+        }
+
+        public void InitGlobalUser()
+        {
+            List<AppUserDAO> AppUsers = DataContext.AppUser.ToList();
+            List<GlobalUserDAO> GlobalUsers = AppUsers.Select(x => new GlobalUserDAO()
+            {
+                Id = x.Id,
+                Username = x.Username,
+                DisplayName = x.DisplayName,
+                Avatar = x.Avatar,
+                GlobalUserTypeId = GlobalUserTypeEnum.LOCAL.Id,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                DeletedAt = x.DeletedAt,
+                RowId = x.RowId
+            }).ToList();
+            DataContext.GlobalUser.BulkSynchronize(GlobalUsers);
         }
 
     }
