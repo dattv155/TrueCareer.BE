@@ -265,6 +265,7 @@ namespace TrueCareer.Repositories
                 Birthday = x.Birthday,
                 Avatar = x.Avatar,
                 CoverImage = x.CoverImage,
+                RowId = x.RowId,
                 Sex = x.Sex == null ? null : new Sex
                 {
                     Id = x.Sex.Id,
