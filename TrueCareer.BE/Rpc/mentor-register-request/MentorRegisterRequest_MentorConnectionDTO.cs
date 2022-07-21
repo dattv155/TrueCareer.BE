@@ -11,6 +11,11 @@ namespace TrueCareer.Rpc.mentor_register_request
         public MentorRegisterRequest_ConnectionTypeDTO ConnectionType { get; set; }
         public MentorRegisterRequest_AppUserDTO Mentor { get; set; }
 
+        public MentorRegisterRequest_MentorConnectionDTO()
+        {
+
+        }
+
         public MentorRegisterRequest_MentorConnectionDTO(MentorConnection MentorConnection)
         {
             this.Id = MentorConnection.Id;

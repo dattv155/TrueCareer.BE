@@ -68,5 +68,6 @@ namespace TrueCareer.Entities
         Id = E._0,
         QuestionContent = E._1,
         Description = E._2,
+        Choice = E._3
     }
 }

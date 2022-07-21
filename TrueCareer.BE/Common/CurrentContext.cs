@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TrueSight.Common;
 namespace TrueCareer.Common
@@ -5,7 +6,7 @@ namespace TrueCareer.Common
     public interface ICurrentContext : IServiceScoped
     {
         long UserId { get; set; }
-        long UserRowId { get; set; }
+        Guid UserRowId { get; set; }
         string UserName { get; set; }
         int TimeZone { get; set; }
         string Language { get; set; }
@@ -17,7 +18,7 @@ namespace TrueCareer.Common
     public class CurrentContext : ICurrentContext
     {
         public long UserId { get; set; }
-        public long UserRowId { get; set; }
+        public Guid UserRowId { get; set; }
         public string UserName { get; set; }
         public int TimeZone { get; set; }
         public string Language { get; set; } = "vi";

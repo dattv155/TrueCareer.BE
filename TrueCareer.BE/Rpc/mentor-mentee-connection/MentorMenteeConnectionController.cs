@@ -222,7 +222,8 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                     Birthday = MentorMenteeConnection_MentorReviewDTO.Mentor.Birthday,
                     Avatar = MentorMenteeConnection_MentorReviewDTO.Mentor.Avatar,
                     CoverImage = MentorMenteeConnection_MentorReviewDTO.Mentor.CoverImage,
-                }
+                },
+                Time = MentorMenteeConnection_MentorReviewDTO.Time
             };
 
             MentorReview = await MentorReviewService.Create(MentorReview);

@@ -34,7 +34,7 @@ namespace TrueCareer.Services
            IHubContext<UserNotificationHub> signalR,
            ICurrentContext CurrentContext,
            ILogging Logging)
-        
+
         {
             this.signalR = signalR;
             this.UOW = UOW;
@@ -64,7 +64,9 @@ namespace TrueCareer.Services
             try
             {
                 await UOW.NotificationRepository.Create(notification);
-                return await Get(notification.Id);
+                notification = await Get(notification.Id);
+                _ = signalR.Clients.User(notification.Recipient.Id.ToString()).SendAsync("Receive", notification);
+                return notification;
             }
             catch (Exception ex)
             {

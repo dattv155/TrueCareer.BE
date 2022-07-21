@@ -13,6 +13,7 @@ namespace TrueCareer.Rpc.mentor_register_request
         public long? StartAt { get; set; }
         public long? EndAt { get; set; }
 
+        public MentorRegisterRequest_UnitOfTimeDTO() { }
         public MentorRegisterRequest_UnitOfTimeDTO(UnitOfTime UnitOfTime)
         {
             this.Id = UnitOfTime.Id;

@@ -67,6 +67,7 @@ namespace TrueCareer.Rpc.notification
             filter.RecipientId = new IdFilter { Equal = CurrentContext.UserId };
             filter.OrderBy = NotificationOrder.Time;
             filter.OrderType = OrderType.DESC;
+            filter.Selects = NotificationSelect.ALL; // fucking this make me crazy all day :)
             return await UserNotificationService.List(filter);
         }
 

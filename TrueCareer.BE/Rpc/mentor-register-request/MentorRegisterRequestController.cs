@@ -194,7 +194,15 @@ namespace TrueCareer.Rpc.mentor_register_request
                 Id = MentorRegisterRequest_MentorConnectionDTO.Id,
                 MentorId = MentorRegisterRequest_MentorConnectionDTO.MentorId,
                 Url = MentorRegisterRequest_MentorConnectionDTO.Url,
-                ConnectionTypeId = MentorRegisterRequest_MentorConnectionDTO.ConnectionTypeId
+                ConnectionTypeId = MentorRegisterRequest_MentorConnectionDTO.ConnectionTypeId,
+                Mentor = MentorRegisterRequest_MentorConnectionDTO.Mentor == null ? null : new AppUser
+                {
+                    Id = MentorRegisterRequest_MentorConnectionDTO.Mentor.Id
+                },
+                ConnectionType = MentorRegisterRequest_MentorConnectionDTO.ConnectionType == null ? null : new ConnectionType
+                {
+                    Id = MentorRegisterRequest_MentorConnectionDTO.ConnectionType.Id
+                }
             };
             MentorConnection = await MentorConnectionService.Create(MentorConnection);
             MentorRegisterRequest_MentorConnectionDTO = new MentorRegisterRequest_MentorConnectionDTO(MentorConnection);
@@ -222,8 +230,17 @@ namespace TrueCareer.Rpc.mentor_register_request
             {
                 Id = MentorRegisterRequest_ActiveTimeDTO.Id,
                 UnitOfTimeId = MentorRegisterRequest_ActiveTimeDTO.UnitOfTimeId, // bo sung constructor unit of time
+                UnitOfTime = MentorRegisterRequest_ActiveTimeDTO.UnitOfTime == null ? null : new UnitOfTime
+                {
+                    Id = MentorRegisterRequest_ActiveTimeDTO.UnitOfTime.Id
+                },
                 ActiveDate = MentorRegisterRequest_ActiveTimeDTO.ActiveDate,
-                MentorId = MentorRegisterRequest_ActiveTimeDTO.MentorId // bo sung constructor app user
+                MentorId = MentorRegisterRequest_ActiveTimeDTO.MentorId, // bo sung constructor app user
+                Mentor = MentorRegisterRequest_ActiveTimeDTO.Mentor == null ? null : new AppUser
+                {
+                    Id = MentorRegisterRequest_ActiveTimeDTO.Mentor.Id
+                }
+
             };
             ActiveTime = await ActiveTimeService.Create(ActiveTime);
             MentorRegisterRequest_ActiveTimeDTO = new MentorRegisterRequest_ActiveTimeDTO(ActiveTime);
@@ -256,6 +273,8 @@ namespace TrueCareer.Rpc.mentor_register_request
             MentorRegisterRequest.MentorApprovalStatus = MentorApprovalStatus;
             MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
             AppUser AppUser = await AppUserService.Get(MentorRegisterRequest_MentorRegisterRequestDTO.UserId);
+            // update role id của app user nữa chứ nhỉ
+
             await AppUserService.Update(AppUser);
             MentorRegisterRequest = await MentorRegisterRequestService.Update(MentorRegisterRequest);
             MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);

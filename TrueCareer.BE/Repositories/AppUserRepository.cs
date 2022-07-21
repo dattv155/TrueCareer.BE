@@ -76,7 +76,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<AppUserDAO> DynamicOrder(IQueryable<AppUserDAO> query, AppUserFilter filter)
         {
@@ -241,7 +241,7 @@ namespace TrueCareer.Repositories
                     Name = x.Sex.Name,
                 },
             }).ToListAsync();
-            
+
 
             return AppUsers;
         }
@@ -272,6 +272,7 @@ namespace TrueCareer.Repositories
                     Code = x.Sex.Code,
                     Name = x.Sex.Name,
                 },
+                RowId = x.RowId
             }).FirstOrDefaultAsync();
 
             if (AppUser == null)
@@ -279,7 +280,7 @@ namespace TrueCareer.Repositories
 
             return AppUser;
         }
-        
+
         public async Task<bool> Create(AppUser AppUser)
         {
             AppUserDAO AppUserDAO = new AppUserDAO();
@@ -330,14 +331,14 @@ namespace TrueCareer.Repositories
         {
             await DataContext.AppUser
                 .Where(x => x.Id == AppUser.Id)
-                .UpdateFromQueryAsync(x => new AppUserDAO 
-                { 
-                    DeletedAt = StaticParams.DateTimeNow, 
-                    UpdatedAt = StaticParams.DateTimeNow 
+                .UpdateFromQueryAsync(x => new AppUserDAO
+                {
+                    DeletedAt = StaticParams.DateTimeNow,
+                    UpdatedAt = StaticParams.DateTimeNow
                 });
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<AppUser> AppUsers)
         {
             IdFilter IdFilter = new IdFilter { In = AppUsers.Select(x => x.Id).ToList() };
@@ -378,10 +379,10 @@ namespace TrueCareer.Repositories
             List<long> Ids = AppUsers.Select(x => x.Id).ToList();
             await DataContext.AppUser
                 .WhereBulkContains(Ids, x => x.Id)
-                .UpdateFromQueryAsync(x => new AppUserDAO 
-                { 
-                    DeletedAt = StaticParams.DateTimeNow, 
-                    UpdatedAt = StaticParams.DateTimeNow 
+                .UpdateFromQueryAsync(x => new AppUserDAO
+                {
+                    DeletedAt = StaticParams.DateTimeNow,
+                    UpdatedAt = StaticParams.DateTimeNow
                 });
             return true;
         }
@@ -389,6 +390,6 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(AppUser AppUser)
         {
         }
-        
+
     }
 }
