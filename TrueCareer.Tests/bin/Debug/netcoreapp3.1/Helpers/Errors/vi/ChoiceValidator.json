@@ -1,0 +1,26 @@
+{
+  "Choice": {
+    "Id": {
+    },
+    "ChoiceContent": {
+      "ChoiceContentEmpty": "Chưa nhập @ChoiceContent",
+      "ChoiceContentOverLength": "ChoiceContent quá dài"
+    },
+    "Description": {
+      "DescriptionEmpty": "Chưa nhập @Description",
+      "DescriptionOverLength": "Description quá dài"
+    },
+    "QuestionId": {
+    },
+    "MbtiSingleTypeId": {
+    },
+    "MbtiSingleType": {
+      "MbtiSingleTypeEmpty": "Chưa chọn @MbtiSingleType",
+      "MbtiSingleTypeNotExisted": "@MbtiSingleType không tồn tại"
+    },
+    "Question": {
+      "QuestionEmpty": "Chưa chọn @Question",
+      "QuestionNotExisted": "@Question không tồn tại"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "MentorReview": {
+    "Id": {
+    },
+    "Description": {
+      "DescriptionEmpty": "Chưa nhập @Description",
+      "DescriptionOverLength": "Description quá dài"
+    },
+    "ContentReview": {
+      "ContentReviewEmpty": "Chưa nhập @ContentReview",
+      "ContentReviewOverLength": "ContentReview quá dài"
+    },
+    "Star": {
+    },
+    "MentorId": {
+    },
+    "CreatorId": {
+    },
+    "Time": {
+      "TimeEmpty": "Chưa nhập @Time"
+      "TimeInvalid": "@Time không hợp lệ"
+    },
+    "Creator": {
+      "CreatorEmpty": "Chưa chọn @Creator",
+      "CreatorNotExisted": "@Creator không tồn tại"
+    },
+    "Mentor": {
+      "MentorEmpty": "Chưa chọn @Mentor",
+      "MentorNotExisted": "@Mentor không tồn tại"
+    }
+  }
+}

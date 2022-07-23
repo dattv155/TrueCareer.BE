@@ -1,0 +1,20 @@
+{
+  "ActiveTime": {
+    "Id": {
+    },
+    "StartAt": {
+      "StartAtEmpty": "Chưa nhập @StartAt",
+      "StartAtInvalid": "@StartAt không hợp lệ"
+    },
+    "EndAt": {
+      "EndAtEmpty": "Chưa nhập @EndAt",
+      "EndAtInvalid": "@EndAt không hợp lệ"
+    },
+    "MentorId": {
+    },
+    "Mentor": {
+      "MentorEmpty": "Chưa chọn @Mentor",
+      "MentorNotExisted": "@Mentor không tồn tại"
+    }
+  }
+}

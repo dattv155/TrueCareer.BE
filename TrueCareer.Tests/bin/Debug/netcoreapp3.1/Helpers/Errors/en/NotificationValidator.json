@@ -1,0 +1,36 @@
+{
+  "Notification": {
+    "Id": {
+    },
+    "TitleWeb": {
+      "TitleWebEmpty": "Chưa nhập @TitleWeb",
+      "TitleWebOverLength": "TitleWeb quá dài"
+    },
+    "ContentWeb": {
+      "ContentWebEmpty": "Chưa nhập @ContentWeb",
+      "ContentWebOverLength": "ContentWeb quá dài"
+    },
+    "SenderId": {
+    },
+    "RecipientId": {
+    },
+    "Unread": {
+    },
+    "Time": {
+      "TimeEmpty": "Chưa nhập @Time"
+      "TimeInvalid": "@Time không hợp lệ"
+    },
+    "LinkWebsite": {
+      "LinkWebsiteEmpty": "Chưa nhập @LinkWebsite",
+      "LinkWebsiteOverLength": "LinkWebsite quá dài"
+    },
+    "Recipient": {
+      "RecipientEmpty": "Chưa chọn @Recipient",
+      "RecipientNotExisted": "@Recipient không tồn tại"
+    },
+    "Sender": {
+      "SenderEmpty": "Chưa chọn @Sender",
+      "SenderNotExisted": "@Sender không tồn tại"
+    }
+  }
+}

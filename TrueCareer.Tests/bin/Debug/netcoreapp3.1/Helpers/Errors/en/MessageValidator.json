@@ -1,0 +1,18 @@
+{
+  "Message": {
+    "Id": {
+    },
+    "UserId": {
+    },
+    "Content": {
+      "ContentEmpty": "Chưa nhập @Content",
+      "ContentOverLength": "Content quá dài"
+    },
+    "ConversationId": {
+    },
+    "Conversation": {
+      "ConversationEmpty": "Chưa chọn @Conversation",
+      "ConversationNotExisted": "@Conversation không tồn tại"
+    }
+  }
+}
