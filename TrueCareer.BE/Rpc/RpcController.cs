@@ -60,6 +60,7 @@ namespace TrueCareer.Rpc
                 return;
             }
             long UserId = long.TryParse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value, out long u) ? u : 0;
+            Guid UserRowId = Guid.TryParse(context.User.FindFirst(c => c.Type == ClaimTypes.PrimarySid).Value, out Guid uRowId) ? uRowId : Guid.Empty;
             string UserName = context.User.FindFirst(c => c.Type == ClaimTypes.Name).Value;
             var HttpContext = httpContextAccessor.HttpContext;
             string url = HttpContext.Request.Path.Value.ToLower().Substring(1);
@@ -69,6 +70,7 @@ namespace TrueCareer.Rpc
             CurrentContext.UserId = UserId;
             CurrentContext.TimeZone = int.TryParse(TimeZone, out int t) ? t : 0;
             CurrentContext.Language = Language ?? "vi";
+            CurrentContext.UserRowId = UserRowId;
             context.Succeed(requirement);
             //List<long> permissionIds = await DataContext.AppUserPermission
             //    .Where(p => p.AppUserId == UserId && p.Path == url)

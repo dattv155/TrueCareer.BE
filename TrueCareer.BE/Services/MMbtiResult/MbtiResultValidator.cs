@@ -15,6 +15,7 @@ namespace TrueCareer.Services.MMbtiResult
     {
         Task Get(MbtiResult MbtiResult);
         Task<bool> Create(MbtiResult MbtiResult);
+        Task<bool> CalcResult(List<long> SingleTypeIds);
         Task<bool> Update(MbtiResult MbtiResult);
         Task<bool> Delete(MbtiResult MbtiResult);
         Task<bool> BulkDelete(List<MbtiResult> MbtiResults);
@@ -43,6 +44,11 @@ namespace TrueCareer.Services.MMbtiResult
             await ValidateMbtiPersonalType(MbtiResult);
             await ValidateUser(MbtiResult);
             return MbtiResult.IsValidated;
+        }
+        
+        public async Task<bool> CalcResult(List<long> SingleTypeIds)
+        {
+            return true;
         }
 
         public async Task<bool> Update(MbtiResult MbtiResult)
