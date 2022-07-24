@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCareer.BE", "TrueCareer.BE\TrueCareer.BE.csproj", "{5CF409FE-2B3C-432F-8DD8-0789322FC0DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrueCareer.BE", "TrueCareer.BE\TrueCareer.BE.csproj", "{5CF409FE-2B3C-432F-8DD8-0789322FC0DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCareer.Tests", "TrueCareer.Tests\TrueCareer.Tests.csproj", "{EB81ADB9-7242-454A-A13B-5CED7EF15192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5CF409FE-2B3C-432F-8DD8-0789322FC0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CF409FE-2B3C-432F-8DD8-0789322FC0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CF409FE-2B3C-432F-8DD8-0789322FC0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB81ADB9-7242-454A-A13B-5CED7EF15192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB81ADB9-7242-454A-A13B-5CED7EF15192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB81ADB9-7242-454A-A13B-5CED7EF15192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB81ADB9-7242-454A-A13B-5CED7EF15192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

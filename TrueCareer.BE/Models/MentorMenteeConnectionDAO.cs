@@ -13,6 +13,7 @@ namespace TrueCareer.BE.Models
         public long ActiveTimeId { get; set; }
         public long Id { get; set; }
 
+        public virtual ActiveTimeDAO ActiveTime { get; set; }
         public virtual MentorConnectionDAO Connection { get; set; }
         public virtual ConnectionStatusDAO ConnectionStatus { get; set; }
         public virtual AppUserDAO Mentee { get; set; }

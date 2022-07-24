@@ -871,6 +871,12 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorMenteeConnectionDAO>(entity =>
             {
+                entity.HasOne(d => d.ActiveTime)
+                    .WithMany(p => p.MentorMenteeConnections)
+                    .HasForeignKey(d => d.ActiveTimeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MentorMenteeConnection_ActiveTime");
+
                 entity.HasOne(d => d.Connection)
                     .WithMany(p => p.MentorMenteeConnections)
                     .HasForeignKey(d => d.ConnectionId)
