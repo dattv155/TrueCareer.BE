@@ -39,6 +39,19 @@ namespace TrueCareer.Repositories
         {
             if (filter == null)
                 return query.Where(q => false);
+            if (filter.JobRole != null)
+            {
+                var ListInformation = await DataContext.Information.AsNoTracking().Where(q => q.InformationTypeId, new IdFilter { Equal = 2 }).Where(q => q.Role, filter.JobRole).ToListAsync();
+                List<long> MentorIds = ListInformation.Select(x => x.UserId).ToList();
+                query = query.Where(q => q.Id, new IdFilter { In = MentorIds });
+            }
+            if (filter.CompanyName != null)
+            {
+                var ListInformation = await DataContext.Information.AsNoTracking().Where(q => q.InformationTypeId, new IdFilter { Equal = 2 }).Where(q => q.Name, filter.CompanyName).ToListAsync();
+                List<long> MentorIds = ListInformation.Select(x => x.UserId).ToList();
+                query = query.Where(q => q.Id, new IdFilter { In = MentorIds });
+            }
+
             query = query.Where(q => !q.DeletedAt.HasValue);
             query = query.Where(q => q.CreatedAt, filter.CreatedAt);
             query = query.Where(q => q.UpdatedAt, filter.UpdatedAt);

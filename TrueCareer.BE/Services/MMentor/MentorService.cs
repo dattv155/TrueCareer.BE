@@ -88,9 +88,7 @@ namespace TrueCareer.Services.MMentor
                     {
                         Mentor.JobRole = Informations[0].Role;
                         Mentor.CompanyName = Informations[0].Name;
-
                     }
-
                 }
                 return Mentors;
             }
