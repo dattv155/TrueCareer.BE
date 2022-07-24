@@ -157,70 +157,9 @@ namespace TrueCareer.Rpc.mbti_result
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
 
-            double E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, J = 0, P = 0;
-            string result = "";
-
-            foreach (var Id in SingleTypeIds)
-            {
-                if (Id == MbtiSingleTypeEnum.Extroverts.Id)
-                {
-                    E++;
-                } else if (Id == MbtiSingleTypeEnum.Introverts.Id)
-                {
-                    I++;
-                } else if (Id == MbtiSingleTypeEnum.Sensors.Id)
-                {
-                    S++;
-                } else if (Id == MbtiSingleTypeEnum.Intuitives.Id)
-                {
-                    N++;
-                } else if (Id == MbtiSingleTypeEnum.Thinkers.Id)
-                {
-                    T++;
-                } else if (Id == MbtiSingleTypeEnum.Feelers.Id)
-                {
-                    F++;
-                } else if (Id == MbtiSingleTypeEnum.Judgers.Id)
-                {
-                    J++;
-                } else if (Id == MbtiSingleTypeEnum.Perceivers.Id)
-                {
-                    P++;
-                }
-            }
-
-            double EPercent, IPercent, SPercent, NPercent, TPercent, FPercent, JPercent, PPercent;
-            EPercent = Math.Floor(E / 10 * 100);
-            IPercent = Math.Floor(I / 10 * 100);
-            SPercent = Math.Floor(S / 20 * 100);
-            NPercent = Math.Floor(N / 20 * 100);
-            TPercent = Math.Floor(T / 20 * 100);
-            FPercent = Math.Floor(F / 20 * 100);
-            JPercent = Math.Floor(J / 20 * 100);
-            PPercent = Math.Floor(P / 20 * 100);
-            
-            result += (EPercent >= IPercent) ? "E" : "I";
-            result += (SPercent >= NPercent) ? "S" : "N";
-            result += (TPercent >= FPercent) ? "T" : "F";
-            result += (JPercent >= PPercent) ? "J" : "P";
-
-            MbtiPersonalTypeFilter MbtiPersonalTypeFilter = new MbtiPersonalTypeFilter
-            {
-                Skip = 0,
-                Take = int.MaxValue,
-                Selects = MbtiPersonalTypeSelect.ALL
-            };
-            List<MbtiPersonalType> MbtiPersonalTypes = await MbtiPersonalTypeService.List(MbtiPersonalTypeFilter);
-            
-            MbtiPersonalType MbtiPersonalType = MbtiPersonalTypes.Where(x => x.Code.ToString() == result).FirstOrDefault();
-
             MbtiResult MbtiResult = new MbtiResult();
-
-            MbtiResult.UserId = CurrentContext.UserId;
-            MbtiResult.MbtiPersonalTypeId = MbtiPersonalType == null ? 0 : MbtiPersonalType.Id;
-            MbtiResult.MbtiPersonalType = MbtiPersonalType;
+            MbtiResult = await MbtiResultService.CalcResult(SingleTypeIds);
             
-            MbtiResult = await MbtiResultService.Create(MbtiResult);
             MbtiResult_MbtiResultDTO MbtiResult_MbtiResultDTO = new MbtiResult_MbtiResultDTO(MbtiResult);
             if (MbtiResult.IsValidated)
                 return MbtiResult_MbtiResultDTO;
