@@ -14,7 +14,7 @@ using TrueCareer.Enums;
 
 namespace TrueCareer.Services.MMentorMenteeConnection
 {
-    public interface IMentorMenteeConnectionService :  IServiceScoped
+    public interface IMentorMenteeConnectionService : IServiceScoped
     {
         Task<int> Count(MentorMenteeConnectionFilter MentorMenteeConnectionFilter);
         Task<List<MentorMenteeConnection>> List(MentorMenteeConnectionFilter MentorMenteeConnectionFilter);
@@ -33,7 +33,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
         private IRabbitManager RabbitManager;
         private ILogging Logging;
         private ICurrentContext CurrentContext;
-        
+
         private IMentorMenteeConnectionValidator MentorMenteeConnectionValidator;
 
         public MentorMenteeConnectionService(
@@ -48,7 +48,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             this.RabbitManager = RabbitManager;
             this.CurrentContext = CurrentContext;
             this.Logging = Logging;
-           
+
             this.MentorMenteeConnectionValidator = MentorMenteeConnectionValidator;
         }
         public async Task<int> Count(MentorMenteeConnectionFilter MentorMenteeConnectionFilter)
@@ -87,7 +87,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
                 return null;
             return MentorMenteeConnection;
         }
-        
+
         public async Task<MentorMenteeConnection> Create(MentorMenteeConnection MentorMenteeConnection)
         {
             if (!await MentorMenteeConnectionValidator.Create(MentorMenteeConnection))
@@ -164,7 +164,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             return null;
 
         }
-        
+
         public async Task<List<MentorMenteeConnection>> Import(List<MentorMenteeConnection> MentorMenteeConnections)
         {
             if (!await MentorMenteeConnectionValidator.Import(MentorMenteeConnections))
@@ -181,8 +181,8 @@ namespace TrueCareer.Services.MMentorMenteeConnection
                 Logging.CreateSystemLog(ex, nameof(MentorMenteeConnectionService));
             }
             return null;
-        }     
-        
+        }
+
         public async Task<MentorMenteeConnectionFilter> ToFilter(MentorMenteeConnectionFilter filter)
         {
             if (filter.OrFilter == null) filter.OrFilter = new List<MentorMenteeConnectionFilter>();
@@ -231,7 +231,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             ConnectionStatuses.AddRange(MentorMenteeConnections.Select(x => new ConnectionStatus { Id = x.ConnectionStatusId }));
             AppUsers.AddRange(MentorMenteeConnections.Select(x => new AppUser { Id = x.MenteeId }));
             AppUsers.AddRange(MentorMenteeConnections.Select(x => new AppUser { Id = x.MentorId }));
-            
+
             MentorConnections = MentorConnections.Distinct().ToList();
             ConnectionStatuses = ConnectionStatuses.Distinct().ToList();
             AppUsers = AppUsers.Distinct().ToList();

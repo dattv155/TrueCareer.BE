@@ -52,6 +52,7 @@ namespace TrueCareer.Repositories
             query = query.Where(q => q.Avatar, filter.Avatar);
             query = query.Where(q => q.CoverImage, filter.CoverImage);
             query = query.Where(q => q.SexId, filter.SexId);
+            query = query.Where(q => q.RoleId, filter.RoleId);
             return query;
         }
 
@@ -73,6 +74,7 @@ namespace TrueCareer.Repositories
                 queryable = queryable.Where(q => q.Avatar, AppUserFilter.Avatar);
                 queryable = queryable.Where(q => q.CoverImage, AppUserFilter.CoverImage);
                 queryable = queryable.Where(q => q.SexId, AppUserFilter.SexId);
+                queryable = queryable.Where(q => q.RoleId, AppUserFilter.RoleId);
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;

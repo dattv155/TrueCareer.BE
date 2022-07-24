@@ -4,6 +4,8 @@ TrueCareer.BE/bin/
 TrueCareer.BE/obj/
 .github/
 TrueCareer.BE/global.json
+TrueCareer.Tests/obj/
+TrueCareer.Tests/bin/
 
 
 

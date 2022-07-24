@@ -37,6 +37,11 @@ namespace TrueCareer.Entities
         public string AIdToken { get; set; }
 
         public long RoleId { get; set; }
+        public int LikeCount { get; set; }
+        public int MenteeCount { get; set; }
+
+        public string JobRole { get; set; }
+        public string CompanyName { get; set; }
 
         public bool Equals(AppUser other)
         {
@@ -68,6 +73,14 @@ namespace TrueCareer.Entities
         public StringFilter CoverImage { get; set; }
         public DateFilter CreatedAt { get; set; }
         public DateFilter UpdatedAt { get; set; }
+        public IdFilter MajorId { get; set; }
+
+        public StringFilter Address { get; set; }
+
+        public StringFilter JobRole { get; set; }
+        public IdFilter RoleId { get; set; }
+
+        public StringFilter CompanyName { get; set; }
         public List<AppUserFilter> OrFilter { get; set; }
         public AppUserOrder OrderBy { get; set; }
         public AppUserSelect Selects { get; set; }
