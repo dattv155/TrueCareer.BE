@@ -2,6 +2,8 @@
 .vscode/
 TrueCareer.BE/bin/
 TrueCareer.BE/obj/
+.github/
+TrueCareer.BE/global.json
 
 
 

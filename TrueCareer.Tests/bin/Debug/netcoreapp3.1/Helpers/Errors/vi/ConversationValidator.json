@@ -1,0 +1,36 @@
+{
+  "Conversation": {
+    "Id": {
+    },
+    "LatestContent": {
+      "LatestContentEmpty": "Chưa nhập @LatestContent",
+      "LatestContentOverLength": "LatestContent quá dài"
+    },
+    "LatestUserId": {
+    },
+    "Hash": {
+      "HashEmpty": "Chưa nhập @Hash",
+      "HashOverLength": "Hash quá dài"
+    },
+    "Message": {
+        "Id": {
+        },
+        "UserId": {
+        },
+        "Content": {
+            "Message_ContentEmpty": "Chưa nhập @Message_Content",
+            "Message_ContentOverLength": "@Message_Content quá dài"
+        },
+        "CreatedAt": {
+        },
+        "UpdatedAt": {
+        },
+        "DeletedAt": {
+        },
+        "ConversationId": {
+        },
+        "Conversation": {
+        }
+    }
+  }
+}
