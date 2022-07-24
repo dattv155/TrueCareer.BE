@@ -264,19 +264,7 @@ namespace TrueCareer.Rpc.mentor_register_request
                 return Forbid();
 
             MentorRegisterRequest MentorRegisterRequest = ConvertDTOToEntity(MentorRegisterRequest_MentorRegisterRequestDTO);
-            MentorApprovalStatus MentorApprovalStatus = new MentorApprovalStatus()
-            {
-                Id = MentorApprovalStatusEnum.APPROVE.Id,
-                Code = MentorApprovalStatusEnum.APPROVE.Code,
-                Name = MentorApprovalStatusEnum.APPROVE.Name
-            };
-            MentorRegisterRequest.MentorApprovalStatus = MentorApprovalStatus;
-            MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
-            AppUser AppUser = await AppUserService.Get(MentorRegisterRequest_MentorRegisterRequestDTO.UserId);
-            // update role id của app user nữa chứ nhỉ
-
-            await AppUserService.Update(AppUser);
-            MentorRegisterRequest = await MentorRegisterRequestService.Update(MentorRegisterRequest);
+            MentorRegisterRequest = await MentorRegisterRequestService.Approve(MentorRegisterRequest);
             MentorRegisterRequest_MentorRegisterRequestDTO = new MentorRegisterRequest_MentorRegisterRequestDTO(MentorRegisterRequest);
             if (MentorRegisterRequest.IsValidated)
                 return MentorRegisterRequest_MentorRegisterRequestDTO;

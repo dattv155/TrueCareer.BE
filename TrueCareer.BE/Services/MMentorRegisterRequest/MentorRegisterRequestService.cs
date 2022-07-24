@@ -9,6 +9,10 @@ using TrueCareer.Helpers;
 using TrueCareer.Repositories;
 using TrueSight.Common;
 using TrueSight.Handlers;
+using TrueCareer.Services.MAppUser;
+using TrueCareer.Services;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
 
 namespace TrueCareer.Services.MMentorRegisterRequest
 {
@@ -23,6 +27,8 @@ namespace TrueCareer.Services.MMentorRegisterRequest
         Task<List<MentorRegisterRequest>> BulkDelete(List<MentorRegisterRequest> MentorRegisterRequests);
         Task<List<MentorRegisterRequest>> Import(List<MentorRegisterRequest> MentorRegisterRequests);
         Task<MentorRegisterRequestFilter> ToFilter(MentorRegisterRequestFilter MentorRegisterRequestFilter);
+        Task<MentorRegisterRequest> Approve(MentorRegisterRequest MentorRegisterRequest);
+        Task<MentorRegisterRequest> Reject(MentorRegisterRequest MentorRegisterRequest);
     }
 
 
@@ -32,17 +38,21 @@ namespace TrueCareer.Services.MMentorRegisterRequest
         private IRabbitManager RabbitManager;
         private ILogging Logging;
         private ICurrentContext CurrentContext;
+
+        private INotificationService NotificationService;
         public MentorRegisterRequestService(
             IUOW UOW,
             ICurrentContext CurrentContext,
             IRabbitManager RabbitManager,
-            ILogging Logging
+            ILogging Logging,
+            INotificationService NotificationService
         )
         {
             this.UOW = UOW;
             this.RabbitManager = RabbitManager;
             this.CurrentContext = CurrentContext;
             this.Logging = Logging;
+            this.NotificationService = NotificationService;
         }
         public Task<List<MentorRegisterRequest>> BulkDelete(List<MentorRegisterRequest> MentorRegisterRequests)
         {
@@ -171,6 +181,117 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 Logging.CreateSystemLog(ex, nameof(MentorRegisterRequestService));
             }
             return null;
+        }
+        public async Task<MentorRegisterRequest> Approve(MentorRegisterRequest MentorRegisterRequest)
+        {
+            try
+            {
+                MentorRegisterRequest = await UOW.MentorRegisterRequestRepository.Get(MentorRegisterRequest.Id);
+                MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
+                await UOW.MentorRegisterRequestRepository.Update(MentorRegisterRequest);
+                // change role id of mentee to mentor
+                AppUser AppUser = await UOW.AppUserRepository.Get(MentorRegisterRequest.UserId);
+                AppUser.RoleId = RoleEnum.MENTOR.Id;
+                await UOW.AppUserRepository.Update(AppUser);
+                // send notification to web and mobile
+                TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
+                {
+                    TitleWeb = "Hồ sơ Mentor được phê duyệt",
+                    ContentWeb = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
+                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    TitleMobile = "Hồ sơ Mentor được phê duyệt",
+                    ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
+                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    RecipientId = MentorRegisterRequest.UserId,
+                    SenderId = 1,
+                    Time = StaticParams.DateTimeNow,
+                    Unread = false
+                };
+                await NotificationService.Create(UserNotification);
+
+                // send push notification to mobile
+                Dictionary<string, string> data = new Dictionary<string, string>();
+                data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
+                data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
+                data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                var message = new FirebaseAdmin.Messaging.Message()
+                {
+                    Notification = new FirebaseAdmin.Messaging.Notification
+                    {
+                        Title = UserNotification.TitleMobile,
+                        Body = UserNotification.ContentMobile,
+                    },
+                    Data = data,
+                    Token = UserNotification.Recipient.Token,
+                };
+
+                var messaging = FirebaseMessaging.DefaultInstance;
+                _ = messaging.SendAsync(message);
+
+                return MentorRegisterRequest;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(MentorRegisterRequestService));
+            }
+            return null;
+
+        }
+
+        public async Task<MentorRegisterRequest> Reject(MentorRegisterRequest MentorRegisterRequest)
+        {
+            try
+            {
+                MentorRegisterRequest = await UOW.MentorRegisterRequestRepository.Get(MentorRegisterRequest.Id);
+                MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.REJECT.Id;
+                await UOW.MentorRegisterRequestRepository.Update(MentorRegisterRequest);
+                // send notification to web and mobile
+                TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
+                {
+                    TitleWeb = "Hồ sơ Mentor bị từ chối",
+                    ContentWeb = "TrueCareer rất tiếc phải thông báo rằng hồ sơ của bạn chưa phù hợp để trở thành Mentor.",
+                    TitleMobile = "Hồ sơ Mentor bị từ chối",
+                    ContentMobile = "TrueCareer rất tiếc phải thông báo rằng hồ sơ của bạn chưa phù hợp để trở thành Mentor.",
+                    RecipientId = MentorRegisterRequest.UserId,
+                    SenderId = 1,
+                    Time = StaticParams.DateTimeNow,
+                    Unread = false
+                };
+                await NotificationService.Create(UserNotification);
+
+                // send push notification to mobile
+                Dictionary<string, string> data = new Dictionary<string, string>();
+                data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
+                data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
+                data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                var message = new FirebaseAdmin.Messaging.Message()
+                {
+                    Notification = new FirebaseAdmin.Messaging.Notification
+                    {
+                        Title = UserNotification.TitleMobile,
+                        Body = UserNotification.ContentMobile,
+                    },
+                    Data = data,
+                    Token = UserNotification.Recipient.Token,
+                };
+
+                var messaging = FirebaseMessaging.DefaultInstance;
+                _ = messaging.SendAsync(message);
+
+                return MentorRegisterRequest;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(MentorRegisterRequestService));
+            }
+            return null;
+
         }
     }
 }

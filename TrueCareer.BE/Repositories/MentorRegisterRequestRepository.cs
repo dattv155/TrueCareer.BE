@@ -142,7 +142,7 @@ namespace TrueCareer.Repositories
                     Avatar = q.User.Avatar,
                     CoverImage = q.User.CoverImage,
                 } : null,
-               
+
             }).ToListAsync();
             return MentorRegisterRequests;
         }
@@ -260,9 +260,9 @@ namespace TrueCareer.Repositories
             {
                 UserId = x.UserId,
                 TopicId = x.TopicId,
-               
+
                 MentorApprovalStatusId = x.MentorApprovalStatusId,
-               
+
                 Id = x.Id,
                 Topic = x.Topic == null ? null : new Topic
                 {
@@ -309,12 +309,11 @@ namespace TrueCareer.Repositories
             MentorRegisterRequestDAO.MentorApprovalStatusId = MentorRegisterRequest.MentorApprovalStatusId;
             MentorRegisterRequestDAO.Id = MentorRegisterRequest.Id;
             await DataContext.SaveChangesAsync();
-            await SaveReference(MentorRegisterRequest);
             return true;
         }
         private async Task SaveReference(MentorRegisterRequest MentorRegisterRequest)
         {
         }
     }
-    
+
 }
