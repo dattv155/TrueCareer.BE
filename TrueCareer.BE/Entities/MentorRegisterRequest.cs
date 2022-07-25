@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using TrueCareer.BE.Entities;
 using TrueSight.Common;
 
 namespace TrueCareer.Entities
@@ -12,12 +13,11 @@ namespace TrueCareer.Entities
     public class MentorRegisterRequest : DataEntity, IEquatable<MentorRegisterRequest>
     {
         public long Id { get; set; }
-        public long UserId { get; set; }
+        public long AppUserId { get; set; }
         public long MentorApprovalStatusId { get; set; }
-        public long TopicId { get; set; }
-        public Topic Topic { get; set; }
         public MentorApprovalStatus MentorApprovalStatus { get; set; }
         public AppUser User { get; set; }
+        public MentorInfo MentorInfo {get; set;}
         public bool Equals(MentorRegisterRequest other)
         {
             return other != null && Id == other.Id;

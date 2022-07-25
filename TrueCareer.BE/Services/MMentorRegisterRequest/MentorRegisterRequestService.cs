@@ -13,6 +13,7 @@ using TrueCareer.Services.MAppUser;
 using TrueCareer.Services;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
+using TrueCareer.BE.Entities;
 
 namespace TrueCareer.Services.MMentorRegisterRequest
 {
@@ -78,7 +79,9 @@ namespace TrueCareer.Services.MMentorRegisterRequest
             try
             {
                 await UOW.MentorRegisterRequestRepository.Create(MentorRegisterRequest);
+                await UOW.MentorInfoRepository.Create(MentorRegisterRequest.MentorInfo);
                 MentorRegisterRequest = await UOW.MentorRegisterRequestRepository.Get(MentorRegisterRequest.Id);
+                MentorRegisterRequest.MentorInfo = await UOW.MentorInfoRepository.Get(MentorRegisterRequest.AppUserId);
                 Logging.CreateAuditLog(MentorRegisterRequest, new { }, nameof(MentorRegisterRequestService));
                 return MentorRegisterRequest;
             }
@@ -190,7 +193,7 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 MentorRegisterRequest.MentorApprovalStatusId = MentorApprovalStatusEnum.APPROVE.Id;
                 await UOW.MentorRegisterRequestRepository.Update(MentorRegisterRequest);
                 // change role id of mentee to mentor
-                AppUser AppUser = await UOW.AppUserRepository.Get(MentorRegisterRequest.UserId);
+                AppUser AppUser = await UOW.AppUserRepository.Get(MentorRegisterRequest.AppUserId);
                 AppUser.RoleId = RoleEnum.MENTOR.Id;
                 await UOW.AppUserRepository.Update(AppUser);
                 // send notification to web and mobile
@@ -202,7 +205,7 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                     TitleMobile = "Hồ sơ Mentor được phê duyệt",
                     ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
                     "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
-                    RecipientId = MentorRegisterRequest.UserId,
+                    RecipientId = MentorRegisterRequest.AppUserId,
                     SenderId = 1,
                     Time = StaticParams.DateTimeNow,
                     Unread = false
@@ -255,7 +258,7 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                     ContentWeb = "TrueCareer rất tiếc phải thông báo rằng hồ sơ của bạn chưa phù hợp để trở thành Mentor.",
                     TitleMobile = "Hồ sơ Mentor bị từ chối",
                     ContentMobile = "TrueCareer rất tiếc phải thông báo rằng hồ sơ của bạn chưa phù hợp để trở thành Mentor.",
-                    RecipientId = MentorRegisterRequest.UserId,
+                    RecipientId = MentorRegisterRequest.AppUserId,
                     SenderId = 1,
                     Time = StaticParams.DateTimeNow,
                     Unread = false

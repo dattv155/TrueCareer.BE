@@ -1,4 +1,4 @@
-﻿using System;using Thinktecture;
+using System;using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -44,6 +44,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<MbtiSingleTypeDAO> MbtiSingleType { get; set; }
         public virtual DbSet<MentorApprovalStatusDAO> MentorApprovalStatus { get; set; }
         public virtual DbSet<MentorConnectionDAO> MentorConnection { get; set; }
+        public virtual DbSet<MentorInfoDAO> MentorInfo { get; set; }
         public virtual DbSet<MentorMenteeConnectionDAO> MentorMenteeConnection { get; set; }
         public virtual DbSet<MentorRegisterRequestDAO> MentorRegisterRequest { get; set; }
         public virtual DbSet<MentorReviewDAO> MentorReview { get; set; }
@@ -78,9 +79,6 @@ namespace TrueCareer.BE.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureTempTable<long>();
-            modelBuilder.ConfigureTempTable<Guid>();
-            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -869,6 +867,15 @@ namespace TrueCareer.BE.Models
                     .HasConstraintName("FK_MentorConnection_AppUser");
             });
 
+            modelBuilder.Entity<MentorInfoDAO>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.ConnectionUrl).HasMaxLength(4000);
+
+                entity.Property(e => e.TopicDescription).HasMaxLength(4000);
+            });
+
             modelBuilder.Entity<MentorMenteeConnectionDAO>(entity =>
             {
                 entity.HasOne(d => d.ActiveTime)
@@ -913,7 +920,6 @@ namespace TrueCareer.BE.Models
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.MentorRegisterRequests)
                     .HasForeignKey(d => d.TopicId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MentorRegisterRequest_Topic");
 
                 entity.HasOne(d => d.User)

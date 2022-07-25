@@ -32,6 +32,7 @@ namespace TrueCareer.Repositories
         IMbtiResultRepository MbtiResultRepository { get; }
         IMbtiSingleTypeRepository MbtiSingleTypeRepository { get; }
         IMentorConnectionRepository MentorConnectionRepository { get; }
+        IMentorInfoRepository MentorInfoRepository { get; }
         IMentorMenteeConnectionRepository MentorMenteeConnectionRepository { get; }
         IMentorReviewRepository MentorReviewRepository { get; }
         INewsRepository NewsRepository { get; }
@@ -79,6 +80,7 @@ namespace TrueCareer.Repositories
         public IMbtiResultRepository MbtiResultRepository { get; private set; }
         public IMbtiSingleTypeRepository MbtiSingleTypeRepository { get; private set; }
         public IMentorConnectionRepository MentorConnectionRepository { get; private set; }
+        public IMentorInfoRepository MentorInfoRepository { get; private set; }
         public IMentorMenteeConnectionRepository MentorMenteeConnectionRepository { get; private set; }
         public IMentorReviewRepository MentorReviewRepository { get; private set; }
         public INewsRepository NewsRepository { get; private set; }
@@ -116,6 +118,7 @@ namespace TrueCareer.Repositories
             MbtiResultRepository = new MbtiResultRepository(DataContext);
             MbtiSingleTypeRepository = new MbtiSingleTypeRepository(DataContext);
             MentorConnectionRepository = new MentorConnectionRepository(DataContext);
+            MentorInfoRepository = new MentorInfoRepository(DataContext);
             MentorMenteeConnectionRepository = new MentorMenteeConnectionRepository(DataContext);
             MentorReviewRepository = new MentorReviewRepository(DataContext);
             NewsRepository = new NewsRepository(DataContext);

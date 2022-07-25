@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TrueCareer.BE.Entities;
 using TrueCareer.BE.Models;
 using TrueCareer.Entities;
 using TrueSight.Common;
@@ -112,17 +113,9 @@ namespace TrueCareer.Repositories
         {
             List<MentorRegisterRequest> MentorRegisterRequests = await query.Select(q => new MentorRegisterRequest()
             {
-                UserId = filter.Selects.Contains(MentorRegisterRequestSelect.User) ? q.UserId : default(long),
-                TopicId = filter.Selects.Contains(MentorRegisterRequestSelect.Topic) ? q.TopicId : default(long),
+                AppUserId = filter.Selects.Contains(MentorRegisterRequestSelect.User) ? q.UserId : default(long),
                 MentorApprovalStatusId = filter.Selects.Contains(MentorRegisterRequestSelect.MentorApprovalStatus) ? q.MentorApprovalStatusId : default(long),
                 Id = filter.Selects.Contains(MentorRegisterRequestSelect.Id) ? q.Id : default(long),
-                Topic = filter.Selects.Contains(MentorRegisterRequestSelect.Topic) && q.Topic != null ? new Topic
-                {
-                    Id = q.Topic.Id,
-                    Title = q.Topic.Title,
-                    Description = q.Topic.Description,
-                    Cost = q.Topic.Cost,
-                } : null,
                 MentorApprovalStatus = filter.Selects.Contains(MentorRegisterRequestSelect.MentorApprovalStatus) && q.MentorApprovalStatus != null ? new MentorApprovalStatus
                 {
                     Id = q.MentorApprovalStatus.Id,
@@ -144,6 +137,7 @@ namespace TrueCareer.Repositories
                 } : null,
 
             }).ToListAsync();
+
             return MentorRegisterRequests;
         }
         public Task<bool> BulkDelete(List<MentorRegisterRequest> MentorRegisterRequests)
@@ -174,8 +168,7 @@ namespace TrueCareer.Repositories
         public async Task<bool> Create(MentorRegisterRequest MentorRegisterRequest)
         {
             MentorRegisterRequestDAO MentorRegisterRequestDAO = new MentorRegisterRequestDAO();
-            MentorRegisterRequestDAO.UserId = MentorRegisterRequest.UserId;
-            MentorRegisterRequestDAO.TopicId = MentorRegisterRequest.TopicId;
+            MentorRegisterRequestDAO.UserId = MentorRegisterRequest.AppUserId;
             MentorRegisterRequestDAO.MentorApprovalStatusId = MentorRegisterRequest.MentorApprovalStatusId;
             MentorRegisterRequestDAO.Id = MentorRegisterRequest.Id;
             DataContext.MentorRegisterRequest.Add(MentorRegisterRequestDAO);
@@ -200,17 +193,9 @@ namespace TrueCareer.Repositories
             .Where(x => x.Id == Id)
             .Select(x => new MentorRegisterRequest()
             {
-                UserId = x.UserId,
-                TopicId = x.TopicId,
+                AppUserId = x.UserId,
                 MentorApprovalStatusId = x.MentorApprovalStatusId,
                 Id = x.Id,
-                Topic = x.Topic == null ? null : new Topic
-                {
-                    Id = x.Topic.Id,
-                    Title = x.Topic.Title,
-                    Description = x.Topic.Description,
-                    Cost = x.Topic.Cost,
-                },
                 MentorApprovalStatus = x.MentorApprovalStatus == null ? null : new MentorApprovalStatus
                 {
                     Id = x.MentorApprovalStatus.Id,
@@ -258,19 +243,9 @@ namespace TrueCareer.Repositories
             List<MentorRegisterRequest> MentorRegisterRequests = await query.AsNoTracking()
             .Select(x => new MentorRegisterRequest()
             {
-                UserId = x.UserId,
-                TopicId = x.TopicId,
-
+                AppUserId = x.UserId,
                 MentorApprovalStatusId = x.MentorApprovalStatusId,
-
                 Id = x.Id,
-                Topic = x.Topic == null ? null : new Topic
-                {
-                    Id = x.Topic.Id,
-                    Title = x.Topic.Title,
-                    Description = x.Topic.Description,
-                    Cost = x.Topic.Cost,
-                },
                 MentorApprovalStatus = x.MentorApprovalStatus == null ? null : new MentorApprovalStatus
                 {
                     Id = x.MentorApprovalStatus.Id,
@@ -304,8 +279,7 @@ namespace TrueCareer.Repositories
               .FirstOrDefault();
             if (MentorRegisterRequestDAO == null)
                 return false;
-            MentorRegisterRequestDAO.UserId = MentorRegisterRequest.UserId;
-            MentorRegisterRequestDAO.TopicId = MentorRegisterRequest.TopicId;
+            MentorRegisterRequestDAO.UserId = MentorRegisterRequest.AppUserId;
             MentorRegisterRequestDAO.MentorApprovalStatusId = MentorRegisterRequest.MentorApprovalStatusId;
             MentorRegisterRequestDAO.Id = MentorRegisterRequest.Id;
             await DataContext.SaveChangesAsync();
