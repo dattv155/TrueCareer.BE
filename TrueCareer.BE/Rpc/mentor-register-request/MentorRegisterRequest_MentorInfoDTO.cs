@@ -26,6 +26,11 @@ namespace TrueCareer.Rpc.mentor_register_request
         {
             this.Id = MentorInfo.Id;
             this.AppUserId = MentorInfo.AppUserId;
+            this.ConnectionId = MentorInfo.ConnectionId;
+            this.ConnectionUrl = MentorInfo.ConnectionUrl;
+            this.MajorId = MentorInfo.MajorId;
+            this.TopicDescription = MentorInfo.TopicDescription;
+            this.ActiveTimes = MentorInfo.ActiveTimes.Select(x => new MentorRegisterRequest_ActiveTimeDTO(x)).ToList();
         }
     }
 

@@ -152,7 +152,6 @@ namespace TrueCareer.Repositories
         public async Task<bool> Create(MentorInfo MentorInfo)
         {
             MentorInfoDAO MentorInfoDAO = new MentorInfoDAO();
-            MentorInfoDAO.Id = MentorInfo.Id;
             MentorInfoDAO.AppUserId = MentorInfo.AppUserId;
             MentorInfoDAO.ConnectionId = MentorInfo.ConnectionId;
             MentorInfoDAO.ConnectionUrl = MentorInfo.ConnectionUrl;

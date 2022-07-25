@@ -869,8 +869,6 @@ namespace TrueCareer.BE.Models
 
             modelBuilder.Entity<MentorInfoDAO>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.ConnectionUrl).HasMaxLength(4000);
 
                 entity.Property(e => e.TopicDescription).HasMaxLength(4000);

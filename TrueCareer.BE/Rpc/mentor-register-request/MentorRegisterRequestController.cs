@@ -226,11 +226,17 @@ namespace TrueCareer.Rpc.mentor_register_request
             MentorRegisterRequest.MentorInfo = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo == null ? null : new MentorInfo
             {
                 Id = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.Id,
-                AppUserId = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.AppUserId,
+                AppUserId = MentorRegisterRequest_MentorRegisterRequestDTO.UserId,
                 ConnectionId = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.ConnectionId,
                 ConnectionUrl = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.ConnectionUrl,
                 MajorId = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.MajorId,
                 TopicDescription = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.TopicDescription,
+                ActiveTimes = MentorRegisterRequest_MentorRegisterRequestDTO.MentorInfo.ActiveTimes.Select(x => new ActiveTime
+                {
+                    MentorId = MentorRegisterRequest_MentorRegisterRequestDTO.UserId,
+                    ActiveDate = x.ActiveDate,
+                    UnitOfTimeId = x.UnitOfTimeId,
+                }).ToList(),
             };
             MentorRegisterRequest.MentorApprovalStatus = MentorRegisterRequest_MentorRegisterRequestDTO.MentorApprovalStatus == null ? null : new MentorApprovalStatus
             {
