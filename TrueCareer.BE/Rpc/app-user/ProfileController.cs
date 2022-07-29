@@ -289,6 +289,8 @@ namespace TrueCareer.Rpc.app_user
             AppUser.Email = AppUser_AppUserDTO.Email;
             AppUser.Phone = AppUser_AppUserDTO.Phone;
             AppUser.SexId = AppUser_AppUserDTO.SexId;
+            AppUser.CoverImage = AppUser_AppUserDTO.CoverImage;
+
             AppUser.Sex = AppUser_AppUserDTO.Sex == null ? null : new Sex
             {
                 Id = AppUser_AppUserDTO.Sex.Id,
