@@ -47,5 +47,24 @@ namespace TrueCareer.Rpc.mentor_register_request
                 .Select(x => new MentorRegisterRequest_MajorDTO(x)).ToList();
             return MentorRegisterRequest_MajorDTOs;
         }
+
+        [Route(MentorRegisterRequestRoute.SingleListMajor), HttpPost]
+        public async Task<List<MentorRegisterRequest_UnitOfTimeDTO>> SingleListUnitOfTime([FromBody] MentorRegisterRequest_UnitOfTimeFilterDTO MentorRegisterRequest_UnitOfTimeFilterDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(ModelState);
+
+            UnitOfTimeFilter UnitOfTimeFilter = new UnitOfTimeFilter();
+            UnitOfTimeFilter.Skip = 0;
+            UnitOfTimeFilter.Take = 20;
+            UnitOfTimeFilter.OrderBy = UnitOfTimeOrder.Id;
+            UnitOfTimeFilter.OrderType = OrderType.ASC;
+            UnitOfTimeFilter.Selects = UnitOfTimeSelect.ALL;
+
+            List<UnitOfTime> UnitOfTimes = await UnitOfTimeService.List(UnitOfTimeFilter);
+            List<MentorRegisterRequest_UnitOfTimeDTO> MentorRegisterRequest_UnitOfTimeDTOs = UnitOfTimes
+                .Select(x => new MentorRegisterRequest_UnitOfTimeDTO(x)).ToList();
+            return MentorRegisterRequest_UnitOfTimeDTOs;
+        }
     }
 }

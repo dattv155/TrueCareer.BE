@@ -21,7 +21,7 @@ namespace TrueCareer.Rpc.mentor_register_request
 
         public const string SingleListConnectionType = Default + "/single-list-connection-type";
         public const string SingleListMajor = Default + "/single-list-major";
-        public const string ListUnitOfTime = Default + "/list-unit-of-time";
+        public const string SingleListUnitOfTime = Default + "/single-list-unit-of-time";
         public const string UploadImage = Default + "/upload-image";
         public const string Send = Default + "/send";
         public const string SaveTopic = Default + "/save-topic";

@@ -14,6 +14,7 @@ using TrueCareer.Services.MTopic;
 using TrueCareer.Services.MMentorConnection;
 using TrueCareer.Services.MActiveTime;
 using TrueCareer.Services.MAppUser;
+using TrueCareer.Services.MUnitOfTime;
 using TrueCareer.Enums;
 using TrueCareer.BE.Entities;
 
@@ -30,6 +31,7 @@ namespace TrueCareer.Rpc.mentor_register_request
         private IMentorConnectionService MentorConnectionService;
         private IActiveTimeService ActiveTimeService;
         private IAppUserService AppUserService;
+        private IUnitOfTimeService UnitOfTimeService;
         public MentorRegisterRequestController(
             IMajorService MajorService,
             IConnectionTypeService ConnectionTypeService,
@@ -39,7 +41,8 @@ namespace TrueCareer.Rpc.mentor_register_request
             ITopicService TopicService,
             IMentorConnectionService MentorConnectionService,
             IActiveTimeService ActiveTimeService,
-            IAppUserService AppUserService
+            IAppUserService AppUserService,
+            IUnitOfTimeService UnitOfTimeService
         )
         {
             this.MajorService = MajorService;
@@ -51,6 +54,7 @@ namespace TrueCareer.Rpc.mentor_register_request
             this.MentorConnectionService = MentorConnectionService;
             this.ActiveTimeService = ActiveTimeService;
             this.AppUserService = AppUserService;
+            this.UnitOfTimeService = UnitOfTimeService;
         }
 
         [Route(MentorRegisterRequestRoute.Count), HttpPost]

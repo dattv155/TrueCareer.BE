@@ -26,4 +26,12 @@ namespace TrueCareer.Rpc.mentor_register_request
             this.Errors = UnitOfTime.Errors;
         }
     }
+    public class MentorRegisterRequest_UnitOfTimeFilterDTO : FilterEntity
+    {
+        public IdFilter Id { get; set; }
+        public StringFilter Code { get; set; }
+        public StringFilter Name { get; set; }
+
+        public MentorRegisterRequestOrder OrderBy { get; set; }
+    }
 }
