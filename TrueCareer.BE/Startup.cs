@@ -220,6 +220,7 @@ namespace TrueCareer
                 }
 
                 RecurringJob.AddOrUpdate<MaintenanceService>("CleanHangfire", x => x.CleanHangfire(), Cron.Daily);
+                RecurringJob.AddOrUpdate<MaintenanceService>("DeleteSupporter", x => x.CleanExpiredConnection(), Cron.Minutely);
             };
             onChange();
             ChangeToken.OnChange(() => Configuration.GetReloadToken(), onChange);

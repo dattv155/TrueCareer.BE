@@ -17,6 +17,7 @@ namespace TrueCareer.Entities
         public long CountUnread { get; set; }
         public string LatestContent { get; set; }
         public long? LatestGlobalUserId { get; set; }
+        public long? StatusId { get; set; }
         public GlobalUser LatestGlobalUser { get; set; }
         public ConversationConfiguration ConversationConfiguration { get; set; }
         public ConversationType ConversationType { get; set; }
@@ -47,6 +48,7 @@ namespace TrueCareer.Entities
     {
         public IdFilter Id { get; set; }
         public IdFilter ConversationTypeId { get; set; }
+        public IdFilter StatusId { get; set; }
         public StringFilter Hash { get; set; }
         public StringFilter Name { get; set; }
         public StringFilter Avatar { get; set; }

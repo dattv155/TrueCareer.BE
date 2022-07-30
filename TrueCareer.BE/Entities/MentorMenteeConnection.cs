@@ -16,6 +16,7 @@ namespace TrueCareer.Entities
         public long ConnectionStatusId { get; set; }
         public long ActiveTimeId { get; set; }
         public long Id { get; set; }
+        public long ConversationId { get; set; }
         public MentorConnection Connection { get; set; }
         public ConnectionStatus ConnectionStatus { get; set; }
         public AppUser Mentee { get; set; }
@@ -38,6 +39,7 @@ namespace TrueCareer.Entities
         public IdFilter MentorId { get; set; }
         public IdFilter MenteeId { get; set; }
         public IdFilter ConnectionId { get; set; }
+        public IdFilter ConversationId { get; set; }
         public StringFilter FirstMessage { get; set; }
         public IdFilter ConnectionStatusId { get; set; }
         public IdFilter ActiveTimeId { get; set; }
