@@ -1,4 +1,4 @@
-using System;using Thinktecture;
+﻿using System;using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -79,9 +79,6 @@ namespace TrueCareer.BE.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureTempTable<long>();
-            modelBuilder.ConfigureTempTable<Guid>();
-            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -249,6 +246,8 @@ namespace TrueCareer.BE.Models
 
                 entity.Property(e => e.RowId).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ConversationConfiguration)
@@ -272,6 +271,12 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.LatestUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Conversation_AppUser");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Conversation_Status");
             });
 
             modelBuilder.Entity<ConversationAttachmentDAO>(entity =>

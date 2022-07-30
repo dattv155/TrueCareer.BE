@@ -8,6 +8,7 @@ namespace TrueCareer.BE.Models
         public StatusDAO()
         {
             ConversationConfigurations = new HashSet<ConversationConfigurationDAO>();
+            Conversations = new HashSet<ConversationDAO>();
         }
 
         public long Id { get; set; }
@@ -15,5 +16,6 @@ namespace TrueCareer.BE.Models
         public string Name { get; set; }
 
         public virtual ICollection<ConversationConfigurationDAO> ConversationConfigurations { get; set; }
+        public virtual ICollection<ConversationDAO> Conversations { get; set; }
     }
 }
