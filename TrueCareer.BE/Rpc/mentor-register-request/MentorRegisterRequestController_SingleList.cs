@@ -48,7 +48,7 @@ namespace TrueCareer.Rpc.mentor_register_request
             return MentorRegisterRequest_MajorDTOs;
         }
 
-        [Route(MentorRegisterRequestRoute.SingleListMajor), HttpPost]
+        [Route(MentorRegisterRequestRoute.SingleListUnitOfTime), HttpPost]
         public async Task<List<MentorRegisterRequest_UnitOfTimeDTO>> SingleListUnitOfTime([FromBody] MentorRegisterRequest_UnitOfTimeFilterDTO MentorRegisterRequest_UnitOfTimeFilterDTO)
         {
             if (!ModelState.IsValid)
