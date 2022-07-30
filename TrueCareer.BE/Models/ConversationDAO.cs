@@ -10,6 +10,7 @@ namespace TrueCareer.BE.Models
             ConversationMessages = new HashSet<ConversationMessageDAO>();
             ConversationParticipants = new HashSet<ConversationParticipantDAO>();
             ConversationReadHistories = new HashSet<ConversationReadHistoryDAO>();
+            MentorMenteeConnections = new HashSet<MentorMenteeConnectionDAO>();
         }
 
         public long Id { get; set; }
@@ -36,5 +37,6 @@ namespace TrueCareer.BE.Models
         public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
         public virtual ICollection<ConversationParticipantDAO> ConversationParticipants { get; set; }
         public virtual ICollection<ConversationReadHistoryDAO> ConversationReadHistories { get; set; }
+        public virtual ICollection<MentorMenteeConnectionDAO> MentorMenteeConnections { get; set; }
     }
 }

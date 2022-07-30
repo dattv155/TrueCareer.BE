@@ -902,6 +902,11 @@ namespace TrueCareer.BE.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MentorMenteeConnection_ConnectionStatus");
 
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.MentorMenteeConnections)
+                    .HasForeignKey(d => d.ConversationId)
+                    .HasConstraintName("FK_MentorMenteeConnection_Conversation");
+
                 entity.HasOne(d => d.Mentee)
                     .WithMany(p => p.MentorMenteeConnectionMentees)
                     .HasForeignKey(d => d.MenteeId)
