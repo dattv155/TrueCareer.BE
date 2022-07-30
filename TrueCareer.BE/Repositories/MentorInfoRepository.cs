@@ -115,6 +115,7 @@ namespace TrueCareer.Repositories
 
             IQueryable<MentorInfoDAO> query = DataContext.MentorInfo.AsNoTracking();
             query = query.Where(q => q.Id, IdFilter);
+
             List<MentorInfo> MentorInfos = await query.AsNoTracking()
             .Select(x => new MentorInfo()
             {
@@ -131,6 +132,22 @@ namespace TrueCareer.Repositories
 
         public async Task<MentorInfo> Get(long AppUserId)
         {
+            List<ActiveTime> AppUserActiveTimes = await DataContext.ActiveTime.AsNoTracking()
+                .Where(x => x.MentorId == AppUserId)
+                .Select(x => new ActiveTime
+                {
+                    ActiveDate = x.ActiveDate,
+                    MentorId = x.MentorId,
+                    UnitOfTimeId = x.UnitOfTimeId,
+                    UnitOfTime = new UnitOfTime
+                    {
+                        Code = x.UnitOfTime.Code,
+                        Name = x.UnitOfTime.Name,
+                        StartAt = x.UnitOfTime.StartAt,
+                        EndAt = x.UnitOfTime.EndAt,
+                    }
+                }).ToListAsync();
+
             MentorInfo MentorInfo = await DataContext.MentorInfo.AsNoTracking()
             .Where(x => x.AppUserId == AppUserId)
             .Select(x => new MentorInfo()
@@ -141,6 +158,7 @@ namespace TrueCareer.Repositories
                 ConnectionUrl = x.ConnectionUrl,
                 MajorId = x.MajorId,
                 TopicDescription = x.TopicDescription,
+                ActiveTimes = AppUserActiveTimes
             }).FirstOrDefaultAsync();
 
             if (MentorInfo == null)
