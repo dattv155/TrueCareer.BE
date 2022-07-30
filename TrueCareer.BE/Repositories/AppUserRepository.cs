@@ -286,7 +286,8 @@ namespace TrueCareer.Repositories
                     Code = x.Sex.Code,
                     Name = x.Sex.Name,
                 },
-                RowId = x.RowId
+                RowId = x.RowId,
+                RoleId = x.RoleId
             }).FirstOrDefaultAsync();
 
             if (AppUser == null)

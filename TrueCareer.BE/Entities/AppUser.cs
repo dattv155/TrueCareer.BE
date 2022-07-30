@@ -36,7 +36,7 @@ namespace TrueCareer.Entities
 
         public string AIdToken { get; set; }
 
-        public long RoleId { get; set; }
+        public long? RoleId { get; set; }
         public int LikeCount { get; set; }
         public int MenteeCount { get; set; }
 

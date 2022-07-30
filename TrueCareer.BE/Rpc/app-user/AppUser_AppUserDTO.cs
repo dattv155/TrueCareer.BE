@@ -26,7 +26,8 @@ namespace TrueCareer.Rpc.app_user
         public Guid RowId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public AppUser_AppUserDTO() {}
+        public long? RoleId { get; set; }
+        public AppUser_AppUserDTO() { }
         public AppUser_AppUserDTO(AppUser AppUser)
         {
             this.Id = AppUser.Id;
@@ -45,6 +46,7 @@ namespace TrueCareer.Rpc.app_user
             this.RowId = AppUser.RowId;
             this.CreatedAt = AppUser.CreatedAt;
             this.UpdatedAt = AppUser.UpdatedAt;
+            this.RoleId = AppUser.RoleId;
             this.Informations = AppUser.Informations;
             this.Warnings = AppUser.Warnings;
             this.Errors = AppUser.Errors;
