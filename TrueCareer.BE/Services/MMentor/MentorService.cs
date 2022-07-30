@@ -20,6 +20,7 @@ namespace TrueCareer.Services.MMentor
     public interface IMentorService : IServiceScoped
     {
         Task<List<AppUser>> List(AppUserFilter AppUserFilter);
+        Task<int> Count(AppUserFilter AppUserFilter);
 
     }
 
@@ -97,6 +98,23 @@ namespace TrueCareer.Services.MMentor
                 Logging.CreateSystemLog(ex, nameof(AppUser));
             }
             return null;
+        }
+
+        public async Task<int> Count(AppUserFilter AppUserFilter)
+        {
+            try
+            {
+                IdFilter RoleIdFilter = new IdFilter();
+                RoleIdFilter.Equal = 2;
+                AppUserFilter.RoleId = RoleIdFilter;
+                int result = await UOW.AppUserRepository.Count(AppUserFilter);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(AppUser));
+            }
+            return 0;
         }
     }
 
