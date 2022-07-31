@@ -224,20 +224,7 @@ namespace TrueCareer.Services.MMentorMenteeConnection
 
         private void Sync(List<MentorMenteeConnection> MentorMenteeConnections)
         {
-            List<MentorConnection> MentorConnections = new List<MentorConnection>();
-            List<ConnectionStatus> ConnectionStatuses = new List<ConnectionStatus>();
-            List<AppUser> AppUsers = new List<AppUser>();
-            MentorConnections.AddRange(MentorMenteeConnections.Select(x => new MentorConnection { Id = x.ConnectionId }));
-            ConnectionStatuses.AddRange(MentorMenteeConnections.Select(x => new ConnectionStatus { Id = x.ConnectionStatusId }));
-            AppUsers.AddRange(MentorMenteeConnections.Select(x => new AppUser { Id = x.MenteeId }));
-            AppUsers.AddRange(MentorMenteeConnections.Select(x => new AppUser { Id = x.MentorId }));
 
-            MentorConnections = MentorConnections.Distinct().ToList();
-            ConnectionStatuses = ConnectionStatuses.Distinct().ToList();
-            AppUsers = AppUsers.Distinct().ToList();
-            RabbitManager.PublishList(MentorConnections, RoutingKeyEnum.MentorConnectionUsed.Code);
-            RabbitManager.PublishList(ConnectionStatuses, RoutingKeyEnum.ConnectionStatusUsed.Code);
-            RabbitManager.PublishList(AppUsers, RoutingKeyEnum.AppUserUsed.Code);
         }
 
     }
