@@ -113,7 +113,12 @@ namespace TrueCareer.Repositories
                 Id = q.Id,
                 ActiveDate = q.ActiveDate,
                 UnitOfTimeId = q.UnitOfTimeId,
-                UnitOfTime = new UnitOfTime { },
+                UnitOfTime = new UnitOfTime
+                {
+                    Id = q.UnitOfTime.Id,
+                    Code = q.UnitOfTime.Code,
+                    Name = q.UnitOfTime.Name
+                },
                 MentorId = q.MentorId,
                 Mentor = new AppUser
                 {
