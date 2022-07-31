@@ -61,7 +61,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<ActiveTimeDAO> DynamicOrder(IQueryable<ActiveTimeDAO> query, ActiveTimeFilter filter)
         {
@@ -110,12 +110,12 @@ namespace TrueCareer.Repositories
         {
             List<ActiveTime> ActiveTimes = await query.Select(q => new ActiveTime()
             {
-                Id = filter.Selects.Contains(ActiveTimeSelect.Id) ? q.Id : default(long),
-                ActiveDate = filter.Selects.Contains(ActiveTimeSelect.ActiveDate) ? q.ActiveDate : default(DateTime),
-                UnitOfTimeId = filter.Selects.Contains(ActiveTimeSelect.UnitOfTime) ? q.UnitOfTimeId : default(long),
-                UnitOfTime = filter.Selects.Contains(ActiveTimeSelect.UnitOfTime) && q.UnitOfTime != null ? new UnitOfTime { } : null,
-                MentorId = filter.Selects.Contains(ActiveTimeSelect.Mentor) ? q.MentorId : default(long),
-                Mentor = filter.Selects.Contains(ActiveTimeSelect.Mentor) && q.Mentor != null ? new AppUser
+                Id = q.Id,
+                ActiveDate = q.ActiveDate,
+                UnitOfTimeId = q.UnitOfTimeId,
+                UnitOfTime = new UnitOfTime { },
+                MentorId = q.MentorId,
+                Mentor = new AppUser
                 {
                     Id = q.Mentor.Id,
                     Username = q.Mentor.Username,
@@ -127,7 +127,7 @@ namespace TrueCareer.Repositories
                     Birthday = q.Mentor.Birthday,
                     Avatar = q.Mentor.Avatar,
                     CoverImage = q.Mentor.CoverImage,
-                } : null,
+                },
             }).ToListAsync();
             return ActiveTimes;
         }
@@ -170,7 +170,8 @@ namespace TrueCareer.Repositories
                 Id = x.Id,
                 ActiveDate = x.ActiveDate,
                 UnitOfTimeId = x.UnitOfTimeId,
-                UnitOfTime = x.UnitOfTime == null ? null : new UnitOfTime {
+                UnitOfTime = x.UnitOfTime == null ? null : new UnitOfTime
+                {
                     Id = x.UnitOfTime.Id,
                     Code = x.UnitOfTime.Code,
                     Name = x.UnitOfTime.Name,
@@ -192,7 +193,7 @@ namespace TrueCareer.Repositories
                     CoverImage = x.Mentor.CoverImage,
                 },
             }).ToListAsync();
-            
+
 
             return ActiveTimes;
         }
@@ -235,7 +236,7 @@ namespace TrueCareer.Repositories
 
             return ActiveTime;
         }
-        
+
         public async Task<bool> Create(ActiveTime ActiveTime)
         {
             ActiveTimeDAO ActiveTimeDAO = new ActiveTimeDAO();
@@ -273,7 +274,7 @@ namespace TrueCareer.Repositories
                 .DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<ActiveTime> ActiveTimes)
         {
             IdFilter IdFilter = new IdFilter { In = ActiveTimes.Select(x => x.Id).ToList() };
@@ -311,6 +312,6 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(ActiveTime ActiveTime)
         {
         }
-        
+
     }
 }
