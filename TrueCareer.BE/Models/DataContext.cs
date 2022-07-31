@@ -79,9 +79,6 @@ namespace TrueCareer.BE.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureTempTable<long>();
-            modelBuilder.ConfigureTempTable<Guid>();
-            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -896,7 +893,6 @@ namespace TrueCareer.BE.Models
                 entity.HasOne(d => d.Connection)
                     .WithMany(p => p.MentorMenteeConnections)
                     .HasForeignKey(d => d.ConnectionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MentorMenteeConnection_MentorConnection");
 
                 entity.HasOne(d => d.ConnectionStatus)

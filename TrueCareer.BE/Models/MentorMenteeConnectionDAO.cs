@@ -7,7 +7,7 @@ namespace TrueCareer.BE.Models
     {
         public long MentorId { get; set; }
         public long MenteeId { get; set; }
-        public long ConnectionId { get; set; }
+        public long? ConnectionId { get; set; }
         public string FirstMessage { get; set; }
         public long ConnectionStatusId { get; set; }
         public long ActiveTimeId { get; set; }
