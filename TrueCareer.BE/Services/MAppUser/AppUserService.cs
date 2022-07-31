@@ -355,6 +355,7 @@ namespace TrueCareer.Services.MAppUser
                 AppUser.Id = 0;
                 var Password = AppUser.Password;
                 AppUser.Password = HashPassword(Password);
+                AppUser.RoleId = 1;
                 await UOW.AppUserRepository.Create(AppUser);
 
                 AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
