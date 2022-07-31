@@ -356,7 +356,24 @@ namespace TrueCareer.Services.MAppUser
                 var Password = AppUser.Password;
                 AppUser.Password = HashPassword(Password);
                 await UOW.AppUserRepository.Create(AppUser);
+
                 AppUser = await UOW.AppUserRepository.Get(AppUser.Id);
+                List<GlobalUser> GlobalUsers = new List<GlobalUser>();
+                // create new global user which is like app user
+                GlobalUser GlobalUser = new GlobalUser()
+                {
+                    Id = AppUser.Id,
+                    Username = AppUser.Username,
+                    DisplayName = AppUser.DisplayName,
+                    Avatar = AppUser.Avatar,
+                    GlobalUserTypeId = GlobalUserTypeEnum.LOCAL.Id,
+                    CreatedAt = AppUser.CreatedAt,
+                    UpdatedAt = AppUser.UpdatedAt,
+                    DeletedAt = AppUser.DeletedAt,
+                    RowId = AppUser.RowId
+                };
+                GlobalUsers.Add(GlobalUser);
+                await UOW.GlobalUserRepository.BulkMerge(GlobalUsers);
                 Logging.CreateAuditLog(AppUser, new { }, nameof(AppUserService));
                 return AppUser;
             }
