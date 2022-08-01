@@ -392,11 +392,7 @@ namespace TrueCareer.BE.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConversationMessage_GlobalUser");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.ConversationMessages)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConversationMessage_AppUser");
+
             });
 
             modelBuilder.Entity<ConversationParticipantDAO>(entity =>
@@ -436,11 +432,7 @@ namespace TrueCareer.BE.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConversationReadHistory_GlobalUser");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.ConversationReadHistories)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConversationReadHistory_AppUser");
+
             });
 
             modelBuilder.Entity<ConversationTypeDAO>(entity =>

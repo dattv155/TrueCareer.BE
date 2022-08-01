@@ -9,8 +9,7 @@ namespace TrueCareer.BE.Models
         {
             ActiveTimes = new HashSet<ActiveTimeDAO>();
             Comments = new HashSet<CommentDAO>();
-            ConversationMessages = new HashSet<ConversationMessageDAO>();
-            ConversationReadHistories = new HashSet<ConversationReadHistoryDAO>();
+
             FavouriteMentorMentors = new HashSet<FavouriteMentorDAO>();
             FavouriteMentorUsers = new HashSet<FavouriteMentorDAO>();
             FavouriteNews = new HashSet<FavouriteNewsDAO>();
@@ -53,8 +52,7 @@ namespace TrueCareer.BE.Models
         public virtual SexDAO Sex { get; set; }
         public virtual ICollection<ActiveTimeDAO> ActiveTimes { get; set; }
         public virtual ICollection<CommentDAO> Comments { get; set; }
-        public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
-        public virtual ICollection<ConversationReadHistoryDAO> ConversationReadHistories { get; set; }
+
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorMentors { get; set; }
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorUsers { get; set; }
         public virtual ICollection<FavouriteNewsDAO> FavouriteNews { get; set; }

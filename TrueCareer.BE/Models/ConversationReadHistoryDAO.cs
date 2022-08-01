@@ -10,10 +10,9 @@ namespace TrueCareer.BE.Models
         public long GlobalUserId { get; set; }
         public DateTime ReadAt { get; set; }
         public long CountUnread { get; set; }
-        public long UserId { get; set; }
 
         public virtual ConversationDAO Conversation { get; set; }
         public virtual GlobalUserDAO GlobalUser { get; set; }
-        public virtual AppUserDAO User { get; set; }
+
     }
 }
