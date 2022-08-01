@@ -12,6 +12,5 @@ namespace TrueCareer.BE.Models
 
         public virtual ConversationDAO Conversation { get; set; }
         public virtual GlobalUserDAO GlobalUser { get; set; }
-        public virtual AppUserDAO User { get; set; }
     }
 }

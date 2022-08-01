@@ -1,4 +1,5 @@
-﻿using System;using Thinktecture;
+﻿using System;
+using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -81,7 +82,7 @@ namespace TrueCareer.BE.Models
         {
             modelBuilder.ConfigureTempTable<long>();
             modelBuilder.ConfigureTempTable<Guid>();
-            
+
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -269,12 +270,6 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.LatestGlobalUserId)
                     .HasConstraintName("FK_Conversation_GlobalUser");
 
-                entity.HasOne(d => d.LatestUser)
-                    .WithMany(p => p.Conversations)
-                    .HasForeignKey(d => d.LatestUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Conversation_AppUser");
-
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Conversations)
                     .HasForeignKey(d => d.StatusId)
@@ -420,11 +415,7 @@ namespace TrueCareer.BE.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participant_GlobalUser");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.ConversationParticipants)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Participant_AppUser");
+
             });
 
             modelBuilder.Entity<ConversationReadHistoryDAO>(entity =>
