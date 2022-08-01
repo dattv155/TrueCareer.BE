@@ -81,6 +81,7 @@ namespace TrueCareer.BE.Models
         {
             modelBuilder.ConfigureTempTable<long>();
             modelBuilder.ConfigureTempTable<Guid>();
+            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");

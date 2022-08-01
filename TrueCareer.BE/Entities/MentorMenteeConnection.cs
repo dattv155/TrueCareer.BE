@@ -7,11 +7,11 @@ using Newtonsoft.Json.Converters;
 
 namespace TrueCareer.Entities
 {
-    public class MentorMenteeConnection : DataEntity,  IEquatable<MentorMenteeConnection>
+    public class MentorMenteeConnection : DataEntity, IEquatable<MentorMenteeConnection>
     {
         public long MentorId { get; set; }
         public long MenteeId { get; set; }
-        public long ConnectionId { get; set; }
+        public long? ConnectionId { get; set; }
         public string FirstMessage { get; set; }
         public long ConnectionStatusId { get; set; }
         public long ActiveTimeId { get; set; }
@@ -21,7 +21,7 @@ namespace TrueCareer.Entities
         public ConnectionStatus ConnectionStatus { get; set; }
         public AppUser Mentee { get; set; }
         public AppUser Mentor { get; set; }
-        
+
         public bool Equals(MentorMenteeConnection other)
         {
             if (other == null) return false;
@@ -45,8 +45,8 @@ namespace TrueCareer.Entities
         public IdFilter ActiveTimeId { get; set; }
         public IdFilter Id { get; set; }
         public List<MentorMenteeConnectionFilter> OrFilter { get; set; }
-        public MentorMenteeConnectionOrder OrderBy {get; set;}
-        public MentorMenteeConnectionSelect Selects {get; set;}
+        public MentorMenteeConnectionOrder OrderBy { get; set; }
+        public MentorMenteeConnectionSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -62,7 +62,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum MentorMenteeConnectionSelect:long
+    public enum MentorMenteeConnectionSelect : long
     {
         ALL = E.ALL,
         Mentor = E._0,

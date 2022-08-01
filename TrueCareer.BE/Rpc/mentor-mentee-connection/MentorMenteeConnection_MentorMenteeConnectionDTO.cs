@@ -11,7 +11,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
     {
         public long MentorId { get; set; }
         public long MenteeId { get; set; }
-        public long ConnectionId { get; set; }
+        public long? ConnectionId { get; set; }
         public string FirstMessage { get; set; }
         public long ConnectionStatusId { get; set; }
         public long ActiveTimeId { get; set; }
@@ -20,7 +20,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
         public MentorMenteeConnection_ConnectionStatusDTO ConnectionStatus { get; set; }
         public MentorMenteeConnection_AppUserDTO Mentee { get; set; }
         public MentorMenteeConnection_AppUserDTO Mentor { get; set; }
-        public MentorMenteeConnection_MentorMenteeConnectionDTO() {}
+        public MentorMenteeConnection_MentorMenteeConnectionDTO() { }
         public MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection MentorMenteeConnection)
         {
             this.MentorId = MentorMenteeConnection.MentorId;

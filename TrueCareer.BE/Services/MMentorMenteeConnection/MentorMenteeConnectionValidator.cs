@@ -41,8 +41,8 @@ namespace TrueCareer.Services.MMentorMenteeConnection
         public async Task<bool> Create(MentorMenteeConnection MentorMenteeConnection)
         {
             await ValidateFirstMessage(MentorMenteeConnection);
-            await ValidateConnection(MentorMenteeConnection);
-            await ValidateConnectionStatus(MentorMenteeConnection);
+
+
             await ValidateMentee(MentorMenteeConnection);
             await ValidateMentor(MentorMenteeConnection);
             return MentorMenteeConnection.IsValidated;

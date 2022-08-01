@@ -65,7 +65,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<MentorMenteeConnectionDAO> DynamicOrder(IQueryable<MentorMenteeConnectionDAO> query, MentorMenteeConnectionFilter filter)
         {
@@ -264,7 +264,7 @@ namespace TrueCareer.Repositories
                     CoverImage = x.Mentor.CoverImage,
                 },
             }).ToListAsync();
-            
+
 
             return MentorMenteeConnections;
         }
@@ -328,7 +328,7 @@ namespace TrueCareer.Repositories
 
             return MentorMenteeConnection;
         }
-        
+
         public async Task<bool> Create(MentorMenteeConnection MentorMenteeConnection)
         {
             MentorMenteeConnectionDAO MentorMenteeConnectionDAO = new MentorMenteeConnectionDAO();
@@ -372,7 +372,7 @@ namespace TrueCareer.Repositories
                 .DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<MentorMenteeConnection> MentorMenteeConnections)
         {
             IdFilter IdFilter = new IdFilter { In = MentorMenteeConnections.Select(x => x.Id).ToList() };
@@ -413,6 +413,6 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(MentorMenteeConnection MentorMenteeConnection)
         {
         }
-        
+
     }
 }
