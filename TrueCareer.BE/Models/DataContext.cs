@@ -1,4 +1,5 @@
-﻿using System;using Thinktecture;
+﻿using System;
+using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -81,6 +82,7 @@ namespace TrueCareer.BE.Models
         {
             modelBuilder.ConfigureTempTable<long>();
             modelBuilder.ConfigureTempTable<Guid>();
+
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -412,6 +414,8 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.GlobalUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participant_GlobalUser");
+
+
             });
 
             modelBuilder.Entity<ConversationReadHistoryDAO>(entity =>
