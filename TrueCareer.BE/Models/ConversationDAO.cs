@@ -26,13 +26,11 @@ namespace TrueCareer.BE.Models
         public string Hash { get; set; }
         public long? LatestGlobalUserId { get; set; }
         public string LatestContent { get; set; }
-        public long LatestUserId { get; set; }
         public long StatusId { get; set; }
 
         public virtual ConversationConfigurationDAO ConversationConfiguration { get; set; }
         public virtual ConversationTypeDAO ConversationType { get; set; }
         public virtual GlobalUserDAO LatestGlobalUser { get; set; }
-        public virtual AppUserDAO LatestUser { get; set; }
         public virtual StatusDAO Status { get; set; }
         public virtual ICollection<ConversationMessageDAO> ConversationMessages { get; set; }
         public virtual ICollection<ConversationParticipantDAO> ConversationParticipants { get; set; }
