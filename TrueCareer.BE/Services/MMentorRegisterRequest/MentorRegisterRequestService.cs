@@ -200,13 +200,11 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
                 {
                     TitleWeb = "Hồ sơ Mentor được phê duyệt",
-                    ContentWeb = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
-                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    ContentWeb = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống.",
                     TitleMobile = "Hồ sơ Mentor được phê duyệt",
-                    ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
-                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống.",
                     RecipientId = MentorRegisterRequest.AppUserId,
-                    SenderId = 1,
+                    SenderId = 10016,
                     Time = StaticParams.DateTimeNow,
                     Unread = false
                 };
@@ -216,7 +214,7 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 Dictionary<string, string> data = new Dictionary<string, string>();
                 data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
                 data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
-                data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
+
                 data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
                 data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
 
