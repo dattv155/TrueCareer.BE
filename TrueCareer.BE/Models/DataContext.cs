@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Thinktecture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -81,6 +81,9 @@ namespace TrueCareer.BE.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ConfigureTempTable<long>();
+            modelBuilder.ConfigureTempTable<Guid>();
+            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
