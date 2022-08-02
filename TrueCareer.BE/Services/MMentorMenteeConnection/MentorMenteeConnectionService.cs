@@ -25,6 +25,8 @@ namespace TrueCareer.Services.MMentorMenteeConnection
         Task<List<MentorMenteeConnection>> BulkDelete(List<MentorMenteeConnection> MentorMenteeConnections);
         Task<List<MentorMenteeConnection>> Import(List<MentorMenteeConnection> MentorMenteeConnections);
         Task<MentorMenteeConnectionFilter> ToFilter(MentorMenteeConnectionFilter MentorMenteeConnectionFilter);
+        Task<MentorMenteeConnection> Approve(MentorMenteeConnection MentorMenteeConnection);
+        Task<MentorMenteeConnection> Reject(MentorMenteeConnection MentorMenteeConnection);
     }
 
     public class MentorMenteeConnectionService : BaseService, IMentorMenteeConnectionService
@@ -36,19 +38,22 @@ namespace TrueCareer.Services.MMentorMenteeConnection
 
         private IMentorMenteeConnectionValidator MentorMenteeConnectionValidator;
 
+        private INotificationService NotificationService;
+
         public MentorMenteeConnectionService(
             IUOW UOW,
             ICurrentContext CurrentContext,
             IRabbitManager RabbitManager,
             IMentorMenteeConnectionValidator MentorMenteeConnectionValidator,
-            ILogging Logging
+            ILogging Logging,
+            INotificationService NotificationService
         )
         {
             this.UOW = UOW;
             this.RabbitManager = RabbitManager;
             this.CurrentContext = CurrentContext;
             this.Logging = Logging;
-
+            this.NotificationService = NotificationService;
             this.MentorMenteeConnectionValidator = MentorMenteeConnectionValidator;
         }
         public async Task<int> Count(MentorMenteeConnectionFilter MentorMenteeConnectionFilter)
@@ -224,6 +229,113 @@ namespace TrueCareer.Services.MMentorMenteeConnection
 
         private void Sync(List<MentorMenteeConnection> MentorMenteeConnections)
         {
+
+        }
+
+        public async Task<MentorMenteeConnection> Approve(MentorMenteeConnection MentorMenteeConnection)
+        {
+            try
+            {
+                MentorMenteeConnection = await UOW.MentorMenteeConnectionRepository.Get(MentorMenteeConnection.Id);
+                MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.COMING_SOON.Id;
+                await UOW.MentorMenteeConnectionRepository.Update(MentorMenteeConnection);
+                // send notification to web and mobile
+                TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
+                {
+                    TitleWeb = "Lịch hẹn được xác nhận",
+                    ContentWeb = "TrueCareer chúc mừng lịch hẹn của bạn đã được chấp nhận.",
+                    TitleMobile = "Lịch hẹn được xác nhận",
+                    ContentMobile = "TrueCareer chúc mừng lịch hẹn của bạn đã được chấp nhận.",
+                    RecipientId = MentorMenteeConnection.MenteeId,
+                    SenderId = 10016,
+                    Time = StaticParams.DateTimeNow,
+                    Unread = false
+                };
+                await NotificationService.Create(UserNotification);
+
+                // send push notification to mobile
+                // Dictionary<string, string> data = new Dictionary<string, string>();
+                // data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                // data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
+
+                // data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                // data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                // var message = new FirebaseAdmin.Messaging.Message()
+                // {
+                //     Notification = new FirebaseAdmin.Messaging.Notification
+                //     {
+                //         Title = UserNotification.TitleMobile,
+                //         Body = UserNotification.ContentMobile,
+                //     },
+                //     Data = data,
+                //     Token = UserNotification.Recipient.Token,
+                // };
+
+                // var messaging = FirebaseMessaging.DefaultInstance;
+                // _ = messaging.SendAsync(message);
+
+                return MentorMenteeConnection;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(MentorMenteeConnectionService));
+            }
+            return null;
+
+        }
+
+        public async Task<MentorMenteeConnection> Reject(MentorMenteeConnection MentorMenteeConnection)
+        {
+            try
+            {
+                MentorMenteeConnection = await UOW.MentorMenteeConnectionRepository.Get(MentorMenteeConnection.Id);
+                MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.REJECTED.Id;
+                await UOW.MentorMenteeConnectionRepository.Update(MentorMenteeConnection);
+                // send notification to web and mobile
+                TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
+                {
+                    TitleWeb = "Lịch hẹn bị từ chối",
+                    ContentWeb = "TrueCareer rất tiếc phải thông báo rằng lịch hẹn của bạn đã bị từ chối.",
+                    TitleMobile = "Lịch hẹn bị từ chối",
+                    ContentMobile = "TrueCareer rất tiếc phải thông báo rằng lịch hẹn của bạn đã bị từ chối.",
+                    RecipientId = MentorMenteeConnection.MenteeId,
+                    SenderId = 10016,
+                    Time = StaticParams.DateTimeNow,
+                    Unread = false
+                };
+                await NotificationService.Create(UserNotification);
+
+                // send push notification to mobile
+                // Dictionary<string, string> data = new Dictionary<string, string>();
+                // data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                // data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
+                // data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
+                // data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                // data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                // var message = new FirebaseAdmin.Messaging.Message()
+                // {
+                //     Notification = new FirebaseAdmin.Messaging.Notification
+                //     {
+                //         Title = UserNotification.TitleMobile,
+                //         Body = UserNotification.ContentMobile,
+                //     },
+                //     Data = data,
+                //     Token = UserNotification.Recipient.Token,
+                // };
+
+                // var messaging = FirebaseMessaging.DefaultInstance;
+                // _ = messaging.SendAsync(message);
+
+                // return MentorRegisterRequest;
+                return MentorMenteeConnection;
+            }
+            catch (Exception ex)
+            {
+                Logging.CreateSystemLog(ex, nameof(MentorMenteeConnectionService));
+            }
+            return null;
 
         }
 
