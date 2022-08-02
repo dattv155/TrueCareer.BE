@@ -28,6 +28,8 @@ namespace TrueCareer.Repositories
         Task<bool> BulkDelete(List<Notification> Notifications);
         Task<bool> Read(long Id);
         Task<bool> BulkCreate(List<Notification> notifications);
+        Task<bool> CreateToken(AppUserFirebaseToken AppUserFirebaseToken);
+        Task<bool> DeleteToken(AppUserFirebaseToken AppUserFirebaseToken);
     }
     public class NotificationRepository : INotificationRepository
     {
@@ -434,6 +436,45 @@ namespace TrueCareer.Repositories
               {
                   Unread = false,
               });
+            return true;
+        }
+
+        public async Task<bool> CreateToken(AppUserFirebaseToken AppUserFirebaseToken)
+        {
+            AppUserFirebaseTokenDAO FirebaseTokenDAO = await DataContext.AppUserFirebaseToken
+                .Where(x => x.Token == AppUserFirebaseToken.Token).FirstOrDefaultAsync();
+            if (FirebaseTokenDAO == null)
+            {
+                FirebaseTokenDAO = new AppUserFirebaseTokenDAO
+                {
+                    AppUserId = AppUserFirebaseToken.AppUserId,
+                    Token = AppUserFirebaseToken.Token,
+                    DeviceModel = AppUserFirebaseToken.DeviceModel,
+                    OsName = AppUserFirebaseToken.OsName,
+                    OsVersion = AppUserFirebaseToken.OsVersion,
+                    UpdatedAt = StaticParams.DateTimeNow,
+                };
+                DataContext.AppUserFirebaseToken.Add(FirebaseTokenDAO);
+            }
+            else
+            {
+                FirebaseTokenDAO.AppUserId = AppUserFirebaseToken.AppUserId;
+                FirebaseTokenDAO.DeviceModel = AppUserFirebaseToken.DeviceModel;
+                FirebaseTokenDAO.OsName = AppUserFirebaseToken.OsName;
+                FirebaseTokenDAO.OsVersion = AppUserFirebaseToken.OsVersion;
+                FirebaseTokenDAO.UpdatedAt = StaticParams.DateTimeNow;
+            }
+            await DataContext.SaveChangesAsync();
+            await DataContext.AppUserFirebaseToken.Where(x => x.UpdatedAt < StaticParams.DateTimeNow.AddDays(-3)).DeleteFromQueryAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteToken(AppUserFirebaseToken AppUserFirebaseToken)
+        {
+            await DataContext.AppUserFirebaseToken
+                .Where(x => x.Token == AppUserFirebaseToken.Token)
+                .DeleteFromQueryAsync();
+
             return true;
         }
     }

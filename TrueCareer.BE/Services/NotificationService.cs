@@ -21,6 +21,8 @@ namespace TrueCareer.Services
         Task<List<Notification>> BulkCreate(List<Notification> notification);
         Task Read(long UserNotificationId);
         Task<bool> Delete(long Id);
+        Task<bool> CreateToken(AppUserFirebaseToken AppUserFirebaseToken);
+        Task<bool> DeleteToken(AppUserFirebaseToken AppUserFirebaseToken);
     }
     public class NotificationService : INotificationService
     {
@@ -151,6 +153,15 @@ namespace TrueCareer.Services
                 Logging.CreateSystemLog(ex, nameof(NotificationService));
             }
             return false;
+        }
+
+        public async Task<bool> CreateToken(AppUserFirebaseToken AppUserFirebaseToken)
+        {
+            return await UOW.NotificationRepository.CreateToken(AppUserFirebaseToken);
+        }
+        public async Task<bool> DeleteToken(AppUserFirebaseToken AppUserFirebaseToken)
+        {
+            return await UOW.NotificationRepository.DeleteToken(AppUserFirebaseToken);
         }
     }
 }

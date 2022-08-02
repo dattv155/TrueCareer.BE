@@ -10,6 +10,7 @@ namespace TrueCareer.BE.Models
         public virtual DbSet<ActiveTimeDAO> ActiveTime { get; set; }
         public virtual DbSet<AggregatedCounterDAO> AggregatedCounter { get; set; }
         public virtual DbSet<AppUserDAO> AppUser { get; set; }
+        public virtual DbSet<AppUserFirebaseTokenDAO> AppUserFirebaseToken { get; set; }
         public virtual DbSet<ChoiceDAO> Choice { get; set; }
         public virtual DbSet<CommentDAO> Comment { get; set; }
         public virtual DbSet<ConnectionStatusDAO> ConnectionStatus { get; set; }
@@ -82,7 +83,7 @@ namespace TrueCareer.BE.Models
         {
             modelBuilder.ConfigureTempTable<long>();
             modelBuilder.ConfigureTempTable<Guid>();
-
+            
             modelBuilder.Entity<ActiveTimeDAO>(entity =>
             {
                 entity.Property(e => e.ActiveDate).HasColumnType("datetime");
@@ -162,6 +163,27 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.SexId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_AppUser_Sex");
+            });
+
+            modelBuilder.Entity<AppUserFirebaseTokenDAO>(entity =>
+            {
+                entity.Property(e => e.DeviceModel).HasMaxLength(4000);
+
+                entity.Property(e => e.OsName).HasMaxLength(4000);
+
+                entity.Property(e => e.OsVersion).HasMaxLength(4000);
+
+                entity.Property(e => e.Token)
+                    .IsRequired()
+                    .HasMaxLength(4000);
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.AppUser)
+                    .WithMany(p => p.AppUserFirebaseTokens)
+                    .HasForeignKey(d => d.AppUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AppUserFirebaseToken_AppUser");
             });
 
             modelBuilder.Entity<ChoiceDAO>(entity =>
@@ -391,8 +413,6 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.GlobalUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConversationMessage_GlobalUser");
-
-
             });
 
             modelBuilder.Entity<ConversationParticipantDAO>(entity =>
@@ -410,8 +430,6 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.GlobalUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participant_GlobalUser");
-
-
             });
 
             modelBuilder.Entity<ConversationReadHistoryDAO>(entity =>
@@ -431,8 +449,6 @@ namespace TrueCareer.BE.Models
                     .HasForeignKey(d => d.GlobalUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConversationReadHistory_GlobalUser");
-
-
             });
 
             modelBuilder.Entity<ConversationTypeDAO>(entity =>
@@ -629,9 +645,7 @@ namespace TrueCareer.BE.Models
 
                 entity.Property(e => e.EndAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Image)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.Property(e => e.Image).IsRequired();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
