@@ -8,8 +8,8 @@ namespace TrueCareer.BE.Models
         public AppUserDAO()
         {
             ActiveTimes = new HashSet<ActiveTimeDAO>();
+            AppUserFirebaseTokens = new HashSet<AppUserFirebaseTokenDAO>();
             Comments = new HashSet<CommentDAO>();
-
             FavouriteMentorMentors = new HashSet<FavouriteMentorDAO>();
             FavouriteMentorUsers = new HashSet<FavouriteMentorDAO>();
             FavouriteNews = new HashSet<FavouriteNewsDAO>();
@@ -51,8 +51,8 @@ namespace TrueCareer.BE.Models
         public virtual RoleDAO Role { get; set; }
         public virtual SexDAO Sex { get; set; }
         public virtual ICollection<ActiveTimeDAO> ActiveTimes { get; set; }
+        public virtual ICollection<AppUserFirebaseTokenDAO> AppUserFirebaseTokens { get; set; }
         public virtual ICollection<CommentDAO> Comments { get; set; }
-
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorMentors { get; set; }
         public virtual ICollection<FavouriteMentorDAO> FavouriteMentorUsers { get; set; }
         public virtual ICollection<FavouriteNewsDAO> FavouriteNews { get; set; }

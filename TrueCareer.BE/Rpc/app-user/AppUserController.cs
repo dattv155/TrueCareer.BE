@@ -14,6 +14,7 @@ using System.Dynamic;
 using TrueCareer.Entities;
 using TrueCareer.Services.MAppUser;
 using TrueCareer.Services.MSex;
+using TrueCareer.Services;
 
 namespace TrueCareer.Rpc.app_user
 {
@@ -21,15 +22,18 @@ namespace TrueCareer.Rpc.app_user
     {
         private ISexService SexService;
         private IAppUserService AppUserService;
+        private INotificationService NotificationService;
         private ICurrentContext CurrentContext;
         public AppUserController(
             ISexService SexService,
             IAppUserService AppUserService,
+        INotificationService NotificationService,
             ICurrentContext CurrentContext
         )
         {
             this.SexService = SexService;
             this.AppUserService = AppUserService;
+            this.NotificationService = NotificationService;
             this.CurrentContext = CurrentContext;
         }
 
@@ -347,6 +351,39 @@ namespace TrueCareer.Rpc.app_user
             return File(output.ToArray(), "application/octet-stream", "AppUser.xlsx");
         }
 
+        [Route(AppUserRoute.CreateToken), HttpPost]
+        public async Task<ActionResult<bool>> CreateToken([FromBody] AppUser_AppUserFirebaseTokenDTO AppUser_AppUserFirebaseTokenDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(AppUser_AppUserFirebaseTokenDTO);
+
+            AppUserFirebaseToken AppUserFirebaseToken = new AppUserFirebaseToken
+            {
+                AppUserId = CurrentContext.UserId,
+                Token = AppUser_AppUserFirebaseTokenDTO.Token,
+                DeviceModel = AppUser_AppUserFirebaseTokenDTO.DeviceModel,
+                OsName = AppUser_AppUserFirebaseTokenDTO.OsName,
+                OsVersion = AppUser_AppUserFirebaseTokenDTO.OsVersion,
+            };
+            return await NotificationService.CreateToken(AppUserFirebaseToken);
+        }
+
+        [Route(AppUserRoute.DeleteToken), HttpPost]
+        public async Task<ActionResult<bool>> DeleteToken([FromBody] AppUser_AppUserFirebaseTokenDTO AppUser_AppUserFirebaseTokenDTO)
+        {
+            if (!ModelState.IsValid)
+                throw new BindException(AppUser_AppUserFirebaseTokenDTO);
+
+            AppUserFirebaseToken AppUserFirebaseToken = new AppUserFirebaseToken
+            {
+                AppUserId = CurrentContext.UserId,
+                Token = AppUser_AppUserFirebaseTokenDTO.Token,
+                DeviceModel = AppUser_AppUserFirebaseTokenDTO.DeviceModel,
+                OsName = AppUser_AppUserFirebaseTokenDTO.OsName,
+                OsVersion = AppUser_AppUserFirebaseTokenDTO.OsVersion,
+            };
+            return await NotificationService.DeleteToken(AppUserFirebaseToken);
+        }
         private async Task<bool> HasPermission(long Id)
         {
             AppUserFilter AppUserFilter = new AppUserFilter();

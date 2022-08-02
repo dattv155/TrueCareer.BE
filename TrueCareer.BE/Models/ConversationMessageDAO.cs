@@ -17,6 +17,7 @@ namespace TrueCareer.BE.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+
         public virtual ConversationDAO Conversation { get; set; }
         public virtual GlobalUserDAO GlobalUser { get; set; }
         public virtual ICollection<ConversationAttachmentDAO> ConversationAttachments { get; set; }
