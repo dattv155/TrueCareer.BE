@@ -102,6 +102,19 @@ namespace TrueCareer.Services.MMentorMenteeConnection
             {
                 await UOW.MentorMenteeConnectionRepository.Create(MentorMenteeConnection);
                 MentorMenteeConnection = await UOW.MentorMenteeConnectionRepository.Get(MentorMenteeConnection.Id);
+                // send notification to web and mobile
+                TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
+                {
+                    TitleWeb = "Bạn có lịch hẹn",
+                    ContentWeb = "Bạn vừa nhận được một yêu cầu đặt lịch.",
+                    TitleMobile = "Bạn có lịch hẹn",
+                    ContentMobile = "Bạn vừa nhận được một yêu cầu đặt lịch.",
+                    RecipientId = MentorMenteeConnection.MentorId,
+                    SenderId = 10016,
+                    Time = StaticParams.DateTimeNow,
+                    Unread = false
+                };
+                await NotificationService.Create(UserNotification);
                 Logging.CreateAuditLog(MentorMenteeConnection, new { }, nameof(MentorMenteeConnectionService));
                 return MentorMenteeConnection;
             }
