@@ -7,12 +7,14 @@ using Newtonsoft.Json.Converters;
 
 namespace TrueCareer.Entities
 {
-    public class Major : DataEntity,  IEquatable<Major>
+    public class Major : DataEntity, IEquatable<Major>
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        
+
+        public string MajorImage { get; set; }
+
         public bool Equals(Major other)
         {
             if (other == null) return false;
@@ -31,8 +33,8 @@ namespace TrueCareer.Entities
         public StringFilter Name { get; set; }
         public StringFilter Description { get; set; }
         public List<MajorFilter> OrFilter { get; set; }
-        public MajorOrder OrderBy {get; set;}
-        public MajorSelect Selects {get; set;}
+        public MajorOrder OrderBy { get; set; }
+        public MajorSelect Selects { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -44,7 +46,7 @@ namespace TrueCareer.Entities
     }
 
     [Flags]
-    public enum MajorSelect:long
+    public enum MajorSelect : long
     {
         ALL = E.ALL,
         Id = E._0,
