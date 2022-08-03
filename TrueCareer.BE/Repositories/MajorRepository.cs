@@ -59,7 +59,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<MajorDAO> DynamicOrder(IQueryable<MajorDAO> query, MajorFilter filter)
         {
@@ -105,6 +105,7 @@ namespace TrueCareer.Repositories
                 Id = filter.Selects.Contains(MajorSelect.Id) ? q.Id : default(long),
                 Name = filter.Selects.Contains(MajorSelect.Name) ? q.Name : default(string),
                 Description = filter.Selects.Contains(MajorSelect.Description) ? q.Description : default(string),
+                MajorImage = q.MajorImage
             }).ToListAsync();
             return Majors;
         }
@@ -148,7 +149,7 @@ namespace TrueCareer.Repositories
                 Name = x.Name,
                 Description = x.Description,
             }).ToListAsync();
-            
+
 
             return Majors;
         }
@@ -162,6 +163,7 @@ namespace TrueCareer.Repositories
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
+                MajorImage = x.MajorImage
             }).FirstOrDefaultAsync();
 
             if (Major == null)
@@ -169,7 +171,7 @@ namespace TrueCareer.Repositories
 
             return Major;
         }
-        
+
         public async Task<bool> Create(Major Major)
         {
             MajorDAO MajorDAO = new MajorDAO();
@@ -205,7 +207,7 @@ namespace TrueCareer.Repositories
                 .DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<Major> Majors)
         {
             IdFilter IdFilter = new IdFilter { In = Majors.Select(x => x.Id).ToList() };
@@ -242,6 +244,6 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(Major Major)
         {
         }
-        
+
     }
 }

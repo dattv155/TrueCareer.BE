@@ -1,18 +1,7 @@
 using TrueSight.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using TrueCareer.Common;
-using TrueCareer.Helpers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using OfficeOpenXml;
 using TrueCareer.Entities;
-using TrueCareer.Services.MAppUser;
-using TrueCareer.Services.MSex;
 
 namespace TrueCareer.Rpc.app_user
 {
@@ -33,7 +22,9 @@ namespace TrueCareer.Rpc.app_user
         public const string Export = Default + "/export";
         public const string ExportTemplate = Default + "/export-template";
         public const string BulkDelete = Default + "/bulk-delete";
-        
+        public const string CreateToken = Default + "/create-firebase-token";
+        public const string DeleteToken = Default + "/delete-firebase-token";
+
         public const string FilterListSex = Default + "/filter-list-sex";
 
         public const string SingleListSex = Default + "/single-list-sex";
@@ -53,64 +44,65 @@ namespace TrueCareer.Rpc.app_user
             { nameof(AppUserFilter.CoverImage), FieldTypeEnum.STRING.Id },
         };
 
-        private static List<string> FilterList = new List<string> { 
+        private static List<string> FilterList = new List<string> {
             FilterListSex,
         };
-        private static List<string> SingleList = new List<string> { 
-            SingleListSex, 
+        private static List<string> SingleList = new List<string> {
+            SingleListSex,
         };
-        private static List<string> CountList = new List<string> { 
-            
+        private static List<string> CountList = new List<string>
+        {
+
         };
-        
+
         public static Dictionary<string, IEnumerable<string>> Action = new Dictionary<string, IEnumerable<string>>
         {
-            { "Tìm kiếm", new List<string> { 
+            { "Tìm kiếm", new List<string> {
                     Parent,
                     Master, Preview, Count, List,
-                    Get,  
+                    Get,
                 }.Concat(FilterList)
             },
-            { "Thêm", new List<string> { 
+            { "Thêm", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    Detail, Create, 
+                    Detail, Create,
                 }.Concat(SingleList).Concat(FilterList).Concat(CountList)
             },
 
-            { "Sửa", new List<string> { 
-                    Parent,            
+            { "Sửa", new List<string> {
+                    Parent,
                     Master, Preview, Count, List, Get,
-                    Detail, Update, 
+                    Detail, Update,
                 }.Concat(SingleList).Concat(FilterList).Concat(CountList)
             },
 
-            { "Xoá", new List<string> { 
+            { "Xoá", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    Delete, 
-                }.Concat(SingleList).Concat(FilterList) 
+                    Delete,
+                }.Concat(SingleList).Concat(FilterList)
             },
 
-            { "Xoá nhiều", new List<string> { 
+            { "Xoá nhiều", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    BulkDelete 
-                }.Concat(FilterList) 
+                    BulkDelete
+                }.Concat(FilterList)
             },
 
-            { "Xuất excel", new List<string> { 
+            { "Xuất excel", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    Export 
-                }.Concat(FilterList) 
+                    Export
+                }.Concat(FilterList)
             },
 
-            { "Nhập excel", new List<string> { 
+            { "Nhập excel", new List<string> {
                     Parent,
                     Master, Preview, Count, List, Get,
-                    ExportTemplate, Import 
-                }.Concat(FilterList) 
+                    ExportTemplate, Import
+                }.Concat(FilterList)
             },
         };
     }

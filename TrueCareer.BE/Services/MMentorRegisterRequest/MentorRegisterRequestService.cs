@@ -200,39 +200,37 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 TrueCareer.Entities.Notification UserNotification = new TrueCareer.Entities.Notification
                 {
                     TitleWeb = "Hồ sơ Mentor được phê duyệt",
-                    ContentWeb = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
-                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    ContentWeb = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống.",
                     TitleMobile = "Hồ sơ Mentor được phê duyệt",
-                    ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống. " +
-                    "Mong rằng bạn sẽ góp hết sức mình cho công tác hướng nghiệp!",
+                    ContentMobile = "TrueCareer chúc mừng bạn đã được chấp nhận làm Mentor của hệ thống.",
                     RecipientId = MentorRegisterRequest.AppUserId,
-                    SenderId = 1,
+                    SenderId = 10016,
                     Time = StaticParams.DateTimeNow,
                     Unread = false
                 };
                 await NotificationService.Create(UserNotification);
 
                 // send push notification to mobile
-                Dictionary<string, string> data = new Dictionary<string, string>();
-                data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
-                data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
-                data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
-                data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
-                data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+                // Dictionary<string, string> data = new Dictionary<string, string>();
+                // data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                // data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
 
-                var message = new FirebaseAdmin.Messaging.Message()
-                {
-                    Notification = new FirebaseAdmin.Messaging.Notification
-                    {
-                        Title = UserNotification.TitleMobile,
-                        Body = UserNotification.ContentMobile,
-                    },
-                    Data = data,
-                    Token = UserNotification.Recipient.Token,
-                };
+                // data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                // data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
 
-                var messaging = FirebaseMessaging.DefaultInstance;
-                _ = messaging.SendAsync(message);
+                // var message = new FirebaseAdmin.Messaging.Message()
+                // {
+                //     Notification = new FirebaseAdmin.Messaging.Notification
+                //     {
+                //         Title = UserNotification.TitleMobile,
+                //         Body = UserNotification.ContentMobile,
+                //     },
+                //     Data = data,
+                //     Token = UserNotification.Recipient.Token,
+                // };
+
+                // var messaging = FirebaseMessaging.DefaultInstance;
+                // _ = messaging.SendAsync(message);
 
                 return MentorRegisterRequest;
             }
@@ -266,26 +264,26 @@ namespace TrueCareer.Services.MMentorRegisterRequest
                 await NotificationService.Create(UserNotification);
 
                 // send push notification to mobile
-                Dictionary<string, string> data = new Dictionary<string, string>();
-                data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
-                data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
-                data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
-                data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
-                data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
+                // Dictionary<string, string> data = new Dictionary<string, string>();
+                // data.Add(nameof(UserNotification.Id), UserNotification.Id.ToString());
+                // data.Add(nameof(UserNotification.ContentMobile), UserNotification.ContentMobile);
+                // data.Add(nameof(UserNotification.LinkMobile), UserNotification.LinkMobile);
+                // data.Add(nameof(UserNotification.Unread), UserNotification.Unread.ToString());
+                // data.Add(nameof(UserNotification.Time), UserNotification.Time.ToString("yyyy-MM-dd hh:mm:ss"));
 
-                var message = new FirebaseAdmin.Messaging.Message()
-                {
-                    Notification = new FirebaseAdmin.Messaging.Notification
-                    {
-                        Title = UserNotification.TitleMobile,
-                        Body = UserNotification.ContentMobile,
-                    },
-                    Data = data,
-                    Token = UserNotification.Recipient.Token,
-                };
+                // var message = new FirebaseAdmin.Messaging.Message()
+                // {
+                //     Notification = new FirebaseAdmin.Messaging.Notification
+                //     {
+                //         Title = UserNotification.TitleMobile,
+                //         Body = UserNotification.ContentMobile,
+                //     },
+                //     Data = data,
+                //     Token = UserNotification.Recipient.Token,
+                // };
 
-                var messaging = FirebaseMessaging.DefaultInstance;
-                _ = messaging.SendAsync(message);
+                // var messaging = FirebaseMessaging.DefaultInstance;
+                // _ = messaging.SendAsync(message);
 
                 return MentorRegisterRequest;
             }

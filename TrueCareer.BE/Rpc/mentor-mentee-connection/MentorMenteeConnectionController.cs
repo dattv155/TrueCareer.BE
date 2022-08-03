@@ -120,14 +120,7 @@ namespace TrueCareer.Rpc.mentor_mentee_connection
                 return Forbid();
 
             MentorMenteeConnection MentorMenteeConnection = ConvertDTOToEntity(MentorMenteeConnection_MentorMenteeConnectionDTO);
-            MentorMenteeConnection.ConnectionStatusId = ConnectionStatusEnum.COMING_SOON.Id;
-            MentorMenteeConnection.ConnectionStatus = new ConnectionStatus()
-            {
-                Id = ConnectionStatusEnum.COMING_SOON.Id,
-                Code = ConnectionStatusEnum.COMING_SOON.Code,
-                Name = ConnectionStatusEnum.COMING_SOON.Name
-            };
-            MentorMenteeConnection = await MentorMenteeConnectionService.Update(MentorMenteeConnection);
+            MentorMenteeConnection = await MentorMenteeConnectionService.Approve(MentorMenteeConnection);
             MentorMenteeConnection_MentorMenteeConnectionDTO = new MentorMenteeConnection_MentorMenteeConnectionDTO(MentorMenteeConnection);
             if (MentorMenteeConnection.IsValidated)
                 return MentorMenteeConnection_MentorMenteeConnectionDTO;

@@ -123,7 +123,7 @@ namespace TrueCareer.Services.MConversationMessage
                 foreach (ConversationParticipant ConversationParticipant in Conversation.ConversationParticipants)
                 {
                     var message = JsonConvert.SerializeObject(ConversationMessage, BuildJsonSerializerSettings());
-                    _ = ConversationHub.Clients.User(ConversationParticipant.GlobalUser.RowId.ToString())
+                    _ = ConversationHub.Clients.User(ConversationParticipant.GlobalUser.Id.ToString())
                         .SendAsync("ReceiveMessage", Conversation.Id.ToString(), "CREATE", message);
                 }
                 return ConversationMessage;
@@ -147,16 +147,16 @@ namespace TrueCareer.Services.MConversationMessage
                 await UOW.ConversationMessageRepository.Create(ConversationMessage);
                 ConversationMessage = await UOW.ConversationMessageRepository.Get(ConversationMessage.Id);
                 await UOW.ConversationReadHistoryRepository.Read(ConversationMessage.ConversationId, ConversationMessage.GlobalUserId);
-               
+
                 Conversation = await UOW.ConversationRepository.Get(ConversationMessage.ConversationId);
 
                 foreach (ConversationParticipant ConversationParticipant in Conversation.ConversationParticipants)
                 {
                     var message = JsonConvert.SerializeObject(ConversationMessage, BuildJsonSerializerSettings());
-                    _ = ConversationHub.Clients.User(ConversationParticipant.GlobalUser.RowId.ToString())
+                    _ = ConversationHub.Clients.User(ConversationParticipant.GlobalUser.Id.ToString())
                         .SendAsync("ReceiveMessage", Conversation.Id.ToString(), "CREATE", message);
                 }
-               
+
                 return ConversationMessage;
             }
             catch (Exception ex)

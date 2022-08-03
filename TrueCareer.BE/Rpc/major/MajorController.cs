@@ -56,7 +56,7 @@ namespace TrueCareer.Rpc.major
         }
 
         [Route(MajorRoute.Get), HttpPost]
-        public async Task<ActionResult<Major_MajorDTO>> Get([FromBody]Major_MajorDTO Major_MajorDTO)
+        public async Task<ActionResult<Major_MajorDTO>> Get([FromBody] Major_MajorDTO Major_MajorDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
@@ -73,7 +73,7 @@ namespace TrueCareer.Rpc.major
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(Major_MajorDTO.Id))
                 return Forbid();
 
@@ -91,7 +91,7 @@ namespace TrueCareer.Rpc.major
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             if (!await HasPermission(Major_MajorDTO.Id))
                 return Forbid();
 
@@ -121,7 +121,7 @@ namespace TrueCareer.Rpc.major
             else
                 return BadRequest(Major_MajorDTO);
         }
-        
+
         [Route(MajorRoute.BulkDelete), HttpPost]
         public async Task<ActionResult<bool>> BulkDelete([FromBody] List<long> Ids)
         {
@@ -141,7 +141,7 @@ namespace TrueCareer.Rpc.major
                 return BadRequest(Majors.Where(x => !x.IsValidated));
             return true;
         }
-        
+
         [Route(MajorRoute.Import), HttpPost]
         public async Task<ActionResult> Import(IFormFile file)
         {
@@ -166,11 +166,11 @@ namespace TrueCareer.Rpc.major
                     string IdValue = worksheet.Cells[i, IdColumn].Value?.ToString();
                     string NameValue = worksheet.Cells[i, NameColumn].Value?.ToString();
                     string DescriptionValue = worksheet.Cells[i, DescriptionColumn].Value?.ToString();
-                    
+
                     Major Major = new Major();
                     Major.Name = NameValue;
                     Major.Description = DescriptionValue;
-                    
+
                     Majors.Add(Major);
                 }
             }
@@ -198,13 +198,13 @@ namespace TrueCareer.Rpc.major
                 return BadRequest(Errors);
             }
         }
-        
+
         [Route(MajorRoute.Export), HttpPost]
         public async Task<ActionResult> Export([FromBody] Major_MajorFilterDTO Major_MajorFilterDTO)
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             MemoryStream memoryStream = new MemoryStream();
             using (ExcelPackage excel = new ExcelPackage(memoryStream))
             {
@@ -234,7 +234,7 @@ namespace TrueCareer.Rpc.major
                 }
                 excel.GenerateWorksheet("Major", MajorHeaders, MajorData);
                 #endregion
-                
+
                 excel.Save();
             }
             return File(memoryStream.ToArray(), "application/octet-stream", "Major.xlsx");
@@ -245,7 +245,7 @@ namespace TrueCareer.Rpc.major
         {
             if (!ModelState.IsValid)
                 throw new BindException(ModelState);
-            
+
             string path = "Templates/Major_Template.xlsx";
             byte[] arr = System.IO.File.ReadAllBytes(path);
             MemoryStream input = new MemoryStream(arr);
@@ -283,6 +283,7 @@ namespace TrueCareer.Rpc.major
             Major.Id = Major_MajorDTO.Id;
             Major.Name = Major_MajorDTO.Name;
             Major.Description = Major_MajorDTO.Description;
+            Major.MajorImage = Major_MajorDTO.MajorImage;
             Major.BaseLanguage = CurrentContext.Language;
             return Major;
         }
