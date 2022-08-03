@@ -337,6 +337,7 @@ namespace TrueCareer.Repositories
             AppUserDAO.Avatar = AppUser.Avatar;
             AppUserDAO.CoverImage = AppUser.CoverImage;
             AppUserDAO.UpdatedAt = StaticParams.DateTimeNow;
+            AppUserDAO.RoleId = AppUser.RoleId;
             await DataContext.SaveChangesAsync();
             await SaveReference(AppUser);
             return true;
