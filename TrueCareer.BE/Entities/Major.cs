@@ -12,7 +12,6 @@ namespace TrueCareer.Entities
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
         public string MajorImage { get; set; }
 
         public bool Equals(Major other)

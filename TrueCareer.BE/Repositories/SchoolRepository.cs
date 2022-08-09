@@ -71,7 +71,7 @@ namespace TrueCareer.Repositories
                 initQuery = initQuery.Union(queryable);
             }
             return initQuery;
-        }    
+        }
 
         private IQueryable<SchoolDAO> DynamicOrder(IQueryable<SchoolDAO> query, SchoolFilter filter)
         {
@@ -210,7 +210,6 @@ namespace TrueCareer.Repositories
                 Address = x.Address,
                 SchoolImage = x.SchoolImage,
             }).ToListAsync();
-            
 
             return Schools;
         }
@@ -232,12 +231,38 @@ namespace TrueCareer.Repositories
                 SchoolImage = x.SchoolImage,
             }).FirstOrDefaultAsync();
 
+            List<SchoolMajorMapping> schoolMajorMappings = await DataContext.SchoolMajorMapping.AsNoTracking()
+                .Where(x => x.SchoolId == Id)
+                .Select(x => new SchoolMajorMapping
+                {
+                    SchoolId = x.SchoolId,
+                    MajorId = x.MajorId,
+                }).ToListAsync();
+
+            List<long> majorIds = schoolMajorMappings.Select(x => x.MajorId).ToList();
+            List<Major> majors = await DataContext.Major.AsNoTracking()
+                .Where(x => majorIds.Contains(x.Id))
+                .Select(x => new Major
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    MajorImage = x.MajorImage,
+                }).ToListAsync();
+
+            foreach (var smm in schoolMajorMappings)
+            {
+                smm.Major = majors.Where(x => x.Id == smm.MajorId).FirstOrDefault();
+            }
+
+            School.SchoolMajorMapping = schoolMajorMappings;
+
             if (School == null)
                 return null;
 
             return School;
         }
-        
+
         public async Task<bool> Create(School School)
         {
             SchoolDAO SchoolDAO = new SchoolDAO();
@@ -286,7 +311,7 @@ namespace TrueCareer.Repositories
                 .DeleteFromQueryAsync();
             return true;
         }
-        
+
         public async Task<bool> BulkMerge(List<School> Schools)
         {
             IdFilter IdFilter = new IdFilter { In = Schools.Select(x => x.Id).ToList() };
@@ -331,6 +356,6 @@ namespace TrueCareer.Repositories
         private async Task SaveReference(School School)
         {
         }
-        
+
     }
 }

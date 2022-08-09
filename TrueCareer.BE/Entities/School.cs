@@ -19,6 +19,8 @@ namespace TrueCareer.Entities
         public string Address { get; set; }
         public string SchoolImage { get; set; }
         public Guid RowId { get; set; }
+
+        public List<SchoolMajorMapping> SchoolMajorMapping {get; set;}
         
         public bool Equals(School other)
         {
@@ -75,5 +77,6 @@ namespace TrueCareer.Entities
         PhoneNumber = E._7,
         Address = E._8,
         SchoolImage = E._9,
+        MajorMapping = E._10,
     }
 }
