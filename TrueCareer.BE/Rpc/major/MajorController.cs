@@ -284,6 +284,7 @@ namespace TrueCareer.Rpc.major
             Major.Name = Major_MajorDTO.Name;
             Major.Description = Major_MajorDTO.Description;
             Major.MajorImage = Major_MajorDTO.MajorImage;
+            Major.SchoolMajorMappings = Major_MajorDTO.SchoolMajorMappings;
             Major.BaseLanguage = CurrentContext.Language;
             return Major;
         }

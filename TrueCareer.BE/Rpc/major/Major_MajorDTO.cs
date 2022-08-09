@@ -14,6 +14,7 @@ namespace TrueCareer.Rpc.major
         public string Description { get; set; }
 
         public string MajorImage { get; set; }
+        public List<SchoolMajorMapping> SchoolMajorMappings { get; set; }
         public Major_MajorDTO() { }
         public Major_MajorDTO(Major Major)
         {
@@ -24,6 +25,7 @@ namespace TrueCareer.Rpc.major
             this.Informations = Major.Informations;
             this.Warnings = Major.Warnings;
             this.Errors = Major.Errors;
+            this.SchoolMajorMappings = Major.SchoolMajorMappings;
         }
     }
 

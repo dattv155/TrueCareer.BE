@@ -13,6 +13,7 @@ namespace TrueCareer.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string MajorImage { get; set; }
+        public List<SchoolMajorMapping> SchoolMajorMappings { get; set; }
 
         public bool Equals(Major other)
         {

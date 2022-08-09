@@ -165,6 +165,37 @@ namespace TrueCareer.Repositories
                 Description = x.Description,
                 MajorImage = x.MajorImage
             }).FirstOrDefaultAsync();
+            
+            List<SchoolMajorMapping> schoolMajorMappings = await DataContext.SchoolMajorMapping.AsNoTracking()
+                .Where(x => x.MajorId == Id)
+                .Select(x => new SchoolMajorMapping
+                {
+                    SchoolId = x.SchoolId,
+                    MajorId = x.MajorId,
+                }).ToListAsync();
+
+            List<long> schoolIds = schoolMajorMappings.Select(x => x.SchoolId).ToList();
+            List<School> schools = await DataContext.School.AsNoTracking()
+                .Where(x => schoolIds.Contains(x.Id))
+                .Select(x => new School()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Rating = x.Rating,
+                    CompleteTime = x.CompleteTime,
+                    StudentCount = x.StudentCount,
+                    PhoneNumber = x.PhoneNumber,
+                    Address = x.Address,
+                    SchoolImage = x.SchoolImage,
+                }).ToListAsync();
+
+            foreach (var smm in schoolMajorMappings)
+            {
+                smm.School = schools.Where(x => x.Id == smm.SchoolId).FirstOrDefault();
+            }
+
+            Major.SchoolMajorMappings = schoolMajorMappings;
 
             if (Major == null)
                 return null;
