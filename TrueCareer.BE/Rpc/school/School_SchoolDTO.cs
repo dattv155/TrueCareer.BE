@@ -18,6 +18,8 @@ namespace TrueCareer.Rpc.school
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string SchoolImage { get; set; }
+        
+        public List<SchoolMajorMapping> SchoolMajorMappings { get; set; }
         public Guid RowId { get; set; }
         public School_SchoolDTO() {}
         public School_SchoolDTO(School School)
@@ -35,6 +37,7 @@ namespace TrueCareer.Rpc.school
             this.Informations = School.Informations;
             this.Warnings = School.Warnings;
             this.Errors = School.Errors;
+            this.SchoolMajorMappings = School.SchoolMajorMappings;
         }
     }
 

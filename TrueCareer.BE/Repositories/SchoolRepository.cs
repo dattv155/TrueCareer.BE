@@ -255,7 +255,7 @@ namespace TrueCareer.Repositories
                 smm.Major = majors.Where(x => x.Id == smm.MajorId).FirstOrDefault();
             }
 
-            School.SchoolMajorMapping = schoolMajorMappings;
+            School.SchoolMajorMappings = schoolMajorMappings;
 
             if (School == null)
                 return null;

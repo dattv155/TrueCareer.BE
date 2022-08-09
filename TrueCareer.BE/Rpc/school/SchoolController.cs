@@ -331,6 +331,7 @@ namespace TrueCareer.Rpc.school
             School.PhoneNumber = School_SchoolDTO.PhoneNumber;
             School.Address = School_SchoolDTO.Address;
             School.SchoolImage = School_SchoolDTO.SchoolImage;
+            School.SchoolMajorMappings = School_SchoolDTO.SchoolMajorMappings;
             School.BaseLanguage = CurrentContext.Language;
             return School;
         }

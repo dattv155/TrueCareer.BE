@@ -19,8 +19,7 @@ namespace TrueCareer.Entities
         public string Address { get; set; }
         public string SchoolImage { get; set; }
         public Guid RowId { get; set; }
-
-        public List<SchoolMajorMapping> SchoolMajorMapping {get; set;}
+        public List<SchoolMajorMapping> SchoolMajorMappings {get; set;}
         
         public bool Equals(School other)
         {
