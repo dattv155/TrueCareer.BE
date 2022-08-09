@@ -223,9 +223,34 @@ namespace TrueCareer.Repositories
                     CoverImage = x.User.CoverImage,
                 },
             }).FirstOrDefaultAsync();
-
+            
             if (MbtiResult == null)
                 return null;
+            
+            List<MbtiPersonalTypeMajorMapping> mbtiPersonalTypeMajorMappings = await DataContext.MbtiPersonalTypeMajorMapping.AsNoTracking()
+                .Where(x => x.MbtiPersonalTypeId == MbtiResult.MbtiPersonalTypeId)
+                .Select(x => new MbtiPersonalTypeMajorMapping
+                {
+                    MbtiPersonalTypeId = x.MbtiPersonalTypeId,
+                    MajorId = x.MajorId,
+                }).ToListAsync();
+
+            List<long> majorIds = mbtiPersonalTypeMajorMappings.Select(x => x.MajorId).ToList();
+            List<Major> majors = await DataContext.Major.AsNoTracking()
+                .Where(x => majorIds.Contains(x.Id))
+                .Select(x => new Major()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    MajorImage = x.MajorImage,
+                }).ToListAsync();
+
+            foreach (var smm in mbtiPersonalTypeMajorMappings)
+            {
+                smm.Major = majors.Where(x => x.Id == smm.MajorId).FirstOrDefault();
+            }
+            MbtiResult.MbtiPersonalType.MbtiPersonalTypeMajorMappings = mbtiPersonalTypeMajorMappings;
 
             return MbtiResult;
         }

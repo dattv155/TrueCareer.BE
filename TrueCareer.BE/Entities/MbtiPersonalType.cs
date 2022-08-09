@@ -13,6 +13,7 @@ namespace TrueCareer.Entities
         public string Name { get; set; }
         public string Code { get; set; }
         public string Value { get; set; }
+        public List<MbtiPersonalTypeMajorMapping> MbtiPersonalTypeMajorMappings { get; set; }
         
         public bool Equals(MbtiPersonalType other)
         {

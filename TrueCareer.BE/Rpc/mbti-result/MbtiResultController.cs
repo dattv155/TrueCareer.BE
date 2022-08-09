@@ -401,7 +401,8 @@ namespace TrueCareer.Rpc.mbti_result
                 Id = MbtiResult_MbtiResultDTO.MbtiPersonalType.Id,
                 Name = MbtiResult_MbtiResultDTO.MbtiPersonalType.Name,
                 Code = MbtiResult_MbtiResultDTO.MbtiPersonalType.Code,
-                Value = MbtiResult_MbtiResultDTO.MbtiPersonalType.Value
+                Value = MbtiResult_MbtiResultDTO.MbtiPersonalType.Value,
+                MbtiPersonalTypeMajorMappings = MbtiResult_MbtiResultDTO.MbtiPersonalType.MbtiPersonalTypeMajorMappings
             };
             MbtiResult.User = MbtiResult_MbtiResultDTO.User == null ? null : new AppUser
             {

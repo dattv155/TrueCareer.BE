@@ -17,6 +17,7 @@ namespace TrueCareer.Rpc.mbti_result
         public string Code { get; set; }
         
         public string Value { get; set; }
+        public List<MbtiPersonalTypeMajorMapping> MbtiPersonalTypeMajorMappings { get; set; }
         
         
         public MbtiResult_MbtiPersonalTypeDTO() {}
@@ -30,6 +31,7 @@ namespace TrueCareer.Rpc.mbti_result
             this.Code = MbtiPersonalType.Code;
             
             this.Value = MbtiPersonalType.Value;
+            this.MbtiPersonalTypeMajorMappings = MbtiPersonalType.MbtiPersonalTypeMajorMappings;
             
             this.Informations = MbtiPersonalType.Informations;
             this.Warnings = MbtiPersonalType.Warnings;
